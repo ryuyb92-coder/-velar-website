@@ -21,7 +21,6 @@ export default function XLToggle({ isXL, onChange }: Props) {
       </button>
       <span className={styles.text}>
         My vehicle is a truck or SUV
-        <span className={styles.surcharge}> +$30</span>
       </span>
     </label>
   );
