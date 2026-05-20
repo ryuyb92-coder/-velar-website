@@ -1,0 +1,129 @@
+.section {
+  background: var(--section-bg);
+  padding-block: var(--section-padding);
+}
+
+.container {
+  max-width: var(--pricing-max);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+  display: flex;
+  flex-direction: column;
+  align-items: center;            /* all direct children center on the same axis */
+  gap: 40px;
+  width: 100%;
+}
+
+/* ─── Header — centered editorial block ─────────────────────────────────── */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 580px;
+  width: 100%;
+  margin-inline: auto;
+}
+
+/* Centered precision rule */
+.header::before {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 1px;
+  background: var(--color-off-black);
+  opacity: 0.2;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  opacity: 0.75;
+  margin-bottom: 14px;
+}
+
+.heading {
+  font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: var(--color-off-black);
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+/* Second clause — quieter, confirmatory */
+.headingAlt {
+  opacity: 0.45;
+}
+
+.subheading {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  max-width: 400px;
+}
+
+/* ─── Controls — centered vertical cluster ───────────────────────────────── */
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+/* ─── Cards wrapper ───────────────────────────────────────────────────────── */
+.cardsWrapper {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Clip carousel breakout on mobile — prevents body horizontal scroll */
+@media (max-width: 639px) {
+  .cardsWrapper {
+    overflow-x: clip;
+  }
+}
+
+/* ─── Trust signal — centered, flanked by thin rules ─────────────────────── */
+.trust {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.trust::before,
+.trust::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.3;
+}
+
+/* ─── Mobile overrides ────────────────────────────────────────────────────── */
+@media (max-width: 639px) {
+  /* Trust badge: long uppercase text overflows at mobile widths, collapsing
+     the flex: 1 decorative lines to 0px. Fall back to centered block text. */
+  .trust {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .trust::before,
+  .trust::after {
+    display: none;
+  }
+}

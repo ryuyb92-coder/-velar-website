@@ -1,0 +1,86 @@
+.section {
+  margin-top: 52px;
+  background: var(--enhancements-bg);   /* contained warm block — editorial, not spreadsheet */
+  border-radius: var(--card-radius);
+  padding: clamp(28px, 4vw, 44px);
+}
+
+.header {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #D9D3CA;
+}
+
+.title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-off-black);
+  opacity: 0.55;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (min-width: 560px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 40px;
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1px solid #D9D3CA;
+  font-size: 0.83rem;
+}
+
+.check {
+  color: #9C9287;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.name {
+  flex: 1;
+  color: var(--color-off-black);
+}
+
+.price {
+  font-weight: 500;
+  font-size: 0.82rem;
+  color: var(--color-off-black);
+  margin-left: auto;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+/* "Contact Us" entries — distinguished without being loud */
+.item:has(.price[data-contact='true']) .price {
+  color: var(--color-text-muted);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.note {
+  margin-top: 20px;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  opacity: 0.8;
+}

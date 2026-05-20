@@ -1,0 +1,369 @@
+/* ─── Overlay ─────────────────────────────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 11, 11, 0.55);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;     /* bottom sheet on mobile */
+  justify-content: center;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .overlay {
+    align-items: center;
+    padding: 24px;
+  }
+}
+
+/* ─── Panel ───────────────────────────────────────────────────────────────── */
+.panel {
+  position: relative;
+  background: var(--color-white);
+  width: 100%;
+  max-width: 520px;
+  max-height: 92dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 20px 20px 0 0;
+  padding: 32px 24px 40px;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (min-width: 640px) {
+  .panel {
+    border-radius: 16px;
+    padding: 40px 40px 40px;
+    max-height: 88dvh;
+    animation: fadeScale 0.22s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(48px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes fadeScale {
+  from { transform: scale(0.97); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+/* ─── Close button ────────────────────────────────────────────────────────── */
+.closeBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  border-radius: 50%;
+  transition: color 0.18s, background 0.18s;
+}
+
+.closeBtn:hover {
+  color: var(--color-off-black);
+  background: #F0EDE8;
+}
+
+/* ─── Header ──────────────────────────────────────────────────────────────── */
+.header {
+  margin-bottom: 28px;
+}
+
+.headerRule {
+  width: 28px;
+  height: 1px;
+  background: var(--color-off-black);
+  opacity: 0.18;
+  margin-bottom: 16px;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: clamp(1.4rem, 4vw, 1.75rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  color: var(--color-off-black);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* ─── Form layout ─────────────────────────────────────────────────────────── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 480px) {
+  .row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ─── Labels ──────────────────────────────────────────────────────────────── */
+.label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.optional {
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  opacity: 0.7;
+}
+
+/* ─── Inputs ──────────────────────────────────────────────────────────────── */
+.input,
+.select,
+.textarea {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--color-off-black);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 10px 13px;
+  width: 100%;
+  transition: border-color 0.18s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.55;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-off-black);
+}
+
+/* Chevron for select */
+.select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a7068' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  padding-right: 34px;
+  cursor: pointer;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.55;
+}
+
+/* ─── Submit ──────────────────────────────────────────────────────────────── */
+.submitBtn {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  background: var(--color-off-black);
+  border: none;
+  border-radius: 8px;
+  padding: 15px 20px;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.22s;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: #000;
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Divider ─────────────────────────────────────────────────────────────── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-block: 4px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.dividerText {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  opacity: 0.65;
+  white-space: nowrap;
+}
+
+/* ─── Direct contact links ────────────────────────────────────────────────── */
+.directRow {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.directLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-off-black);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  padding: 10px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  transition: border-color 0.18s, background 0.18s;
+  flex: 1;
+  justify-content: center;
+}
+
+.directLink:hover {
+  border-color: var(--color-off-black);
+  background: #F8F6F3;
+}
+
+/* ─── Error ───────────────────────────────────────────────────────────────── */
+.error {
+  font-size: 0.82rem;
+  color: #b91c1c;
+  line-height: 1.5;
+}
+
+/* ─── Success state ───────────────────────────────────────────────────────── */
+.success {
+  padding-top: 8px;
+}
+
+.successRule {
+  width: 28px;
+  height: 1px;
+  background: var(--color-off-black);
+  opacity: 0.18;
+  margin-bottom: 18px;
+}
+
+.successBody {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin-top: 12px;
+  margin-bottom: 28px;
+}
+
+.successActions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.callBtn,
+.textBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  flex: 1;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.callBtn {
+  background: var(--color-off-black);
+  color: var(--color-white);
+}
+
+.callBtn:hover {
+  background: #000;
+}
+
+.textBtn {
+  background: transparent;
+  color: var(--color-off-black);
+  border: 1px solid var(--color-border);
+}
+
+.textBtn:hover {
+  border-color: var(--color-off-black);
+  background: #F8F6F3;
+}
+
+.doneBtn {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  opacity: 0.65;
+  transition: opacity 0.18s;
+}
+
+.doneBtn:hover {
+  opacity: 1;
+}

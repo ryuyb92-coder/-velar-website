@@ -1,0 +1,201 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+  gap: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Light card — white on warm stone section creates physical lift */
+.light {
+  background: var(--card-light-bg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--card-shadow-light);
+}
+
+/* Dark (featured) card — dramatic depth */
+.dark {
+  background: var(--card-dark-bg);
+  border: 1px solid #141824;         /* cold blue-tinted border — barely perceptible */
+  box-shadow: var(--card-shadow-dark);
+}
+
+/* Precision accent bar — reads as engineering detail, not "featured" badge */
+.featuredBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-blue);
+  opacity: 0.7;
+}
+
+/* Price row */
+.priceRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+  margin-bottom: 18px;
+}
+
+.dollarSign {
+  font-size: 1.35rem;
+  font-weight: 300;
+  margin-top: 12px;
+  color: var(--color-off-black);
+  line-height: 1;
+  opacity: 0.5;
+}
+
+.dark .dollarSign {
+  color: var(--color-white);
+  opacity: 0.45;
+}
+
+.price {
+  font-size: 3.75rem;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-off-black);
+  display: inline-block;
+  min-width: 4ch;
+  font-feature-settings: "tnum" 1;   /* tabular numerals — prices align cleanly */
+}
+
+.dark .price {
+  color: var(--color-white);
+}
+
+/* Duration */
+.duration {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.durationRule {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.dark .durationRule {
+  background: var(--color-border-dark);
+}
+
+.durationText {
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.dark .durationText {
+  color: #4a5068;                    /* cold slate — matches card undertone */
+  letter-spacing: 0.12em;
+}
+
+/* Package name */
+.name {
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--color-off-black);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.dark .name {
+  color: var(--color-white);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+/* Description */
+.description {
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+}
+
+.dark .description {
+  color: #5a6070;                    /* cold muted — stays in the steel-black atmosphere */
+}
+
+/* Popular add-ons — refined italic hint, no box */
+.addons {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.dark .addons {
+  color: #4a5268;
+}
+
+.addonsLabel {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--color-off-black);
+  opacity: 0.5;
+}
+
+.dark .addonsLabel {
+  color: #9c9790;
+  opacity: 1;
+}
+
+/* CTA button */
+.cta {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 13px 20px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  margin-top: auto;
+  padding-top: 28px;
+  cursor: pointer;
+  appearance: none;
+  transition: background 0.25s var(--ease-premium),
+              color 0.25s var(--ease-premium),
+              border-color 0.25s var(--ease-premium);
+}
+
+.ctaDark {
+  background: var(--color-blue);
+  color: var(--color-white);
+  border: 1px solid transparent;
+}
+
+.ctaDark:hover {
+  background: var(--color-blue-muted);
+}
+
+.ctaLight {
+  background: transparent;
+  color: var(--color-off-black);
+  border: 1px solid #C8BFB3;         /* warm border — not generic gray */
+}
+
+.ctaLight:hover {
+  background: var(--color-off-black);
+  color: var(--color-white);
+  border-color: var(--color-off-black);
+}

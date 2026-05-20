@@ -1,0 +1,34 @@
+# dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# environment variables — never commit these
+.env
+.env*.local
+
+# screenshots (dev tool, not source)
+screenshots/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Vercel
+.vercel
+
+# Claude Code project settings (machine-specific)
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dev test files
+test.html
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

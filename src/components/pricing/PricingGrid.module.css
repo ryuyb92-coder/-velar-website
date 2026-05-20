@@ -1,0 +1,81 @@
+.grid {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  grid-template-columns: 1fr;
+}
+
+.cardWrapper {
+  display: contents; /* pass-through on desktop — card is a direct grid child */
+}
+
+/* ─── Mobile: horizontal scroll carousel ─────────────────────────────────── */
+@media (max-width: 639px) {
+
+  .grid {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;           /* equal card height across all siblings */
+    gap: 12px;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-block: 10px;            /* shadow breathing room */
+
+    /* Break out of container padding to use full viewport width */
+    margin-inline: calc(-1 * var(--container-padding));
+    padding-inline: var(--container-padding);
+
+    /* Snap offset accounts for the leading padding */
+    scroll-padding-inline-start: var(--container-padding);
+  }
+
+  .grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cardWrapper {
+    display: block;
+    /* Card occupies most of the viewport; formula leaves ~36px peek of next card */
+    flex: 0 0 calc(100vw - 2 * var(--container-padding) - 48px);
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
+  /* Featured card leads the carousel */
+  .cardWrapper[data-featured='true'] {
+    order: -1;
+  }
+}
+
+/* ─── Tablet: 2-col for 2-card categories ────────────────────────────────── */
+@media (min-width: 640px) {
+  .grid[data-count='2'] {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 680px;
+    margin-inline: auto;
+  }
+}
+
+/* ─── Tablet: 3-col for 3-card, 2-col for 2-card ────────────────────────── */
+@media (min-width: 768px) {
+  .grid[data-count='3'] {
+    grid-template-columns: repeat(3, 1fr);
+    margin-inline: auto;
+  }
+
+  .grid[data-count='2'] {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 680px;
+    margin-inline: auto;
+  }
+}
+
+/* ─── Desktop: wider 2-col ───────────────────────────────────────────────── */
+@media (min-width: 900px) {
+  .grid[data-count='2'] {
+    max-width: 720px;
+  }
+}
