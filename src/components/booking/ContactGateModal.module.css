@@ -75,13 +75,14 @@
 .logoWrap {
   display: flex;
   justify-content: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .logo {
-  height: 44px;
-  width: auto;
+  width: clamp(140px, 42%, 180px);
+  height: auto;
   display: block;
+  object-fit: contain;
 }
 
 /* ─── Header ──────────────────────────────────────────────────────────────── */
