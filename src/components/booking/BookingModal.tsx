@@ -671,20 +671,109 @@ function Step4({ state, update }: { state: BookingState; update: (partial: Parti
 }
 function Step5({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   return (
-    <div>
+    <>
       <span className={styles.stepEye}>Step 5 of 7</span>
       <h3 className={styles.stepHeading}>Tell us about your vehicle.</h3>
-      <p className={styles.stepSub}>Step content coming in Task 7.</p>
-    </div>
+      <p className={styles.stepSub}>Year, make, and model help us arrive prepared with the right products.</p>
+
+      <div className={styles.field}>
+        <label className={styles.fieldLabel} htmlFor="bk-vehicle">
+          Year, Make, Model
+        </label>
+        <input
+          className={styles.fieldInput}
+          id="bk-vehicle"
+          name="vehicle"
+          type="text"
+          required
+          placeholder="e.g. 2022 BMW X5"
+          autoComplete="off"
+          value={state.vehicleDescription}
+          onChange={e => update({ vehicleDescription: e.target.value })}
+        />
+      </div>
+    </>
   );
 }
 function Step6({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   return (
-    <div>
+    <>
       <span className={styles.stepEye}>Step 6 of 7</span>
       <h3 className={styles.stepHeading}>How do we reach you?</h3>
-      <p className={styles.stepSub}>Step content coming in Task 7.</p>
-    </div>
+      <p className={styles.stepSub}>We&apos;ll confirm and coordinate your appointment via phone or email.</p>
+
+      <div className={styles.fieldRow}>
+        <div className={styles.field}>
+          <label className={styles.fieldLabel} htmlFor="bk-name">
+            Full Name
+          </label>
+          <input
+            className={styles.fieldInput}
+            id="bk-name"
+            name="name"
+            type="text"
+            required
+            placeholder="Your name"
+            autoComplete="name"
+            value={state.name}
+            onChange={e => update({ name: e.target.value })}
+          />
+        </div>
+        <div className={styles.field}>
+          <label className={styles.fieldLabel} htmlFor="bk-phone">
+            Phone
+          </label>
+          <input
+            className={styles.fieldInput}
+            id="bk-phone"
+            name="phone"
+            type="tel"
+            required
+            placeholder="(214) 555-0000"
+            autoComplete="tel"
+            inputMode="tel"
+            value={state.phone}
+            onChange={e => update({ phone: e.target.value })}
+          />
+        </div>
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.fieldLabel} htmlFor="bk-email">
+          Email Address
+        </label>
+        <input
+          className={styles.fieldInput}
+          id="bk-email"
+          name="email"
+          type="email"
+          required
+          placeholder="your@email.com"
+          autoComplete="email"
+          inputMode="email"
+          value={state.email}
+          onChange={e => update({ email: e.target.value })}
+        />
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.fieldLabel} htmlFor="bk-notes">
+          Notes{' '}
+          <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, opacity: 0.6 }}>
+            (optional)
+          </span>
+        </label>
+        <textarea
+          className={styles.fieldTextarea}
+          id="bk-notes"
+          name="notes"
+          placeholder="Vehicle condition, gate codes, location details, anything helpful…"
+          rows={3}
+          value={state.notes}
+          onChange={e => update({ notes: e.target.value })}
+        />
+      </div>
+    </>
   );
 }
 function Step7({ state, submitError }: { state: BookingState; submitError: string }) {
