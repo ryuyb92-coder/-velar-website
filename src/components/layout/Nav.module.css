@@ -1,96 +1,104 @@
+/* ─── Header shell ────────────────────────────────────────────────────────── */
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 80;
-  background: var(--color-white);
-  border-bottom: 1px solid var(--color-border);
+  height: 74px;
+  transition: background 0.3s ease, border-color 0.3s ease,
+              backdrop-filter 0.3s ease;
+  border-bottom: 1px solid transparent;
 }
 
+/* Transparent state — over hero */
+.header:not(.scrolled) {
+  background: transparent;
+}
+
+/* Opaque state — past hero */
+.header.scrolled {
+  background: rgba(8, 7, 6, 0.96);
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ─── Inner layout ────────────────────────────────────────────────────────── */
 .inner {
   max-width: var(--container-max);
   margin-inline: auto;
   padding-inline: var(--container-padding);
-  height: 64px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
 }
 
 /* ─── Logo ────────────────────────────────────────────────────────────────── */
 .logo {
   display: flex;
-  flex-direction: column;
-  gap: 1px;
+  align-items: center;
   text-decoration: none;
-  line-height: 1;
   flex-shrink: 0;
 }
 
-.logoMark {
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: var(--color-off-black);
-  text-transform: uppercase;
+.logoImg {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  display: block;
 }
 
-.logoSub {
-  font-size: 0.6rem;
-  font-weight: 400;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-  opacity: 0.7;
-}
-
-/* ─── Nav actions ─────────────────────────────────────────────────────────── */
-.actions {
+/* ─── Nav links — centered ────────────────────────────────────────────────── */
+.links {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 36px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.navLink {
-  font-size: 0.82rem;
+.link {
+  font-size: 0.77rem;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, 0.46);
   text-decoration: none;
-  transition: color 0.18s;
+  transition: color 0.2s;
+  white-space: nowrap;
 }
 
-.navLink:hover {
-  color: var(--color-off-black);
+.link:hover {
+  color: rgba(255, 255, 255, 0.82);
 }
 
+/* ─── Book Now CTA ────────────────────────────────────────────────────────── */
 .bookBtn {
   font-family: var(--font-sans);
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--color-white);
-  background: var(--color-off-black);
+  color: #fff;
+  background: var(--color-orange);
   border: none;
-  border-radius: 7px;
-  padding: 10px 20px;
+  border-radius: 5px;
+  padding: 10px 22px;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.2s;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
 }
 
 .bookBtn:hover {
-  background: #000;
+  opacity: 0.88;
 }
 
-/* ─── Mobile — hide text nav links ───────────────────────────────────────── */
+/* ─── Mobile — hide links ─────────────────────────────────────────────────── */
 @media (max-width: 639px) {
-  .navLink {
+  .links {
     display: none;
-  }
-
-  .actions {
-    gap: 0;
   }
 }
