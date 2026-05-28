@@ -12,6 +12,7 @@
   --color-white: #ffffff;
   --color-blue: #1C3E74;              /* deep cold steel — automotive, not startup */
   --color-blue-muted: #142D56;
+  --color-orange: #f26a0d;
   --color-text-muted: #7a7068;        /* warm brown-gray — more editorial than cool gray */
   --color-border: #e4ddd4;            /* warm parchment border — eliminates sterile gray */
   --color-border-dark: #2c2a27;       /* warm dark border */
@@ -43,7 +44,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Offset anchor links by the sticky nav height */
-  scroll-padding-top: 64px;
+  scroll-padding-top: 74px;
 }
 
 /* Reserve space at the bottom on mobile so sticky CTA never overlaps content */
