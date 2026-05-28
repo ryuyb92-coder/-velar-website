@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CATEGORIES } from '@/lib/pricing-data';
-import { VELAR_PHONE, VELAR_PHONE_DISPLAY, FORMSPREE_ID } from '@/lib/config';
+import Image from 'next/image';
+import { CATEGORIES, ENHANCEMENTS } from '@/lib/pricing-data';
+import { VELAR_PHONE, VELAR_PHONE_DISPLAY } from '@/lib/config';
 import styles from './BookingModal.module.css';
 
+/* ─── Public interface — unchanged ─────────────────────────────────────── */
 export interface BookingIntent {
   packageName?: string;
   categoryLabel?: string;
@@ -17,6 +19,34 @@ interface Props {
   onClose: () => void;
 }
 
+/* ─── Internal booking state ────────────────────────────────────────────── */
+type VehicleType = 'sedan' | 'suv' | 'xl';
+
+interface BookingState {
+  vehicleType: VehicleType | null;
+  categoryId: string | null;
+  packageId: string | null;
+  enhancements: string[];
+  preferredDate: string;
+  preferredTime: string;
+  zip: string;
+  vehicleDescription: string;
+  name: string;
+  phone: string;
+  email: string;
+  notes: string;
+}
+
+const STEPS = [
+  'Vehicle & Package',
+  'Add-ons',
+  'Date & Time',
+  'Location',
+  'Vehicle Details',
+  'Your Information',
+  'Review & Confirm',
+] as const;
+
 const TIME_SLOTS = [
   'No preference',
   '8:00 AM – 10:00 AM',
@@ -26,43 +56,80 @@ const TIME_SLOTS = [
   '4:00 PM – 6:00 PM',
 ];
 
-// Build service options from pricing data so they stay in sync automatically
-const SERVICE_OPTIONS = [
-  ...CATEGORIES.flatMap((cat) =>
-    cat.packages.map((pkg) => `${cat.label} — ${pkg.name}`)
-  ),
-  'Not sure yet — contact me',
-];
+function buildInitialState(intent: BookingIntent): BookingState {
+  let categoryId: string | null = null;
+  let packageId: string | null = null;
 
+  if (intent.packageName && intent.categoryLabel) {
+    const cat = CATEGORIES.find(c => c.label === intent.categoryLabel);
+    if (cat) {
+      categoryId = cat.id;
+      const pkg = cat.packages.find(p => p.name === intent.packageName);
+      if (pkg) packageId = pkg.id;
+    }
+  }
+
+  return {
+    vehicleType: null,
+    categoryId,
+    packageId,
+    enhancements: [],
+    preferredDate: '',
+    preferredTime: 'No preference',
+    zip: '',
+    vehicleDescription: '',
+    name: '',
+    phone: '',
+    email: '',
+    notes: '',
+  };
+}
+
+function computePrice(state: BookingState): number | null {
+  if (!state.categoryId || !state.packageId) return null;
+  const cat = CATEGORIES.find(c => c.id === state.categoryId);
+  const pkg = cat?.packages.find(p => p.id === state.packageId);
+  if (!pkg) return null;
+  return state.vehicleType === 'sedan' ? pkg.price : pkg.xlPrice;
+}
+
+function isStepValid(step: number, state: BookingState): boolean {
+  switch (step) {
+    case 1: return state.vehicleType !== null && state.packageId !== null;
+    case 2: return true;
+    case 3: return state.preferredDate !== '';
+    case 4: return /^\d{5}$/.test(state.zip);
+    case 5: return state.vehicleDescription.trim().length > 0;
+    case 6: return (
+      state.name.trim().length > 0 &&
+      state.phone.trim().length >= 7 &&
+      /\S+@\S+\.\S+/.test(state.email)
+    );
+    case 7: return true;
+    default: return false;
+  }
+}
+
+/* ─── Main component ────────────────────────────────────────────────────── */
 export default function BookingModal({ intent, onClose }: Props) {
   const [mounted, setMounted] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [step, setStep] = useState(1);
+  const [state, setState] = useState<BookingState>(() => buildInitialState(intent));
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const overlayRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-
-  const defaultService =
-    intent.packageName && intent.categoryLabel
-      ? `${intent.categoryLabel} — ${intent.packageName}`
-      : '';
-
   const todayISO = new Date().toISOString().split('T')[0];
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
-  // Lock body scroll; restore on unmount
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = prev;
-    };
+    return () => { document.body.style.overflow = prev; };
   }, []);
 
-  // ESC to close
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose();
@@ -71,39 +138,66 @@ export default function BookingModal({ intent, onClose }: Props) {
     return () => document.removeEventListener('keydown', onKey);
   }, [onClose]);
 
-  // Trap focus inside panel
   useEffect(() => {
-    const el = panelRef.current;
-    if (!el) return;
-    const focusable = el.querySelectorAll<HTMLElement>(
-      'button, input, select, textarea, a[href]'
-    );
-    focusable[0]?.focus();
-  }, []);
+    panelRef.current
+      ?.querySelector<HTMLElement>('button, input, select, textarea')
+      ?.focus();
+  }, [step]);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  function update(partial: Partial<BookingState>) {
+    setState(prev => ({ ...prev, ...partial }));
+  }
+
+  function goNext() {
+    if (step < 7) setStep(s => s + 1);
+  }
+
+  function goBack() {
+    if (step > 1) setStep(s => s - 1);
+  }
+
+  async function handleSubmit() {
     setSubmitting(true);
-    setError('');
+    setSubmitError('');
+    const cat = CATEGORIES.find(c => c.id === state.categoryId);
+    const pkg = cat?.packages.find(p => p.id === state.packageId);
+    const vehicleTypeLabel =
+      state.vehicleType === 'sedan' ? 'Sedan/Coupe' :
+      state.vehicleType === 'suv'   ? 'SUV/Truck'   : 'XL Vehicle';
 
-    const data = new FormData(e.currentTarget);
+    const noteParts = [state.notes.trim()];
+    if (state.enhancements.length > 0) {
+      noteParts.push(`Add-ons requested: ${state.enhancements.join(', ')}`);
+    }
+
+    const payload = {
+      name:           state.name,
+      phone:          state.phone,
+      email:          state.email,
+      vehicle:        `${state.vehicleDescription} (${vehicleTypeLabel})`,
+      service:        cat && pkg ? `${cat.label} — ${pkg.name}` : '',
+      preferred_date: state.preferredDate,
+      preferred_time: state.preferredTime,
+      zip:            state.zip,
+      notes:          noteParts.filter(Boolean).join('\n\n'),
+    };
 
     try {
-      if (FORMSPREE_ID) {
-        const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-          method: 'POST',
-          body: data,
-          headers: { Accept: 'application/json' },
-        });
-        if (!res.ok) throw new Error();
-      } else {
-        // No endpoint configured — simulate a successful send in dev
-        await new Promise((r) => setTimeout(r, 600));
+      const res = await fetch('/api/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error((data as { error?: string }).error || 'Submission failed');
       }
       setSubmitted(true);
-    } catch {
-      setError(
-        'Something went wrong. Please call or text us and we\'ll get you booked.'
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error
+          ? err.message
+          : 'Something went wrong. Please call or text us.'
       );
     } finally {
       setSubmitting(false);
@@ -112,284 +206,287 @@ export default function BookingModal({ intent, onClose }: Props) {
 
   if (!mounted) return null;
 
+  const price = computePrice(state);
+  const cat = CATEGORIES.find(c => c.id === state.categoryId);
+  const pkg = cat?.packages.find(p => p.id === state.packageId);
+
   return createPortal(
     <div
       className={styles.overlay}
       ref={overlayRef}
-      onClick={(e) => {
-        if (e.target === overlayRef.current) onClose();
-      }}
+      onClick={e => { if (e.target === overlayRef.current) onClose(); }}
       role="dialog"
       aria-modal="true"
       aria-label="Book a detail"
     >
-      <div className={styles.panel} ref={panelRef}>
-        <button
-          className={styles.closeBtn}
-          onClick={onClose}
-          aria-label="Close booking form"
-          type="button"
-        >
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-            <path
-              d="M1 1l11 11M12 1L1 12"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
-        </button>
+      <div className={styles.frame} ref={panelRef}>
 
         {submitted ? (
           <SuccessState onClose={onClose} />
         ) : (
           <>
-            <div className={styles.header}>
-              <div className={styles.headerRule} aria-hidden="true" />
-              <span className={styles.eyebrow}>VELAR · Dallas, TX</span>
-              <h2 className={styles.title}>Book Your Detail</h2>
-              <p className={styles.subtitle}>
-                We'll confirm availability and reach out to schedule.
-              </p>
+            {/* ── DARK SIDEBAR ── */}
+            <div className={styles.sidebar}>
+              <div className={styles.sidebarTop}>
+                <div className={styles.sidebarLogo}>
+                  <Image
+                    src="/velar-logo.png"
+                    alt="VELAR Mobile Detailing"
+                    width={120}
+                    height={116}
+                    className={styles.sidebarLogoImg}
+                  />
+                </div>
+
+                <nav className={styles.stepList} aria-label="Booking steps">
+                  {STEPS.map((label, i) => {
+                    const n = i + 1;
+                    const isActive = n === step;
+                    const isDone = n < step;
+                    return (
+                      <div key={n} className={styles.stepItem}>
+                        <div
+                          className={[
+                            styles.stepRow,
+                            isActive ? styles.stepActive : '',
+                            isDone   ? styles.stepDone   : '',
+                          ].join(' ')}
+                        >
+                          <div className={styles.stepNum}>{n}</div>
+                          <span className={styles.stepName}>{label}</span>
+                        </div>
+                        {n < STEPS.length && (
+                          <div className={styles.stepConnector} />
+                        )}
+                      </div>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              {/* Booking summary */}
+              <div className={styles.summary}>
+                <div className={styles.summaryHeader}>Booking Summary</div>
+                <div className={styles.summaryRow}>
+                  <div className={styles.summaryKey}>Service</div>
+                  <div className={styles.summaryVal}>
+                    {pkg
+                      ? pkg.name
+                      : <span className={styles.summaryEmpty}>—</span>}
+                  </div>
+                </div>
+                <div className={styles.summaryRow}>
+                  <div className={styles.summaryKey}>Vehicle</div>
+                  <div className={styles.summaryVal}>
+                    {state.vehicleType === 'sedan' ? 'Sedan / Coupe' :
+                     state.vehicleType === 'suv'   ? 'SUV / Truck (+$30)' :
+                     state.vehicleType === 'xl'    ? 'XL Vehicle (+$30)' :
+                     <span className={styles.summaryEmpty}>—</span>}
+                  </div>
+                </div>
+                <div className={styles.summaryTotal}>
+                  <div className={styles.summaryTotalKey}>Est. Total</div>
+                  {price != null ? (
+                    <>
+                      <div className={styles.summaryTotalVal}>${price}</div>
+                      <div className={styles.summaryTotalNote}>
+                        {pkg?.duration} · subject to review
+                      </div>
+                    </>
+                  ) : (
+                    <div className={styles.summaryTotalValEmpty}>TBD</div>
+                  )}
+                </div>
+              </div>
             </div>
 
-            <form
-              className={styles.form}
-              onSubmit={handleSubmit}
-              noValidate
-              // key resets uncontrolled fields when a different package triggers the modal
-              key={defaultService}
-            >
-              <div className={styles.row}>
-                <Field label="Name" htmlFor="bk-name">
-                  <input
-                    className={styles.input}
-                    id="bk-name"
-                    name="name"
-                    type="text"
-                    required
-                    placeholder="Your name"
-                    autoComplete="name"
-                  />
-                </Field>
-                <Field label="Phone" htmlFor="bk-phone">
-                  <input
-                    className={styles.input}
-                    id="bk-phone"
-                    name="phone"
-                    type="tel"
-                    required
-                    placeholder="(214) 555-0000"
-                    autoComplete="tel"
-                    inputMode="tel"
-                  />
-                </Field>
+            {/* ── WHITE STEP PANEL ── */}
+            <div className={styles.stepPanel}>
+              <div className={styles.progress}>
+                <div
+                  className={styles.progressFill}
+                  style={{ width: `${(step / STEPS.length) * 100}%` }}
+                />
               </div>
 
-              <Field label="Vehicle" htmlFor="bk-vehicle">
-                <input
-                  className={styles.input}
-                  id="bk-vehicle"
-                  name="vehicle"
-                  type="text"
-                  required
-                  placeholder="Year, Make, Model  (e.g. 2022 BMW X5 — truck/SUV adds $30)"
+              <div className={styles.stepContent}>
+                <StepContent
+                  step={step}
+                  state={state}
+                  update={update}
+                  todayISO={todayISO}
+                  timeSlots={TIME_SLOTS}
+                  submitError={submitError}
                 />
-              </Field>
+              </div>
 
-              <Field label="Service Needed" htmlFor="bk-service">
-                <select
-                  className={styles.select}
-                  id="bk-service"
-                  name="service"
-                  required
-                  defaultValue={defaultService}
+              <div className={styles.stepNav}>
+                <button
+                  className={styles.backBtn}
+                  onClick={goBack}
+                  type="button"
+                  style={{ visibility: step === 1 ? 'hidden' : 'visible' }}
                 >
-                  <option value="" disabled>
-                    Select a service
-                  </option>
-                  {SERVICE_OPTIONS.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-
-              <div className={styles.row}>
-                <Field label="Preferred Date" htmlFor="bk-date">
-                  <input
-                    className={styles.input}
-                    id="bk-date"
-                    name="preferred_date"
-                    type="date"
-                    required
-                    min={todayISO}
-                  />
-                </Field>
-                <Field label="Preferred Time" htmlFor="bk-time">
-                  <select
-                    className={styles.select}
-                    id="bk-time"
-                    name="preferred_time"
-                    defaultValue="No preference"
+                  ← Back
+                </button>
+                {step < 7 ? (
+                  <button
+                    className={styles.continueBtn}
+                    onClick={goNext}
+                    type="button"
+                    disabled={!isStepValid(step, state)}
                   >
-                    {TIME_SLOTS.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
+                    Continue &nbsp;→
+                  </button>
+                ) : (
+                  <button
+                    className={styles.continueBtn}
+                    onClick={handleSubmit}
+                    type="button"
+                    disabled={submitting || !isStepValid(6, state)}
+                  >
+                    {submitting ? 'Sending…' : 'Confirm Booking'}
+                  </button>
+                )}
               </div>
-
-              <Field label="ZIP Code" htmlFor="bk-zip">
-                <input
-                  className={styles.input}
-                  id="bk-zip"
-                  name="zip"
-                  type="text"
-                  required
-                  placeholder="75201"
-                  inputMode="numeric"
-                  maxLength={5}
-                  pattern="[0-9]{5}"
-                />
-              </Field>
-
-              <Field
-                label="Notes"
-                htmlFor="bk-notes"
-                optional
-              >
-                <textarea
-                  className={styles.textarea}
-                  id="bk-notes"
-                  name="notes"
-                  placeholder="Vehicle condition, location details, anything helpful…"
-                  rows={3}
-                />
-              </Field>
-
-              {error && <p className={styles.error}>{error}</p>}
 
               <button
-                className={styles.submitBtn}
-                type="submit"
-                disabled={submitting}
+                className={styles.closeBtn}
+                onClick={onClose}
+                aria-label="Close booking"
+                type="button"
               >
-                {submitting ? 'Sending…' : 'Request Booking'}
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                  <path
+                    d="M1 1l11 11M12 1L1 12"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
               </button>
-
-              <div className={styles.divider} aria-hidden="true">
-                <span className={styles.dividerText}>or reach us directly</span>
-              </div>
-
-              <div className={styles.directRow}>
-                <a
-                  href={`tel:+1${VELAR_PHONE}`}
-                  className={styles.directLink}
-                >
-                  <PhoneIcon />
-                  Call {VELAR_PHONE_DISPLAY}
-                </a>
-                <a
-                  href={`sms:+1${VELAR_PHONE}`}
-                  className={styles.directLink}
-                >
-                  <TextIcon />
-                  Send a Text
-                </a>
-              </div>
-            </form>
+            </div>
           </>
         )}
+
       </div>
     </div>,
     document.body
   );
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+/* ─── Step content router ───────────────────────────────────────────────── */
+interface StepContentProps {
+  step: number;
+  state: BookingState;
+  update: (partial: Partial<BookingState>) => void;
+  todayISO: string;
+  timeSlots: string[];
+  submitError: string;
+}
 
-function Field({
-  label,
-  htmlFor,
-  optional,
-  children,
-}: {
-  label: string;
-  htmlFor: string;
-  optional?: boolean;
-  children: React.ReactNode;
-}) {
+function StepContent(props: StepContentProps) {
+  const { step, state, update, todayISO, timeSlots, submitError } = props;
+  switch (step) {
+    case 1: return <Step1 state={state} update={update} />;
+    case 2: return <Step2 state={state} update={update} />;
+    case 3: return <Step3 state={state} update={update} todayISO={todayISO} timeSlots={timeSlots} />;
+    case 4: return <Step4 state={state} update={update} />;
+    case 5: return <Step5 state={state} update={update} />;
+    case 6: return <Step6 state={state} update={update} />;
+    case 7: return <Step7 state={state} submitError={submitError} />;
+    default: return null;
+  }
+}
+
+/* ─── Step placeholders (replaced in Tasks 5–8) ────────────────────────── */
+function Step1({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
   return (
-    <div className={styles.field}>
-      <label className={styles.label} htmlFor={htmlFor}>
-        {label}
-        {optional && <span className={styles.optional}> (optional)</span>}
-      </label>
-      {children}
+    <div>
+      <span className={styles.stepEye}>Step 1 of 7</span>
+      <h3 className={styles.stepHeading}>Your vehicle and service level.</h3>
+      <p className={styles.stepSub}>Step content coming in Task 5.</p>
+    </div>
+  );
+}
+function Step2({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
+  return (
+    <div>
+      <span className={styles.stepEye}>Step 2 of 7</span>
+      <h3 className={styles.stepHeading}>Anything else we can do?</h3>
+      <p className={styles.stepSub}>Step content coming in Task 6.</p>
+    </div>
+  );
+}
+function Step3({ state, update, todayISO, timeSlots }: { state: BookingState; update: (p: Partial<BookingState>) => void; todayISO: string; timeSlots: string[] }) {
+  return (
+    <div>
+      <span className={styles.stepEye}>Step 3 of 7</span>
+      <h3 className={styles.stepHeading}>When works for you?</h3>
+      <p className={styles.stepSub}>Step content coming in Task 6.</p>
+    </div>
+  );
+}
+function Step4({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
+  return (
+    <div>
+      <span className={styles.stepEye}>Step 4 of 7</span>
+      <h3 className={styles.stepHeading}>Where are you located?</h3>
+      <p className={styles.stepSub}>Step content coming in Task 6.</p>
+    </div>
+  );
+}
+function Step5({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
+  return (
+    <div>
+      <span className={styles.stepEye}>Step 5 of 7</span>
+      <h3 className={styles.stepHeading}>Tell us about your vehicle.</h3>
+      <p className={styles.stepSub}>Step content coming in Task 7.</p>
+    </div>
+  );
+}
+function Step6({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
+  return (
+    <div>
+      <span className={styles.stepEye}>Step 6 of 7</span>
+      <h3 className={styles.stepHeading}>How do we reach you?</h3>
+      <p className={styles.stepSub}>Step content coming in Task 7.</p>
+    </div>
+  );
+}
+function Step7({ state, submitError }: { state: BookingState; submitError: string }) {
+  return (
+    <div>
+      <span className={styles.stepEye}>Step 7 of 7</span>
+      <h3 className={styles.stepHeading}>Review your booking.</h3>
+      <p className={styles.stepSub}>Step content coming in Task 8.</p>
+      {submitError && <p className={styles.errorMsg}>{submitError}</p>}
     </div>
   );
 }
 
+/* ─── Success state ─────────────────────────────────────────────────────── */
 function SuccessState({ onClose }: { onClose: () => void }) {
   return (
     <div className={styles.success}>
-      <div className={styles.successRule} aria-hidden="true" />
-      <span className={styles.eyebrow}>Request Received</span>
-      <h2 className={styles.title}>We&apos;ll be in touch shortly.</h2>
-      <p className={styles.successBody}>
-        We typically confirm within 1–2 hours during business hours.
-        <br />
-        Need to reach us faster?
-      </p>
-      <div className={styles.successActions}>
-        <a
-          href={`tel:+1${VELAR_PHONE}`}
-          className={styles.callBtn}
-        >
-          <PhoneIcon />
-          Call {VELAR_PHONE_DISPLAY}
-        </a>
-        <a
-          href={`sms:+1${VELAR_PHONE}`}
-          className={styles.textBtn}
-        >
-          <TextIcon />
-          Send a Text
-        </a>
+      <div className={styles.successInner}>
+        <span className={styles.successEye}>Request Received</span>
+        <h2 className={styles.successTitle}>We&apos;ll be in touch shortly.</h2>
+        <p className={styles.successBody}>
+          We typically confirm within 1–2 hours during business hours.
+        </p>
+        <div className={styles.successActions}>
+          <a href={`tel:+1${VELAR_PHONE}`} className={styles.callBtn}>
+            Call {VELAR_PHONE_DISPLAY}
+          </a>
+          <a href={`sms:+1${VELAR_PHONE}`} className={styles.textBtn}>
+            Send a Text
+          </a>
+        </div>
+        <button className={styles.doneBtn} onClick={onClose} type="button">
+          Done
+        </button>
       </div>
-      <button className={styles.doneBtn} onClick={onClose} type="button">
-        Done
-      </button>
     </div>
-  );
-}
-
-function PhoneIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-      <path
-        d="M2.2 1.3C2.2 1.3.8 2.8.8 5.3c0 4 3.5 7 8 7 2.5 0 4-1.5 4-1.5l-2-2.5-1.5 1C8.3 10 5.8 8 5.8 6.5l1-1.5-2.5-3.5-.1-.2z"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function TextIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 14 13" fill="none" aria-hidden="true">
-      <path
-        d="M1 1h12v8H7.5l-3 3V9H1V1z"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }
