@@ -136,6 +136,19 @@
   display: block;
 }
 
+/* ─── Popular add-ons ────────────────────────────────────────────────────── */
+.addons {
+  font-size: 0.72rem;
+  line-height: 1.55;
+  color: #9a9288;
+  margin-bottom: 20px;
+}
+
+.addonsLabel {
+  font-weight: 600;
+  color: #6a6258;
+}
+
 /* ─── CTA ────────────────────────────────────────────────────────────────── */
 .cta {
   display: block;

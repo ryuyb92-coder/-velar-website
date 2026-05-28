@@ -72,6 +72,12 @@ export default function PricingCard({ pkg, isXL, categoryLabel, onBook }: Props)
         <FeatureList groups={pkg.features} />
       </div>
 
+      {/* Popular add-ons */}
+      <p className={styles.addons}>
+        <span className={styles.addonsLabel}>Popular add-ons: </span>
+        {pkg.popularAddons}
+      </p>
+
       {/* CTA */}
       <button
         type="button"

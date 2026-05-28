@@ -1,3 +1,27 @@
+/* Grouped layout (Interior + Exterior packages) */
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* INTERIOR / EXTERIOR section label */
+.groupLabel {
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #9a9288;
+  display: block;
+}
+
+/* Flat list (Interior Only packages — no group labels) */
 .list {
   list-style: none;
   display: flex;
@@ -8,9 +32,9 @@
 .item {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 9px;
   font-size: 0.83rem;
-  line-height: 1.45;
+  line-height: 1.42;
   color: #2e2c2a;
 }
 

@@ -42,20 +42,33 @@ export const CATEGORIES: PricingCategory[] = [
         duration: '~2 Hours',
         price: 159,
         xlPrice: 189,
-        description: 'Complete maintenance detail for well-kept vehicles.',
-        popularAddons: 'Pet hair removal · Engine bay · Hydrophobic spray',
+        description:
+          "A complete maintenance detail designed for regularly maintained vehicles needing a clean, refreshed reset inside and out.",
+        popularAddons:
+          'Pet Hair Removal (+$30–80) · Engine Bay Detail (+$50) · Hydrophobic Spray Protection (+$40)',
         isFeatured: false,
         features: [
           {
-            label: '',
+            label: 'Interior',
             items: [
-              'Vacuum & air crevice blowout',
-              'All surfaces & mats wiped',
+              'Professional interior vacuum',
+              'Compressed air crevice blowout',
+              'Wipe & clean all interior surfaces',
+              'Floor mats & carpet refresh',
               'Seats wiped & refreshed',
-              'Interior glass cleaned',
-              'Exterior hand wash',
-              'Wheel & tire cleaning',
+              'Interior glass & mirrors cleaned',
+              'Trunk vacuum & wipe down',
+            ],
+          },
+          {
+            label: 'Exterior',
+            items: [
+              'Safe hand wash',
+              'Wheel faces & tires cleaned',
               'Tire dressing applied',
+              'Exterior trim refreshed',
+              'Door jambs cleaned',
+              'Exterior glass cleaned',
               'Spot-free dry finish',
             ],
           },
@@ -67,21 +80,31 @@ export const CATEGORIES: PricingCategory[] = [
         duration: '~3 Hours',
         price: 239,
         xlPrice: 279,
-        description: 'Deeper clean with steam, stain treatment, and enhanced protection.',
-        popularAddons: 'Pet hair removal · Seat shampoo extraction · Odor treatment',
+        description:
+          'Our most comprehensive everyday detail featuring deeper interior cleaning, steam sanitization, stain treatment, and enhanced exterior protection.',
+        popularAddons:
+          'Pet Hair Removal (+$30–80) · Seat Shampoo Extraction (+$50–75) · Engine Bay Detail (+$50) · Odor Treatment (+$40)',
         isFeatured: true,
         inheritedFrom: 'Essential',
         features: [
           {
-            label: '',
+            label: 'Interior',
             items: [
-              '2-step deep vacuum',
-              'Full steam cleaning & sanitization',
+              '2-step deep interior vacuum',
+              'Full interior steam cleaning',
               'Light stain treatment',
               'Leather cleaning & conditioning',
-              'Pre-wash contaminant treatment',
+              'Premium matte interior finish',
+              'Additional attention to crevices & detail areas',
+            ],
+          },
+          {
+            label: 'Exterior',
+            items: [
+              'Pre-wash exterior treatment',
               'Deep wheel & tire cleaning',
               'Hydrophobic spray protection',
+              'Enhanced gloss finish',
             ],
           },
         ],
