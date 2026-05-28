@@ -86,7 +86,7 @@ function buildInitialState(intent: BookingIntent): BookingState {
 }
 
 function computePrice(state: BookingState): number | null {
-  if (!state.categoryId || !state.packageId) return null;
+  if (!state.vehicleType || !state.categoryId || !state.packageId) return null;
   const cat = CATEGORIES.find(c => c.id === state.categoryId);
   const pkg = cat?.packages.find(p => p.id === state.packageId);
   if (!pkg) return null;
@@ -483,6 +483,7 @@ function Step1({ state, update }: { state: BookingState; update: (p: Partial<Boo
             role="button"
             tabIndex={0}
             className={[styles.vtCard, state.vehicleType === type ? styles.vtSelected : ''].filter(Boolean).join(' ')}
+            aria-pressed={state.vehicleType === type}
             onClick={() => update({ vehicleType: type })}
             onKeyDown={e => {
               if (e.key === 'Enter' || e.key === ' ') {
@@ -516,6 +517,7 @@ function Step1({ state, update }: { state: BookingState; update: (p: Partial<Boo
                 pkg.isFeatured ? styles.pkgFeatured : '',
                 isSelected     ? styles.pkgSelected  : '',
               ].filter(Boolean).join(' ')}
+              aria-pressed={isSelected}
               onClick={() => update({ packageId: pkg.id, categoryId: selectedCat.id })}
               onKeyDown={e => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -536,7 +538,7 @@ function Step1({ state, update }: { state: BookingState; update: (p: Partial<Boo
               </div>
               <div className={styles.pkgRule} />
               <div className={styles.pkgPrice}>
-                ${state.vehicleType ? displayPrice : pkg.price}
+                {state.vehicleType ? `$${displayPrice}` : `from $${pkg.price}`}
               </div>
               <div className={styles.pkgDur}>{pkg.duration}</div>
             </div>
