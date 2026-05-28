@@ -440,12 +440,110 @@ function StepContent(props: StepContentProps) {
 
 /* ─── Step placeholders (replaced in Tasks 5–8) ────────────────────────── */
 function Step1({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
+  // Default to first category if none selected yet
+  const activeCatId = state.categoryId ?? CATEGORIES[0].id;
+  const selectedCat = CATEGORIES.find(c => c.id === activeCatId) ?? CATEGORIES[0];
+
+  function selectCategory(id: string) {
+    // Reset package selection when switching category
+    update({ categoryId: id, packageId: null });
+  }
+
   return (
-    <div>
+    <>
       <span className={styles.stepEye}>Step 1 of 7</span>
       <h3 className={styles.stepHeading}>Your vehicle and service level.</h3>
-      <p className={styles.stepSub}>Step content coming in Task 5.</p>
-    </div>
+      <p className={styles.stepSub}>This helps us give you accurate pricing before you confirm.</p>
+
+      {/* Service type toggle */}
+      <span className={styles.sublabel}>Service Type</span>
+      <div className={styles.catToggle}>
+        {CATEGORIES.map(cat => (
+          <button
+            key={cat.id}
+            type="button"
+            className={[styles.catBtn, activeCatId === cat.id ? styles.catSelected : ''].filter(Boolean).join(' ')}
+            onClick={() => selectCategory(cat.id)}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Vehicle size */}
+      <span className={styles.sublabel}>Vehicle Size</span>
+      <div className={styles.vehicleTypes}>
+        {([
+          { type: 'sedan', label: 'Sedan / Coupe', icon: '🚗', adj: null  },
+          { type: 'suv',   label: 'SUV / Truck',   icon: '🚙', adj: '+$30' },
+          { type: 'xl',    label: 'XL Vehicle',    icon: '🚐', adj: '+$30' },
+        ] as const).map(({ type, label, icon, adj }) => (
+          <div
+            key={type}
+            role="button"
+            tabIndex={0}
+            className={[styles.vtCard, state.vehicleType === type ? styles.vtSelected : ''].filter(Boolean).join(' ')}
+            onClick={() => update({ vehicleType: type })}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                update({ vehicleType: type });
+              }
+            }}
+          >
+            <span className={styles.vtIcon}>{icon}</span>
+            <span className={styles.vtName}>{label}</span>
+            {adj && <span className={styles.vtAdj}>{adj}</span>}
+          </div>
+        ))}
+      </div>
+
+      {/* Package selection */}
+      <span className={styles.sublabel}>Choose Your Package</span>
+      <div className={styles.pkgCols}>
+        {selectedCat.packages.map(pkg => {
+          const isSelected = state.packageId === pkg.id;
+          const displayPrice = state.vehicleType === 'sedan' ? pkg.price : pkg.xlPrice;
+          const topFeatures = pkg.features.flatMap(g => g.items).slice(0, 4);
+
+          return (
+            <div
+              key={pkg.id}
+              role="button"
+              tabIndex={0}
+              className={[
+                styles.pkgCard,
+                pkg.isFeatured ? styles.pkgFeatured : '',
+                isSelected     ? styles.pkgSelected  : '',
+              ].filter(Boolean).join(' ')}
+              onClick={() => update({ packageId: pkg.id, categoryId: selectedCat.id })}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  update({ packageId: pkg.id, categoryId: selectedCat.id });
+                }
+              }}
+            >
+              {pkg.isFeatured && (
+                <div className={styles.pkgBadge}>Most Popular</div>
+              )}
+              <div className={styles.pkgTier}>{selectedCat.label}</div>
+              <div className={styles.pkgName}>{pkg.name}</div>
+              <div className={styles.pkgFeats}>
+                {topFeatures.map(f => (
+                  <div key={f} className={styles.pkgFeat}>{f}</div>
+                ))}
+              </div>
+              <div className={styles.pkgRule} />
+              <div className={styles.pkgPrice}>
+                ${state.vehicleType ? displayPrice : pkg.price}
+              </div>
+              <div className={styles.pkgDur}>{pkg.duration}</div>
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
 function Step2({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
