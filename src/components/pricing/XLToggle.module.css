@@ -13,7 +13,7 @@
   height: 24px;
   border-radius: 12px;
   border: none;
-  background: #C4BAB0;               /* warm stone — cohesive with border palette */
+  background: rgba(255, 255, 255, 0.12);
   cursor: pointer;
   transition: background 0.22s var(--ease-premium);
   flex-shrink: 0;
@@ -21,7 +21,7 @@
 }
 
 .toggle.on {
-  background: var(--color-blue);
+  background: var(--color-orange);
 }
 
 .thumb {
@@ -32,7 +32,7 @@
   height: 18px;
   border-radius: 50%;
   background: var(--color-white);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   transition: transform 0.22s var(--ease-premium);
 }
 
@@ -41,12 +41,12 @@
 }
 
 .text {
-  font-size: 0.85rem;
-  color: var(--color-off-black);
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
   font-weight: 400;
 }
 
 .surcharge {
   font-weight: 500;
-  color: var(--color-blue);
+  color: var(--color-orange);
 }

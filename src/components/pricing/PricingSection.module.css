@@ -1,5 +1,5 @@
 .section {
-  background: var(--section-bg);
+  background: #09080706;
   padding-block: var(--section-padding);
 }
 
@@ -31,40 +31,40 @@
   display: block;
   width: 36px;
   height: 1px;
-  background: var(--color-off-black);
-  opacity: 0.2;
+  background: var(--color-orange);
+  opacity: 0.5;
   margin-bottom: 20px;
 }
 
 .eyebrow {
   display: block;
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-size: 0.61rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
-  opacity: 0.75;
-  margin-bottom: 14px;
+  color: var(--color-orange);
+  opacity: 1;
+  margin-bottom: 16px;
 }
 
 .heading {
-  font-size: clamp(1.75rem, 4.5vw, 2.5rem);
-  font-weight: 400;
+  font-size: clamp(1.75rem, 4.5vw, 2.6rem);
+  font-weight: 700;
   letter-spacing: -0.03em;
-  color: var(--color-off-black);
-  line-height: 1.15;
+  color: #fff;
+  line-height: 1.1;
   margin-bottom: 16px;
 }
 
 /* Second clause — quieter, confirmatory */
 .headingAlt {
-  opacity: 0.45;
+  color: rgba(255, 255, 255, 0.32);
 }
 
 .subheading {
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
-  line-height: 1.7;
+  font-size: 0.86rem;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 1.72;
   letter-spacing: 0.01em;
   max-width: 400px;
 }
@@ -97,11 +97,11 @@
   align-items: center;
   gap: 16px;
   width: 100%;
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  letter-spacing: 0.05em;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.2);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  opacity: 0.7;
+  opacity: 1;
 }
 
 .trust::before,
@@ -109,8 +109,7 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: currentColor;
-  opacity: 0.3;
+  background: rgba(255, 255, 255, 0.07);
 }
 
 /* ─── Mobile overrides ────────────────────────────────────────────────────── */

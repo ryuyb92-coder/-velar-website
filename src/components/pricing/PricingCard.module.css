@@ -9,29 +9,29 @@
   height: 100%;
 }
 
-/* Light card — white on warm stone section creates physical lift */
+/* Non-featured card — elevated dark surface on dark section */
 .light {
-  background: var(--card-light-bg);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--card-shadow-light);
+  background: #0d0c0a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: none;
 }
 
-/* Dark (featured) card — dramatic depth */
+/* Featured card — more elevated, orange-tinted border */
 .dark {
-  background: var(--card-dark-bg);
-  border: 1px solid #141824;         /* cold blue-tinted border — barely perceptible */
-  box-shadow: var(--card-shadow-dark);
+  background: #141210;
+  border: 1px solid rgba(242, 106, 13, 0.2);
+  box-shadow: 0 0 0 1px rgba(242, 106, 13, 0.06);
 }
 
-/* Precision accent bar — reads as engineering detail, not "featured" badge */
+/* Orange precision accent — featured indicator */
 .featuredBar {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 1px;
-  background: var(--color-blue);
-  opacity: 0.7;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-orange) 0%, transparent 60%);
+  opacity: 0.85;
 }
 
 /* Price row */
@@ -43,32 +43,32 @@
 }
 
 .dollarSign {
-  font-size: 1.35rem;
+  font-size: 1.1rem;
   font-weight: 300;
-  margin-top: 12px;
-  color: var(--color-off-black);
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.3);
   line-height: 1;
-  opacity: 0.5;
+  opacity: 1;
 }
 
 .dark .dollarSign {
-  color: var(--color-white);
+  color: var(--color-orange);
   opacity: 0.45;
 }
 
 .price {
-  font-size: 3.75rem;
+  font-size: 2.9rem;
   font-weight: 300;
   line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--color-off-black);
+  letter-spacing: -0.035em;
+  color: rgba(255, 255, 255, 0.7);
   display: inline-block;
   min-width: 4ch;
   font-feature-settings: "tnum" 1;   /* tabular numerals — prices align cleanly */
 }
 
 .dark .price {
-  color: var(--color-white);
+  color: var(--color-orange);
 }
 
 /* Duration */
@@ -76,83 +76,83 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .durationRule {
   flex: 1;
   height: 1px;
-  background: var(--color-border);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .dark .durationRule {
-  background: var(--color-border-dark);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .durationText {
-  font-size: 0.68rem;
+  font-size: 0.63rem;
   font-weight: 400;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, 0.2);
   white-space: nowrap;
 }
 
 .dark .durationText {
-  color: #4a5068;                    /* cold slate — matches card undertone */
-  letter-spacing: 0.12em;
+  color: rgba(242, 106, 13, 0.45);
+  letter-spacing: 0.14em;
 }
 
 /* Package name */
 .name {
-  font-size: 1.3rem;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--color-off-black);
-  margin-bottom: 10px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 12px;
   line-height: 1.2;
 }
 
 .dark .name {
-  color: var(--color-white);
-  font-weight: 300;
-  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 500;
+  letter-spacing: -0.015em;
 }
 
 /* Description */
 .description {
-  font-size: 0.82rem;
-  line-height: 1.65;
-  color: var(--color-text-muted);
-  margin-bottom: 16px;
+  font-size: 0.81rem;
+  line-height: 1.68;
+  color: rgba(255, 255, 255, 0.24);
+  margin-bottom: 14px;
 }
 
 .dark .description {
-  color: #5a6070;                    /* cold muted — stays in the steel-black atmosphere */
+  color: rgba(255, 255, 255, 0.28);
 }
 
-/* Popular add-ons — refined italic hint, no box */
+/* Popular add-ons */
 .addons {
-  font-size: 0.75rem;
-  line-height: 1.5;
-  color: var(--color-text-muted);
+  font-size: 0.74rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.18);
   margin-bottom: 20px;
   font-style: italic;
 }
 
 .dark .addons {
-  color: #4a5268;
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .addonsLabel {
   font-style: normal;
   font-weight: 500;
-  color: var(--color-off-black);
-  opacity: 0.5;
+  color: rgba(255, 255, 255, 0.3);
+  opacity: 1;
 }
 
 .dark .addonsLabel {
-  color: #9c9790;
+  color: rgba(255, 255, 255, 0.35);
   opacity: 1;
 }
 
@@ -162,40 +162,43 @@
   width: 100%;
   text-align: center;
   padding: 13px 20px;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 500;
+  border-radius: 7px;
+  font-size: 0.72rem;
+  font-weight: 600;
   font-family: var(--font-sans);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
   margin-top: auto;
   padding-top: 28px;
   cursor: pointer;
   appearance: none;
-  transition: background 0.25s var(--ease-premium),
-              color 0.25s var(--ease-premium),
-              border-color 0.25s var(--ease-premium);
+  transition: opacity 0.22s var(--ease-premium),
+              background 0.22s var(--ease-premium),
+              border-color 0.22s var(--ease-premium);
 }
 
+/* Featured CTA — solid orange */
 .ctaDark {
-  background: var(--color-blue);
-  color: var(--color-white);
+  background: var(--color-orange);
+  color: #fff;
   border: 1px solid transparent;
+  box-shadow: 0 4px 18px rgba(242, 106, 13, 0.22);
 }
 
 .ctaDark:hover {
-  background: var(--color-blue-muted);
+  opacity: 0.88;
 }
 
+/* Regular CTA — restrained ghost */
 .ctaLight {
   background: transparent;
-  color: var(--color-off-black);
-  border: 1px solid #C8BFB3;         /* warm border — not generic gray */
+  color: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .ctaLight:hover {
-  background: var(--color-off-black);
-  color: var(--color-white);
-  border-color: var(--color-off-black);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.18);
 }

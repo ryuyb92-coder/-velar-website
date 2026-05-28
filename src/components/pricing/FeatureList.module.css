@@ -3,24 +3,24 @@
   flex-direction: column;
   gap: 20px;
   padding-top: 20px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .dark.root {
-  border-top-color: var(--color-border-dark);
+  border-top-color: rgba(255, 255, 255, 0.05);
 }
 
 .inherited {
-  font-size: 0.7rem;
+  font-size: 0.69rem;
   letter-spacing: 0.06em;
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, 0.2);
   text-transform: uppercase;
   padding-bottom: 2px;
-  opacity: 0.75;
+  opacity: 1;
 }
 
 .dark .inherited {
-  color: #5a5650;
+  color: rgba(255, 255, 255, 0.22);
   opacity: 1;
 }
 
@@ -36,16 +36,16 @@
 }
 
 .groupLabel {
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
-  opacity: 0.55;
+  color: rgba(255, 255, 255, 0.22);
+  opacity: 1;
 }
 
 .dark .groupLabel {
-  color: #5a5650;
+  color: rgba(255, 255, 255, 0.25);
   opacity: 1;
 }
 
@@ -60,24 +60,24 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 0.81rem;
+  font-size: 0.8rem;
   line-height: 1.5;
-  color: var(--color-off-black);
+  color: rgba(255, 255, 255, 0.38);
 }
 
 .dark .item {
-  color: #b8b3ac;
+  color: rgba(255, 255, 255, 0.42);
 }
 
-/* Warm check mark — less generic, more editorial */
+/* Check mark — restrained warm tone */
 .check {
   flex-shrink: 0;
   margin-top: 3px;
-  color: #9C9287;                   /* warm brown-gray on light */
-  opacity: 0.8;
+  color: rgba(255, 255, 255, 0.2);
+  opacity: 1;
 }
 
 .dark .check {
-  color: var(--color-blue);
-  opacity: 0.85;
+  color: var(--color-orange);
+  opacity: 0.65;
 }
