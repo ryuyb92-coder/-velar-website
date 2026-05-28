@@ -180,8 +180,11 @@ export default function BookingModal({ intent, onClose }: Props) {
     return () => document.removeEventListener('keydown', onTab);
   }, []); // runs once; panelRef is stable
 
-  function update(partial: Partial<BookingState>) {
-    setState(prev => ({ ...prev, ...partial }));
+  function update(partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) {
+    setState(prev => ({
+      ...prev,
+      ...(typeof partial === 'function' ? partial(prev) : partial),
+    }));
   }
 
   function goNext() {
@@ -418,7 +421,7 @@ export default function BookingModal({ intent, onClose }: Props) {
 interface StepContentProps {
   step: number;
   state: BookingState;
-  update: (partial: Partial<BookingState>) => void;
+  update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void;
   todayISO: string;
   timeSlots: string[];
   submitError: string;
@@ -439,7 +442,7 @@ function StepContent(props: StepContentProps) {
 }
 
 /* ─── Step placeholders (replaced in Tasks 5–8) ────────────────────────── */
-function Step1({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
+function Step1({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   // Default to first category if none selected yet
   const activeCatId = state.categoryId ?? CATEGORIES[0].id;
   const selectedCat = CATEGORIES.find(c => c.id === activeCatId) ?? CATEGORIES[0];
@@ -548,13 +551,13 @@ function Step1({ state, update }: { state: BookingState; update: (p: Partial<Boo
     </>
   );
 }
-function Step2({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
+function Step2({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   function toggleEnhancement(name: string) {
-    update({
-      enhancements: state.enhancements.includes(name)
-        ? state.enhancements.filter(e => e !== name)
-        : [...state.enhancements, name],
-    });
+    update(prev => ({
+      enhancements: prev.enhancements.includes(name)
+        ? prev.enhancements.filter(e => e !== name)
+        : [...prev.enhancements, name],
+    }));
   }
 
   return (
@@ -593,7 +596,7 @@ function Step3({
   timeSlots,
 }: {
   state: BookingState;
-  update: (p: Partial<BookingState>) => void;
+  update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void;
   todayISO: string;
   timeSlots: string[];
 }) {
@@ -615,7 +618,7 @@ function Step3({
             type="date"
             required
             min={todayISO}
-            value={state.preferredDate}
+            value={state.preferredDate || undefined}
             onChange={e => update({ preferredDate: e.target.value })}
           />
         </div>
@@ -639,7 +642,7 @@ function Step3({
     </>
   );
 }
-function Step4({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
+function Step4({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   return (
     <>
       <span className={styles.stepEye}>Step 4 of 7</span>
@@ -659,7 +662,6 @@ function Step4({ state, update }: { state: BookingState; update: (p: Partial<Boo
           placeholder="75201"
           inputMode="numeric"
           maxLength={5}
-          pattern="[0-9]{5}"
           value={state.zip}
           onChange={e => update({ zip: e.target.value.replace(/\D/g, '').slice(0, 5) })}
         />
@@ -667,7 +669,7 @@ function Step4({ state, update }: { state: BookingState; update: (p: Partial<Boo
     </>
   );
 }
-function Step5({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
+function Step5({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   return (
     <div>
       <span className={styles.stepEye}>Step 5 of 7</span>
@@ -676,7 +678,7 @@ function Step5({ state, update }: { state: BookingState; update: (p: Partial<Boo
     </div>
   );
 }
-function Step6({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
+function Step6({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   return (
     <div>
       <span className={styles.stepEye}>Step 6 of 7</span>
