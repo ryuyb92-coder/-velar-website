@@ -1,0 +1,214 @@
+/* ─── Overlay ─────────────────────────────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 7, 6, 0.65);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+@media (max-width: 639px) {
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+}
+
+/* ─── Panel ───────────────────────────────────────────────────────────────── */
+.panel {
+  position: relative;
+  background: #fff;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 18px;
+  padding: 44px 36px 40px;
+  animation: fadeScale 0.22s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+}
+
+@media (max-width: 639px) {
+  .panel {
+    border-radius: 20px 20px 0 0;
+    padding: 36px 24px calc(40px + env(safe-area-inset-bottom));
+    animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes fadeScale {
+  from { transform: scale(0.97); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(48px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ─── Close ───────────────────────────────────────────────────────────────── */
+.closeBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c8c0b4;
+  border-radius: 50%;
+  transition: color 0.18s, background 0.18s;
+}
+
+.closeBtn:hover {
+  color: #666;
+  background: #f5f0ea;
+}
+
+/* ─── Logo ────────────────────────────────────────────────────────────────── */
+.logoWrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.logo {
+  height: 44px;
+  width: auto;
+  display: block;
+}
+
+/* ─── Header ──────────────────────────────────────────────────────────────── */
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.heading {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #111;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.sub {
+  font-size: 0.83rem;
+  color: var(--color-text-muted);
+  line-height: 1.62;
+}
+
+/* ─── Form ────────────────────────────────────────────────────────────────── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.req {
+  color: var(--color-orange);
+}
+
+.optional {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.6;
+}
+
+.input {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: #111;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 11px 14px;
+  width: 100%;
+  transition: border-color 0.18s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+/* ─── SMS consent ─────────────────────────────────────────────────────────── */
+.consentRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkbox {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: var(--color-orange);
+  cursor: pointer;
+}
+
+.consentText {
+  font-size: 0.71rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* ─── CTA ─────────────────────────────────────────────────────────────────── */
+.continueBtn {
+  font-family: var(--font-sans);
+  width: 100%;
+  background: var(--color-orange);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 14px 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(242, 106, 13, 0.25);
+  transition: opacity 0.2s;
+  margin-top: 4px;
+}
+
+.continueBtn:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.continueBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+}

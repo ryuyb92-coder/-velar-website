@@ -7,11 +7,14 @@ import { CATEGORIES, ENHANCEMENTS } from '@/lib/pricing-data';
 import { VELAR_PHONE, VELAR_PHONE_DISPLAY } from '@/lib/config';
 import styles from './BookingModal.module.css';
 
-/* ─── Public interface — unchanged ─────────────────────────────────────── */
+/* ─── Public interface ──────────────────────────────────────────────────── */
 export interface BookingIntent {
   packageName?: string;
   categoryLabel?: string;
   price?: number;
+  /** Pre-filled from the ContactGateModal */
+  prefillName?: string;
+  prefillPhone?: string;
 }
 
 interface Props {
@@ -78,8 +81,8 @@ function buildInitialState(intent: BookingIntent): BookingState {
     preferredTime: 'No preference',
     zip: '',
     vehicleDescription: '',
-    name: '',
-    phone: '',
+    name: intent.prefillName ?? '',
+    phone: intent.prefillPhone ?? '',
     email: '',
     notes: '',
   };
