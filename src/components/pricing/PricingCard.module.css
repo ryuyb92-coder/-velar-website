@@ -3,52 +3,48 @@
   display: flex;
   flex-direction: column;
   border-radius: var(--card-radius);
-  padding: var(--card-padding);
+  padding: clamp(20px, 3vw, 30px);
   gap: 0;
   overflow: hidden;
   height: 100%;
 }
 
-/* Non-featured card — elevated dark surface on dark section */
+/* Non-featured card */
 .light {
   background: #0d0c0a;
   border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: none;
 }
 
-/* Featured card — more elevated, orange-tinted border */
+/* Featured card */
 .dark {
   background: #141210;
   border: 1px solid rgba(242, 106, 13, 0.2);
   box-shadow: 0 0 0 1px rgba(242, 106, 13, 0.06);
 }
 
-/* Orange precision accent — featured indicator */
+/* Orange accent bar */
 .featuredBar {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   height: 2px;
   background: linear-gradient(90deg, var(--color-orange) 0%, transparent 60%);
   opacity: 0.85;
 }
 
-/* Price row */
+/* ─── Price ─────────────────────────────────────────────────────────────── */
 .priceRow {
   display: flex;
   align-items: flex-start;
   gap: 2px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .dollarSign {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 300;
-  margin-top: 8px;
-  color: rgba(255, 255, 255, 0.3);
+  margin-top: 7px;
+  color: rgba(255, 255, 255, 0.28);
   line-height: 1;
-  opacity: 1;
 }
 
 .dark .dollarSign {
@@ -57,26 +53,26 @@
 }
 
 .price {
-  font-size: 2.9rem;
+  font-size: 2.7rem;
   font-weight: 300;
   line-height: 1;
   letter-spacing: -0.035em;
   color: rgba(255, 255, 255, 0.7);
   display: inline-block;
   min-width: 4ch;
-  font-feature-settings: "tnum" 1;   /* tabular numerals — prices align cleanly */
+  font-feature-settings: "tnum" 1;
 }
 
 .dark .price {
   color: var(--color-orange);
 }
 
-/* Duration */
+/* ─── Duration ───────────────────────────────────────────────────────────── */
 .duration {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .durationRule {
@@ -90,7 +86,7 @@
 }
 
 .durationText {
-  font-size: 0.63rem;
+  font-size: 0.6rem;
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -100,73 +96,37 @@
 
 .dark .durationText {
   color: rgba(242, 106, 13, 0.45);
-  letter-spacing: 0.14em;
 }
 
-/* Package name */
+/* ─── Name ───────────────────────────────────────────────────────────────── */
 .name {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: -0.02em;
   color: rgba(255, 255, 255, 0.82);
-  margin-bottom: 8px;
+  margin-bottom: 0;
   line-height: 1.2;
 }
 
 .dark .name {
   color: rgba(255, 255, 255, 0.9);
-  font-weight: 600;
-  letter-spacing: -0.02em;
 }
 
-/* Description */
-.description {
-  font-size: 0.78rem;
-  line-height: 1.58;
-  color: rgba(255, 255, 255, 0.22);
-  margin-bottom: 0;
-}
-
-/* Popular add-ons */
-.addons {
-  font-size: 0.74rem;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.18);
-  margin-bottom: 20px;
-  font-style: italic;
-}
-
-.dark .addons {
-  color: rgba(255, 255, 255, 0.2);
-}
-
-.addonsLabel {
-  font-style: normal;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.3);
-  opacity: 1;
-}
-
-.dark .addonsLabel {
-  color: rgba(255, 255, 255, 0.35);
-  opacity: 1;
-}
-
-/* CTA button */
+/* ─── CTA ────────────────────────────────────────────────────────────────── */
 .cta {
   display: block;
   width: 100%;
   text-align: center;
-  padding: 12px 20px;
+  padding: 11px 20px;
   border-radius: 7px;
-  font-size: 0.7rem;
+  font-size: 0.69rem;
   font-weight: 600;
   font-family: var(--font-sans);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
   margin-top: auto;
-  padding-top: 24px;
+  padding-top: 22px;
   cursor: pointer;
   appearance: none;
   transition: opacity 0.22s var(--ease-premium),
@@ -174,7 +134,6 @@
               border-color 0.22s var(--ease-premium);
 }
 
-/* Featured CTA — solid orange */
 .ctaDark {
   background: var(--color-orange);
   color: #fff;
@@ -186,15 +145,14 @@
   opacity: 0.88;
 }
 
-/* Regular CTA — restrained ghost */
 .ctaLight {
   background: transparent;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .ctaLight:hover {
   background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.72);
   border-color: rgba(255, 255, 255, 0.18);
 }

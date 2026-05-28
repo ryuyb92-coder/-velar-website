@@ -1,9 +1,9 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding-top: 18px;
-  margin-top: 16px;
+  gap: 12px;
+  padding-top: 14px;
+  margin-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -12,73 +12,57 @@
 }
 
 .inherited {
-  font-size: 0.69rem;
-  letter-spacing: 0.06em;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.2);
   text-transform: uppercase;
-  padding-bottom: 2px;
-  opacity: 1;
-}
-
-.dark .inherited {
-  color: rgba(255, 255, 255, 0.22);
-  opacity: 1;
-}
-
-.inherited strong {
-  color: inherit;
-  font-weight: 600;
 }
 
 .group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
+/* Only shown when label is non-empty */
 .groupLabel {
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.22);
-  opacity: 1;
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .dark .groupLabel {
-  color: rgba(255, 255, 255, 0.25);
-  opacity: 1;
+  color: rgba(255, 255, 255, 0.22);
 }
 
 .list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .item {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 0.78rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.36);
+  align-items: center;
+  gap: 9px;
+  font-size: 0.77rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.35);
 }
 
 .dark .item {
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.4);
 }
 
-/* Check mark — restrained warm tone */
 .check {
   flex-shrink: 0;
-  margin-top: 3px;
-  color: rgba(255, 255, 255, 0.2);
-  opacity: 1;
+  color: rgba(255, 255, 255, 0.18);
 }
 
 .dark .check {
   color: var(--color-orange);
-  opacity: 0.65;
+  opacity: 0.6;
 }

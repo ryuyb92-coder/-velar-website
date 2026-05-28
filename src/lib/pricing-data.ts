@@ -15,7 +15,7 @@ export interface PricingPackage {
   popularAddons: string;
   features: FeatureGroup[];
   isFeatured: boolean;
-  inheritedFrom?: string; // name of the tier below, for "includes everything in X, plus:"
+  inheritedFrom?: string;
 }
 
 export interface PricingCategory {
@@ -26,7 +26,7 @@ export interface PricingCategory {
 
 export interface Enhancement {
   name: string;
-  price: string; // string to allow "Contact Us" or "from $35"
+  price: string;
 }
 
 export const XL_SURCHARGE = 30;
@@ -39,31 +39,23 @@ export const CATEGORIES: PricingCategory[] = [
       {
         id: 'essential',
         name: 'Essential',
-        duration: '2 Hours',
+        duration: '2 hrs',
         price: 159,
         xlPrice: 189,
-        description:
-          'Complete maintenance detail for regularly maintained vehicles. Fresh inside and out.',
+        description: 'Maintenance detail for well-kept vehicles.',
         popularAddons:
-          'Pet Hair Removal (+$30–80), Engine Bay Detail (+$50), Hydrophobic Spray Protection (+$40)',
+          'Pet Hair Removal (+$30–80), Engine Bay Detail (+$65), Hydrophobic Spray (+$40)',
         isFeatured: false,
         features: [
           {
-            label: 'Interior',
+            label: '',
             items: [
-              'Full vacuum & air crevice blowout',
-              'All surfaces, mats & seats wiped',
-              'Interior glass & mirrors cleaned',
-              'Trunk vacuumed',
-            ],
-          },
-          {
-            label: 'Exterior',
-            items: [
-              'Safe hand wash',
-              'Wheel & tire cleaning',
-              'Tire dressing applied',
-              'Spot-free dry finish',
+              'Interior vacuum',
+              'Surfaces & mats wiped',
+              'Glass cleaned',
+              'Hand wash',
+              'Wheels & tires cleaned',
+              'Spot-free finish',
             ],
           },
         ],
@@ -71,31 +63,22 @@ export const CATEGORIES: PricingCategory[] = [
       {
         id: 'signature',
         name: 'Signature',
-        duration: '3 Hours',
+        duration: '3 hrs',
         price: 239,
         xlPrice: 279,
-        description:
-          'Deep clean with steam sanitization, stain treatment, and enhanced exterior protection.',
+        description: 'Deep clean with steam & enhanced protection.',
         popularAddons:
-          'Pet Hair Removal (+$30–80), Seat Shampoo Extraction (+$50 Sedan / +$75 SUV), Engine Bay Detail (+$50), Odor Treatment (+$40)',
+          'Pet Hair Removal (+$30–80), Seat Extraction (+$50–75), Odor Treatment (+$55)',
         isFeatured: true,
-        inheritedFrom: 'Essential',
         features: [
           {
-            label: 'Interior',
+            label: '',
             items: [
-              'Deep 2-step vacuum',
-              'Full steam cleaning & sanitization',
-              'Light stain treatment',
-              'Leather cleaning & conditioning',
-            ],
-          },
-          {
-            label: 'Exterior',
-            items: [
-              'Pre-wash bug & road film treatment',
-              'Deep wheel & tire cleaning',
-              'Hydrophobic spray protection',
+              'Everything in Essential',
+              'Deep vacuum & steam clean',
+              'Stain treatment',
+              'Leather conditioning',
+              'Hydrophobic protection',
             ],
           },
         ],
@@ -109,21 +92,21 @@ export const CATEGORIES: PricingCategory[] = [
       {
         id: 'cabin-refresh',
         name: 'Cabin Refresh',
-        duration: '1.5–2 Hours',
+        duration: '1.5–2 hrs',
         price: 179,
         xlPrice: 209,
-        description: 'Interior refresh for well-maintained cabins.',
+        description: 'Interior reset for well-maintained cabins.',
         popularAddons:
-          'Pet Hair Removal (+$30–80), Odor Treatment (+$40), Seat Shampoo Extraction (+$50 Sedan / +$75 SUV)',
+          'Pet Hair Removal (+$30–80), Odor Treatment (+$55), Seat Extraction (+$50–75)',
         isFeatured: false,
         features: [
           {
-            label: 'Interior',
+            label: '',
             items: [
-              'Full vacuum & air crevice blowout',
-              'All surfaces, mats & seats wiped',
-              'Interior glass & mirrors cleaned',
-              'Light steam sanitation',
+              'Interior vacuum',
+              'Surfaces & mats wiped',
+              'Glass cleaned',
+              'Steam sanitation',
             ],
           },
         ],
@@ -131,23 +114,22 @@ export const CATEGORIES: PricingCategory[] = [
       {
         id: 'deep-interior-reset',
         name: 'Deep Interior Reset',
-        duration: '2.5–4 Hours',
+        duration: '2.5–4 hrs',
         price: 279,
         xlPrice: 309,
-        description:
-          'Full interior restoration for vehicles needing a deeper reset.',
+        description: 'Full restoration for interiors needing a deeper reset.',
         popularAddons:
-          'Pet Hair Removal (+$30–80), Odor Treatment (+$40), Headliner Spot Treatment (+$40), Biohazard Cleanup (+$50+)',
+          'Pet Hair Removal (+$30–80), Odor Treatment (+$55), Headliner Treatment (+$40)',
         isFeatured: true,
-        inheritedFrom: 'Cabin Refresh',
         features: [
           {
-            label: 'Interior',
+            label: '',
             items: [
-              'Deep 2-step vacuum',
+              'Everything in Cabin Refresh',
+              'Deep vacuum',
               'Full steam cleaning',
-              'Shampoo extraction — carpets & seats',
-              'Stain treatment & leather conditioning',
+              'Shampoo extraction',
+              'Stain treatment',
             ],
           },
         ],

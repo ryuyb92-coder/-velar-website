@@ -14,8 +14,8 @@ interface Props {
 }
 
 const priceVariants = {
-  exit: { opacity: 0, y: -6, transition: { duration: 0.15 } },
-  enter: { opacity: 0, y: 6 },
+  exit:    { opacity: 0, y: -6, transition: { duration: 0.15 } },
+  enter:   { opacity: 0, y: 6 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
 };
 
@@ -55,15 +55,8 @@ export default function PricingCard({ pkg, isXL, categoryLabel, onBook }: Props)
       {/* Name */}
       <h3 className={styles.name}>{pkg.name}</h3>
 
-      {/* Description */}
-      <p className={styles.description}>{pkg.description}</p>
-
       {/* Feature list */}
-      <FeatureList
-        groups={pkg.features}
-        inheritedFrom={pkg.inheritedFrom}
-        dark={dark}
-      />
+      <FeatureList groups={pkg.features} dark={dark} />
 
       {/* CTA */}
       <button
