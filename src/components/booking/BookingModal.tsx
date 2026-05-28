@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
-import { CATEGORIES, ENHANCEMENTS } from '@/lib/pricing-data';
+import { CATEGORIES } from '@/lib/pricing-data';
 import { VELAR_PHONE, VELAR_PHONE_DISPLAY } from '@/lib/config';
 import styles from './BookingModal.module.css';
 
@@ -143,6 +143,42 @@ export default function BookingModal({ intent, onClose }: Props) {
       ?.querySelector<HTMLElement>('button, input, select, textarea')
       ?.focus();
   }, [step]);
+
+  // Focus trap — prevent Tab/Shift-Tab from escaping the modal
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    function onTab(e: KeyboardEvent) {
+      if (e.key !== 'Tab') return;
+
+      const focusable = Array.from(
+        panel!.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter(el => !el.closest('[aria-hidden="true"]'));
+
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    document.addEventListener('keydown', onTab);
+    return () => document.removeEventListener('keydown', onTab);
+  }, []); // runs once; panelRef is stable
 
   function update(partial: Partial<BookingState>) {
     setState(prev => ({ ...prev, ...partial }));
@@ -343,6 +379,9 @@ export default function BookingModal({ intent, onClose }: Props) {
                     className={styles.continueBtn}
                     onClick={handleSubmit}
                     type="button"
+                    // Guard on step 6 (contact info) — the real required fields.
+                    // isStepValid(7) unconditionally returns true; this ensures name/phone/email
+                    // are filled before submission even if the user somehow reaches step 7 directly.
                     disabled={submitting || !isStepValid(6, state)}
                   >
                     {submitting ? 'Sending…' : 'Confirm Booking'}
