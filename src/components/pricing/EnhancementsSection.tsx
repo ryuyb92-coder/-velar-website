@@ -5,9 +5,9 @@ export default function EnhancementsSection() {
   return (
     <section className={styles.section}>
       <div className={styles.header}>
-        <h3 className={styles.title}>Enhancements</h3>
+        <h3 className={styles.title}>Add-Ons</h3>
         <p className={styles.subtitle}>
-          Every service can be tailored to your vehicle&apos;s specific needs.
+          *Some add-ons may be included in packages.
         </p>
       </div>
       <ul className={styles.grid}>

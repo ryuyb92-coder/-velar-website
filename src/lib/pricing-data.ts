@@ -47,18 +47,13 @@ export const CATEGORIES: PricingCategory[] = [
         isFeatured: false,
         features: [
           {
-            label: 'Interior',
+            label: '',
             items: [
               'Vacuum & air crevice blowout',
               'All surfaces & mats wiped',
               'Seats wiped & refreshed',
               'Interior glass cleaned',
-            ],
-          },
-          {
-            label: 'Exterior',
-            items: [
-              'Safe hand wash',
+              'Exterior hand wash',
               'Wheel & tire cleaning',
               'Tire dressing applied',
               'Spot-free dry finish',
@@ -78,17 +73,12 @@ export const CATEGORIES: PricingCategory[] = [
         inheritedFrom: 'Essential',
         features: [
           {
-            label: 'Interior',
+            label: '',
             items: [
               '2-step deep vacuum',
               'Full steam cleaning & sanitization',
               'Light stain treatment',
               'Leather cleaning & conditioning',
-            ],
-          },
-          {
-            label: 'Exterior',
-            items: [
               'Pre-wash contaminant treatment',
               'Deep wheel & tire cleaning',
               'Hydrophobic spray protection',
@@ -113,7 +103,7 @@ export const CATEGORIES: PricingCategory[] = [
         isFeatured: false,
         features: [
           {
-            label: 'Interior',
+            label: '',
             items: [
               'Vacuum & air crevice blowout',
               'All surfaces & mats wiped',
@@ -136,7 +126,7 @@ export const CATEGORIES: PricingCategory[] = [
         inheritedFrom: 'Cabin Refresh',
         features: [
           {
-            label: 'Interior',
+            label: '',
             items: [
               '2-step deep vacuum',
               'Full steam cleaning',

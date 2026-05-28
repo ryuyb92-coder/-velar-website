@@ -1,5 +1,5 @@
 .section {
-  background: linear-gradient(180deg, #0e0c0a 0%, #0a0907 100%);
+  background: #f9f8f6;
   padding-block: var(--section-padding);
 }
 
@@ -9,12 +9,12 @@
   padding-inline: var(--container-padding);
   display: flex;
   flex-direction: column;
-  align-items: center;            /* all direct children center on the same axis */
+  align-items: center;
   gap: 40px;
   width: 100%;
 }
 
-/* ─── Header — centered editorial block ─────────────────────────────────── */
+/* ─── Header ─────────────────────────────────────────────────────────────── */
 .header {
   display: flex;
   flex-direction: column;
@@ -25,83 +25,77 @@
   margin-inline: auto;
 }
 
-/* Centered precision rule */
 .header::before {
   content: '';
   display: block;
-  width: 36px;
+  width: 32px;
   height: 1px;
   background: var(--color-orange);
   opacity: 0.5;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .eyebrow {
   display: block;
-  font-size: 0.61rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--color-orange);
-  opacity: 1;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .heading {
-  font-size: clamp(1.75rem, 4.5vw, 2.6rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: #fff;
-  line-height: 1.1;
-  margin-bottom: 16px;
+  font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: #111110;
+  line-height: 1.05;
+  margin-bottom: 14px;
 }
 
-/* Second clause — quieter, confirmatory */
 .headingAlt {
-  color: rgba(255, 255, 255, 0.32);
+  color: rgba(17, 17, 16, 0.38);
 }
 
 .subheading {
-  font-size: 0.86rem;
-  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.88rem;
+  color: #7a7068;
   line-height: 1.72;
-  letter-spacing: 0.01em;
-  max-width: 400px;
+  max-width: 420px;
 }
 
-/* ─── Controls — centered vertical cluster ───────────────────────────────── */
+/* ─── Controls ───────────────────────────────────────────────────────────── */
 .controls {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   width: 100%;
 }
 
-/* ─── Cards wrapper ───────────────────────────────────────────────────────── */
+/* ─── Cards wrapper ──────────────────────────────────────────────────────── */
 .cardsWrapper {
   width: 100%;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
-/* Clip carousel breakout on mobile — prevents body horizontal scroll */
 @media (max-width: 639px) {
   .cardsWrapper {
     overflow-x: clip;
   }
 }
 
-/* ─── Trust signal — centered, flanked by thin rules ─────────────────────── */
+/* ─── Trust signal ───────────────────────────────────────────────────────── */
 .trust {
   display: flex;
   align-items: center;
   gap: 16px;
   width: 100%;
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.64rem;
+  color: #9a9288;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  opacity: 1;
 }
 
 .trust::before,
@@ -109,18 +103,14 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: rgba(255, 255, 255, 0.07);
+  background: #e4ddd4;
 }
 
-/* ─── Mobile overrides ────────────────────────────────────────────────────── */
 @media (max-width: 639px) {
-  /* Trust badge: long uppercase text overflows at mobile widths, collapsing
-     the flex: 1 decorative lines to 0px. Fall back to centered block text. */
   .trust {
     justify-content: center;
     text-align: center;
   }
-
   .trust::before,
   .trust::after {
     display: none;

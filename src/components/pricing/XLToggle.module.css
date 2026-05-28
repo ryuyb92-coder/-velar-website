@@ -9,11 +9,11 @@
 
 .toggle {
   position: relative;
-  width: 42px;
+  width: 44px;
   height: 24px;
   border-radius: 12px;
   border: none;
-  background: rgba(255, 255, 255, 0.12);
+  background: #c8bfb5;
   cursor: pointer;
   transition: background 0.22s var(--ease-premium);
   flex-shrink: 0;
@@ -31,22 +31,17 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: var(--color-white);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
   transition: transform 0.22s var(--ease-premium);
 }
 
 .toggle.on .thumb {
-  transform: translateX(18px);
+  transform: translateX(20px);
 }
 
 .text {
-  font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.86rem;
+  color: #3a3530;
   font-weight: 400;
-}
-
-.surcharge {
-  font-weight: 500;
-  color: var(--color-orange);
 }

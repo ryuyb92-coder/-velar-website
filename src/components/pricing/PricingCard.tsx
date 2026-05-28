@@ -20,13 +20,17 @@ const priceVariants = {
 };
 
 export default function PricingCard({ pkg, isXL, categoryLabel, onBook }: Props) {
-  const dark = pkg.isFeatured;
+  const featured = pkg.isFeatured;
   const displayPrice = isXL ? pkg.xlPrice : pkg.price;
   const priceKey = `${pkg.id}-${displayPrice}`;
 
   return (
-    <article className={`${styles.card} ${dark ? styles.dark : styles.light}`}>
-      {dark && <div className={styles.featuredBar} aria-hidden="true" />}
+    <article className={`${styles.card} ${featured ? styles.featured : styles.standard}`}>
+
+      {/* Most Popular badge — featured only */}
+      {featured && (
+        <div className={styles.badge}>Most Popular</div>
+      )}
 
       {/* Price */}
       <div className={styles.priceRow}>
@@ -52,27 +56,26 @@ export default function PricingCard({ pkg, isXL, categoryLabel, onBook }: Props)
         <span className={styles.durationRule} />
       </div>
 
-      {/* Name + description */}
+      {/* Name */}
       <h3 className={styles.name}>{pkg.name}</h3>
+
+      {/* Description */}
       <p className={styles.description}>{pkg.description}</p>
 
-      {/* Features */}
-      <FeatureList
-        groups={pkg.features}
-        inheritedFrom={pkg.inheritedFrom}
-        dark={dark}
-      />
-
-      {/* Popular add-ons — compact single-line */}
-      <p className={styles.addons}>
-        <span className={styles.addonsLabel}>Add-ons: </span>
-        {pkg.popularAddons}
-      </p>
+      {/* Feature header + list */}
+      <div className={styles.featureBlock}>
+        <span className={styles.includesLabel}>
+          {pkg.inheritedFrom
+            ? `Includes everything in ${pkg.inheritedFrom}, plus:`
+            : 'Includes:'}
+        </span>
+        <FeatureList groups={pkg.features} />
+      </div>
 
       {/* CTA */}
       <button
         type="button"
-        className={`${styles.cta} ${dark ? styles.ctaDark : styles.ctaLight}`}
+        className={`${styles.cta} ${featured ? styles.ctaFeatured : styles.ctaStandard}`}
         onClick={() => onBook({ packageName: pkg.name, categoryLabel, price: displayPrice })}
       >
         Book Now
