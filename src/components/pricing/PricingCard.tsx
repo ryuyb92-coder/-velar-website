@@ -62,6 +62,12 @@ export default function PricingCard({ pkg, isXL, categoryLabel, onBook }: Props)
       {/* Description */}
       <p className={styles.description}>{pkg.description}</p>
 
+      {/* Popular add-ons — secondary, above features */}
+      <p className={styles.addons}>
+        <span className={styles.addonsLabel}>Popular add-ons: </span>
+        {pkg.popularAddons}
+      </p>
+
       {/* Feature header + list */}
       <div className={styles.featureBlock}>
         <span className={styles.includesLabel}>
@@ -71,12 +77,6 @@ export default function PricingCard({ pkg, isXL, categoryLabel, onBook }: Props)
         </span>
         <FeatureList groups={pkg.features} />
       </div>
-
-      {/* Popular add-ons */}
-      <p className={styles.addons}>
-        <span className={styles.addonsLabel}>Popular add-ons: </span>
-        {pkg.popularAddons}
-      </p>
 
       {/* CTA */}
       <button
