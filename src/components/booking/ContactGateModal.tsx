@@ -70,10 +70,10 @@ export default function ContactGateModal({ onContinue, onClose }: Props) {
         {/* VELAR logo */}
         <div className={styles.logoWrap}>
           <Image
-            src="/velar-logo.png"
+            src="/velar-logo-white.png"
             alt="VELAR Mobile Detailing"
-            width={1238}
-            height={1194}
+            width={1774}
+            height={887}
             className={styles.logo}
             priority
           />
