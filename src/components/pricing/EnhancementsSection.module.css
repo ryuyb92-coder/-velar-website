@@ -1,92 +1,83 @@
+/* ─── Open section — no card box ────────────────────────────────────────── */
 .section {
-  margin-top: 8px;
-  background: #fff;
-  border: 1px solid #e4ddd4;
-  border-radius: 16px;
-  padding: clamp(32px, 5vw, 52px) clamp(28px, 5vw, 52px);
+  width: 100%;
+  padding-top: 48px;
+  border-top: 1px solid #e4ddd4;
 }
 
-/* Stacked header — large title above italic subtitle */
-.header {
-  margin-bottom: 28px;
-  padding-bottom: 22px;
-  border-bottom: 1px solid #e4ddd4;
+/* ─── Left + right two-column layout ────────────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: start;
+}
+
+@media (max-width: 767px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+/* ─── Left column — heading block ────────────────────────────────────────── */
+.leftCol {
+  padding-top: 4px;
 }
 
 .title {
-  font-size: 1.7rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
   color: #111110;
-  margin-bottom: 6px;
+  line-height: 1.1;
+  margin-bottom: 10px;
 }
 
 .subtitle {
   font-size: 0.8rem;
   color: #9a9288;
-  line-height: 1.5;
+  line-height: 1.6;
   font-style: italic;
 }
 
-/* 3-column grid */
-.grid {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: 40px;
-  gap: 0;
+/* ─── Right column — clean vertical list ────────────────────────────────── */
+.rightCol {
+  display: flex;
+  flex-direction: column;
 }
 
-@media (max-width: 767px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 28px;
-  }
-}
-
-@media (max-width: 479px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.item {
+.row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 0;
+  gap: 14px;
+  padding: 14px 0;
   border-bottom: 1px solid #ede9e3;
-  font-size: 0.84rem;
+}
+
+.row:first-child {
+  border-top: 1px solid #ede9e3;
 }
 
 .check {
-  color: var(--color-orange);
   flex-shrink: 0;
+  color: var(--color-orange);
+  display: flex;
+  align-items: center;
 }
 
 .name {
   flex: 1;
+  font-size: 0.9rem;
   color: #2e2c2a;
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 .price {
+  font-size: 0.9rem;
   font-weight: 600;
-  font-size: 0.84rem;
   color: #111110;
-  margin-left: auto;
   white-space: nowrap;
-}
-
-/* "Contact Us" entries */
-.item:has(.price[data-contact='true']) .price {
-  color: #9a9288;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.note {
-  margin-top: 20px;
-  font-size: 0.75rem;
-  color: #9a9288;
-  font-style: italic;
+  letter-spacing: 0.01em;
 }

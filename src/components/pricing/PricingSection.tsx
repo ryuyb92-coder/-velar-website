@@ -56,13 +56,13 @@ export default function PricingSection({ onBook }: Props) {
           />
         </div>
 
-        {/* Trust signal */}
+        {/* Enhancements */}
+        <EnhancementsSection />
+
+        {/* Trust signal — below add-ons, small and muted */}
         <p className={styles.trust}>
           Trusted by 100+ Dallas vehicle owners &nbsp;·&nbsp; 5-star rated
         </p>
-
-        {/* Enhancements */}
-        <EnhancementsSection />
 
       </div>
     </section>

@@ -86,33 +86,12 @@
   }
 }
 
-/* ─── Trust signal ───────────────────────────────────────────────────────── */
+/* ─── Trust signal — bottom of section, quiet ───────────────────────────── */
 .trust {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  font-size: 0.64rem;
-  color: #9a9288;
+  font-size: 0.62rem;
+  color: #b8b0a8;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-}
-
-.trust::before,
-.trust::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: #e4ddd4;
-}
-
-@media (max-width: 639px) {
-  .trust {
-    justify-content: center;
-    text-align: center;
-  }
-  .trust::before,
-  .trust::after {
-    display: none;
-  }
+  text-align: center;
+  padding-top: 32px;
 }
