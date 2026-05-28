@@ -118,20 +118,24 @@ export const CATEGORIES: PricingCategory[] = [
       {
         id: 'cabin-refresh',
         name: 'Cabin Refresh',
-        duration: '~1.5–2 Hours',
+        duration: '1.5–2 Hours',
         price: 179,
         xlPrice: 209,
-        description: 'Interior refresh for well-maintained cabins.',
-        popularAddons: 'Pet hair removal · Odor treatment · Seat extraction',
+        description: 'Well-maintained interiors needing a clean reset and refresh.',
+        popularAddons:
+          'Pet Hair Removal (+$30–80) · Odor Treatment (+$40) · Seat Shampoo Extraction (+$50 Sedan / +$75 SUV)',
         isFeatured: false,
         features: [
           {
             label: '',
             items: [
-              'Vacuum & air crevice blowout',
-              'All surfaces & mats wiped',
+              'Professional interior vacuum',
+              'Compressed air blowout',
+              'Wipe & clean all interior surfaces',
+              'Floor mats cleaned',
               'Seats wiped & refreshed',
-              'Interior glass cleaned',
+              'Interior glass & mirrors cleaned',
+              'Trunk vacuum & wipe down',
               'Light steam sanitation',
             ],
           },
@@ -143,19 +147,22 @@ export const CATEGORIES: PricingCategory[] = [
         duration: '~2.5–4 Hours',
         price: 279,
         xlPrice: 309,
-        description: 'Full interior restoration for vehicles needing a deeper reset.',
-        popularAddons: 'Pet hair removal · Odor treatment · Headliner treatment',
+        description: 'Heavily used interiors needing deeper cleaning, stain treatment, and restoration.',
+        popularAddons:
+          'Pet Hair Removal (+$30–80) · Odor Treatment (+$40) · Biohazard Cleanup (+$50+) · Headliner Spot Treatment (+$40)',
         isFeatured: true,
         inheritedFrom: 'Cabin Refresh',
         features: [
           {
             label: '',
             items: [
-              '2-step deep vacuum',
-              'Full steam cleaning',
+              '2-step deep interior vacuum',
+              'Full interior steam cleaning',
               'Shampoo extraction',
               'Light to moderate stain treatment',
               'Leather cleaning & conditioning',
+              'Premium matte interior finish',
+              'Additional crevice & detail attention',
             ],
           },
         ],

@@ -42,6 +42,7 @@
 .priceRow {
   display: flex;
   align-items: flex-start;
+  justify-content: center;
   gap: 2px;
   margin-top: 16px;
   margin-bottom: 14px;
@@ -102,6 +103,7 @@
   color: #111110;
   margin-bottom: 10px;
   line-height: 1.15;
+  text-align: center;
 }
 
 .description {
@@ -109,20 +111,22 @@
   line-height: 1.68;
   color: #7a7068;
   margin-bottom: 0;
+  text-align: center;
 }
 
-/* ─── Popular add-ons — above features, subtle ───────────────────────────── */
+/* ─── Popular add-ons — centered, subtle, light ──────────────────────────── */
 .addons {
-  font-size: 0.78rem;
-  line-height: 1.62;
-  color: #8a8078;
-  margin-top: 16px;
+  font-size: 0.74rem;
+  line-height: 1.65;
+  color: #a09890;
+  margin-top: 20px;
   margin-bottom: 0;
+  text-align: center;
 }
 
 .addonsLabel {
   font-weight: 700;
-  color: #3a3530;
+  color: #5a5248;
 }
 
 /* ─── Features ───────────────────────────────────────────────────────────── */
