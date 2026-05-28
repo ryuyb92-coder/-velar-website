@@ -776,13 +776,94 @@ function Step6({ state, update }: { state: BookingState; update: (partial: Parti
   );
 }
 function Step7({ state, submitError }: { state: BookingState; submitError: string }) {
+  const cat = CATEGORIES.find(c => c.id === state.categoryId);
+  const pkg = cat?.packages.find(p => p.id === state.packageId);
+  const price = (() => {
+    if (!state.vehicleType || !pkg) return null;
+    return state.vehicleType === 'sedan' ? pkg.price : pkg.xlPrice;
+  })();
+  const vehicleLabel =
+    state.vehicleType === 'sedan' ? 'Sedan / Coupe' :
+    state.vehicleType === 'suv'   ? 'SUV / Truck'   :
+    state.vehicleType === 'xl'    ? 'XL Vehicle'     : '—';
+
   return (
-    <div>
+    <>
       <span className={styles.stepEye}>Step 7 of 7</span>
       <h3 className={styles.stepHeading}>Review your booking.</h3>
-      <p className={styles.stepSub}>Step content coming in Task 8.</p>
-      {submitError && <p className={styles.errorMsg}>{submitError}</p>}
-    </div>
+      <p className={styles.stepSub}>Confirm the details below. We&apos;ll be in touch to finalize.</p>
+
+      {/* Service */}
+      <div className={styles.reviewSection}>
+        <span className={styles.reviewSectionLabel}>Service</span>
+        <div className={styles.reviewRow}>
+          <span className={styles.reviewKey}>Package</span>
+          <span className={styles.reviewVal}>
+            {cat && pkg ? `${cat.label} — ${pkg.name}` : '—'}
+          </span>
+        </div>
+        <div className={styles.reviewRow}>
+          <span className={styles.reviewKey}>Vehicle size</span>
+          <span className={styles.reviewVal}>{vehicleLabel}</span>
+        </div>
+        {state.enhancements.length > 0 && (
+          <div className={styles.reviewRow}>
+            <span className={styles.reviewKey}>Add-ons</span>
+            <span className={styles.reviewVal}>{state.enhancements.join(', ')}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Schedule */}
+      <div className={styles.reviewSection}>
+        <span className={styles.reviewSectionLabel}>Schedule</span>
+        <div className={styles.reviewRow}>
+          <span className={styles.reviewKey}>Date</span>
+          <span className={styles.reviewVal}>{state.preferredDate || '—'}</span>
+        </div>
+        <div className={styles.reviewRow}>
+          <span className={styles.reviewKey}>Time</span>
+          <span className={styles.reviewVal}>{state.preferredTime}</span>
+        </div>
+        <div className={styles.reviewRow}>
+          <span className={styles.reviewKey}>ZIP</span>
+          <span className={styles.reviewVal}>{state.zip}</span>
+        </div>
+      </div>
+
+      {/* Contact */}
+      <div className={styles.reviewSection}>
+        <span className={styles.reviewSectionLabel}>Contact</span>
+        <div className={styles.reviewRow}>
+          <span className={styles.reviewKey}>Name</span>
+          <span className={styles.reviewVal}>{state.name}</span>
+        </div>
+        <div className={styles.reviewRow}>
+          <span className={styles.reviewKey}>Phone</span>
+          <span className={styles.reviewVal}>{state.phone}</span>
+        </div>
+        <div className={styles.reviewRow}>
+          <span className={styles.reviewKey}>Email</span>
+          <span className={styles.reviewVal}>{state.email}</span>
+        </div>
+        <div className={styles.reviewRow}>
+          <span className={styles.reviewKey}>Vehicle</span>
+          <span className={styles.reviewVal}>{state.vehicleDescription}</span>
+        </div>
+      </div>
+
+      {/* Estimated total */}
+      {price != null && (
+        <div className={styles.reviewTotalRow}>
+          <span className={styles.reviewTotalKey}>Estimated Total</span>
+          <span className={styles.reviewTotalVal}>${price}</span>
+        </div>
+      )}
+
+      {submitError && (
+        <p className={styles.errorMsg}>{submitError}</p>
+      )}
+    </>
   );
 }
 
