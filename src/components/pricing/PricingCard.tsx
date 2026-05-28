@@ -52,11 +52,22 @@ export default function PricingCard({ pkg, isXL, categoryLabel, onBook }: Props)
         <span className={styles.durationRule} />
       </div>
 
-      {/* Name */}
+      {/* Name + description */}
       <h3 className={styles.name}>{pkg.name}</h3>
+      <p className={styles.description}>{pkg.description}</p>
 
-      {/* Feature list */}
-      <FeatureList groups={pkg.features} dark={dark} />
+      {/* Features */}
+      <FeatureList
+        groups={pkg.features}
+        inheritedFrom={pkg.inheritedFrom}
+        dark={dark}
+      />
+
+      {/* Popular add-ons — compact single-line */}
+      <p className={styles.addons}>
+        <span className={styles.addonsLabel}>Add-ons: </span>
+        {pkg.popularAddons}
+      </p>
 
       {/* CTA */}
       <button

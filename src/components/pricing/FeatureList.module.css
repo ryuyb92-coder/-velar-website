@@ -1,9 +1,9 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-top: 14px;
-  margin-top: 14px;
+  gap: 16px;
+  padding-top: 16px;
+  margin-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -11,58 +11,69 @@
   border-top-color: rgba(255, 255, 255, 0.05);
 }
 
+/* "Everything in X, plus:" — restrained typographic cue */
 .inherited {
-  font-size: 0.68rem;
+  font-size: 0.69rem;
   letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.2);
-  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.22);
+  line-height: 1.4;
+}
+
+.dark .inherited {
+  color: rgba(255, 255, 255, 0.24);
+}
+
+.inherited strong {
+  color: inherit;
+  font-weight: 600;
 }
 
 .group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
-/* Only shown when label is non-empty */
+/* Group labels (Interior / Exterior) */
 .groupLabel {
   font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.2);
 }
 
 .dark .groupLabel {
-  color: rgba(255, 255, 255, 0.22);
+  color: rgba(242, 106, 13, 0.38);
 }
 
 .list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 7px;
 }
 
 .item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 9px;
-  font-size: 0.77rem;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.79rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.38);
 }
 
 .dark .item {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.44);
 }
 
 .check {
   flex-shrink: 0;
+  margin-top: 2px;
   color: rgba(255, 255, 255, 0.18);
 }
 
 .dark .check {
   color: var(--color-orange);
-  opacity: 0.6;
+  opacity: 0.62;
 }

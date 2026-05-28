@@ -3,12 +3,18 @@ import styles from './FeatureList.module.css';
 
 interface Props {
   groups: FeatureGroup[];
+  inheritedFrom?: string;
   dark?: boolean;
 }
 
-export default function FeatureList({ groups, dark = false }: Props) {
+export default function FeatureList({ groups, inheritedFrom, dark = false }: Props) {
   return (
     <div className={`${styles.root} ${dark ? styles.dark : ''}`}>
+      {inheritedFrom && (
+        <p className={styles.inherited}>
+          Everything in <strong>{inheritedFrom}</strong>, plus:
+        </p>
+      )}
       {groups.map((group, i) => (
         <div key={group.label || i} className={styles.group}>
           {group.label && (
