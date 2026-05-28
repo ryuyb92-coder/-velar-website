@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
-import { CATEGORIES } from '@/lib/pricing-data';
+import { CATEGORIES, ENHANCEMENTS } from '@/lib/pricing-data';
 import { VELAR_PHONE, VELAR_PHONE_DISPLAY } from '@/lib/config';
 import styles from './BookingModal.module.css';
 
@@ -549,30 +549,122 @@ function Step1({ state, update }: { state: BookingState; update: (p: Partial<Boo
   );
 }
 function Step2({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
+  function toggleEnhancement(name: string) {
+    update({
+      enhancements: state.enhancements.includes(name)
+        ? state.enhancements.filter(e => e !== name)
+        : [...state.enhancements, name],
+    });
+  }
+
   return (
-    <div>
+    <>
       <span className={styles.stepEye}>Step 2 of 7</span>
       <h3 className={styles.stepHeading}>Anything else we can do?</h3>
-      <p className={styles.stepSub}>Step content coming in Task 6.</p>
-    </div>
+      <p className={styles.stepSub}>Optional add-ons — select any that apply. You can always skip this step.</p>
+
+      <div className={styles.enhancementGrid}>
+        {ENHANCEMENTS.map(e => {
+          const isSelected = state.enhancements.includes(e.name);
+          return (
+            <button
+              key={e.name}
+              type="button"
+              className={[
+                styles.enhChip,
+                isSelected ? styles.enhSelected : '',
+              ].filter(Boolean).join(' ')}
+              onClick={() => toggleEnhancement(e.name)}
+              aria-pressed={isSelected}
+            >
+              {e.name}
+              <span className={styles.enhPrice}>{e.price}</span>
+            </button>
+          );
+        })}
+      </div>
+    </>
   );
 }
-function Step3({ state, update, todayISO, timeSlots }: { state: BookingState; update: (p: Partial<BookingState>) => void; todayISO: string; timeSlots: string[] }) {
+function Step3({
+  state,
+  update,
+  todayISO,
+  timeSlots,
+}: {
+  state: BookingState;
+  update: (p: Partial<BookingState>) => void;
+  todayISO: string;
+  timeSlots: string[];
+}) {
   return (
-    <div>
+    <>
       <span className={styles.stepEye}>Step 3 of 7</span>
       <h3 className={styles.stepHeading}>When works for you?</h3>
-      <p className={styles.stepSub}>Step content coming in Task 6.</p>
-    </div>
+      <p className={styles.stepSub}>We&apos;ll confirm availability and reach out to finalize your appointment.</p>
+
+      <div className={styles.fieldRow}>
+        <div className={styles.field}>
+          <label className={styles.fieldLabel} htmlFor="bk-date">
+            Preferred Date
+          </label>
+          <input
+            className={styles.fieldInput}
+            id="bk-date"
+            name="preferred_date"
+            type="date"
+            required
+            min={todayISO}
+            value={state.preferredDate}
+            onChange={e => update({ preferredDate: e.target.value })}
+          />
+        </div>
+        <div className={styles.field}>
+          <label className={styles.fieldLabel} htmlFor="bk-time">
+            Preferred Time
+          </label>
+          <select
+            className={styles.fieldSelect}
+            id="bk-time"
+            name="preferred_time"
+            value={state.preferredTime}
+            onChange={e => update({ preferredTime: e.target.value })}
+          >
+            {timeSlots.map(t => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+    </>
   );
 }
 function Step4({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
   return (
-    <div>
+    <>
       <span className={styles.stepEye}>Step 4 of 7</span>
       <h3 className={styles.stepHeading}>Where are you located?</h3>
-      <p className={styles.stepSub}>Step content coming in Task 6.</p>
-    </div>
+      <p className={styles.stepSub}>We serve Dallas and surrounding areas. Enter your ZIP to confirm we cover your area.</p>
+
+      <div className={styles.field}>
+        <label className={styles.fieldLabel} htmlFor="bk-zip">
+          ZIP Code
+        </label>
+        <input
+          className={styles.fieldInput}
+          id="bk-zip"
+          name="zip"
+          type="text"
+          required
+          placeholder="75201"
+          inputMode="numeric"
+          maxLength={5}
+          pattern="[0-9]{5}"
+          value={state.zip}
+          onChange={e => update({ zip: e.target.value.replace(/\D/g, '').slice(0, 5) })}
+        />
+      </div>
+    </>
   );
 }
 function Step5({ state, update }: { state: BookingState; update: (p: Partial<BookingState>) => void }) {
