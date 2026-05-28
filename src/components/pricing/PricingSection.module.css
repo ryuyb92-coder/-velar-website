@@ -1,5 +1,5 @@
 .section {
-  background: #09080706;
+  background: linear-gradient(180deg, #0e0c0a 0%, #0a0907 100%);
   padding-block: var(--section-padding);
 }
 
