@@ -903,3 +903,11 @@
   color: var(--color-orange);
   letter-spacing: -0.03em;
 }
+
+/* ─── Optional field label modifier ──────────────────────────────────────── */
+.fieldLabelOptional {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.6;
+}

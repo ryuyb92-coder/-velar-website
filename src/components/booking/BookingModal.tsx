@@ -687,7 +687,6 @@ function Step5({ state, update }: { state: BookingState; update: (partial: Parti
           type="text"
           required
           placeholder="e.g. 2022 BMW X5"
-          autoComplete="off"
           value={state.vehicleDescription}
           onChange={e => update({ vehicleDescription: e.target.value })}
         />
@@ -759,7 +758,7 @@ function Step6({ state, update }: { state: BookingState; update: (partial: Parti
       <div className={styles.field}>
         <label className={styles.fieldLabel} htmlFor="bk-notes">
           Notes{' '}
-          <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, opacity: 0.6 }}>
+          <span className={styles.fieldLabelOptional}>
             (optional)
           </span>
         </label>
