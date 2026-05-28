@@ -3,8 +3,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: 14px;
-  padding: clamp(24px, 3.5vw, 36px);
+  border-radius: 16px;
+  padding: clamp(28px, 4vw, 44px);
   height: 100%;
 }
 
@@ -12,14 +12,14 @@
 .standard {
   background: #ffffff;
   border: 1px solid #e4ddd4;
-  box-shadow: 0 1px 3px rgba(60,45,20,0.05), 0 4px 16px rgba(60,45,20,0.04);
+  box-shadow: 0 1px 3px rgba(60,45,20,0.05), 0 6px 24px rgba(60,45,20,0.05);
 }
 
 /* Signature — subtle cool-tinted background */
 .featured {
   background: #eef3fb;
   border: 1px solid #d4e0f0;
-  box-shadow: 0 1px 3px rgba(40,60,100,0.06), 0 4px 20px rgba(40,60,100,0.06);
+  box-shadow: 0 1px 3px rgba(40,60,100,0.06), 0 6px 24px rgba(40,60,100,0.07);
 }
 
 /* ─── Most Popular badge ─────────────────────────────────────────────────── */
@@ -43,21 +43,21 @@
   display: flex;
   align-items: flex-start;
   gap: 2px;
-  margin-top: 12px;
-  margin-bottom: 12px;
+  margin-top: 16px;
+  margin-bottom: 14px;
 }
 
 .dollarSign {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 300;
-  margin-top: 8px;
+  margin-top: 10px;
   color: #111;
   line-height: 1;
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
 .price {
-  font-size: 3.8rem;
+  font-size: 4rem;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.04em;
@@ -71,8 +71,8 @@
 .duration {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .durationRule {
@@ -82,13 +82,13 @@
 }
 
 .featured .durationRule {
-  background: #c8d8ec;
+  background: #c4d6ec;
 }
 
 .durationText {
-  font-size: 0.6rem;
+  font-size: 0.62rem;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #9a9288;
   white-space: nowrap;
@@ -96,67 +96,70 @@
 
 /* ─── Name + description ─────────────────────────────────────────────────── */
 .name {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: #111110;
-  margin-bottom: 8px;
-  line-height: 1.2;
+  margin-bottom: 10px;
+  line-height: 1.15;
 }
 
 .description {
-  font-size: 0.84rem;
-  line-height: 1.6;
+  font-size: 0.87rem;
+  line-height: 1.68;
   color: #7a7068;
   margin-bottom: 0;
+}
+
+/* ─── Popular add-ons ────────────────────────────────────────────────────── */
+.addons {
+  font-size: 0.78rem;
+  line-height: 1.62;
+  color: #8a8078;
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
+.addonsLabel {
+  font-weight: 700;
+  color: #3a3530;
 }
 
 /* ─── Features ───────────────────────────────────────────────────────────── */
 .featureBlock {
   flex: 1;
-  padding-top: 18px;
-  margin-top: 18px;
+  padding-top: 24px;
+  margin-top: 24px;
   border-top: 1px solid #e4ddd4;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 24px;
+  gap: 6px;
+  margin-bottom: 28px;
 }
 
 .featured .featureBlock {
-  border-top-color: #c8d8ec;
+  border-top-color: #c4d6ec;
 }
 
+/* "Includes:" / "Includes everything in Essential, plus:" */
 .includesLabel {
-  font-size: 0.56rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--color-orange);
   display: block;
-}
-
-/* ─── Popular add-ons ────────────────────────────────────────────────────── */
-.addons {
-  font-size: 0.72rem;
-  line-height: 1.55;
-  color: #9a9288;
-  margin-bottom: 20px;
-}
-
-.addonsLabel {
-  font-weight: 600;
-  color: #6a6258;
+  margin-bottom: 6px;
 }
 
 /* ─── CTA ────────────────────────────────────────────────────────────────── */
 .cta {
   display: block;
   width: 100%;
-  padding: 14px;
-  border-radius: 8px;
+  padding: 15px;
+  border-radius: 9px;
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -182,7 +185,7 @@
   background: var(--color-orange);
   color: #fff;
   border: 1.5px solid transparent;
-  box-shadow: 0 4px 18px rgba(242, 106, 13, 0.28);
+  box-shadow: 0 4px 20px rgba(242, 106, 13, 0.28);
 }
 
 .ctaFeatured:hover {

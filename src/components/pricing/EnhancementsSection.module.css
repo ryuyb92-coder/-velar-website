@@ -2,45 +2,45 @@
   margin-top: 8px;
   background: #fff;
   border: 1px solid #e4ddd4;
-  border-radius: 14px;
-  padding: clamp(24px, 4vw, 36px) clamp(24px, 4vw, 40px);
+  border-radius: 16px;
+  padding: clamp(32px, 5vw, 52px) clamp(28px, 5vw, 52px);
 }
 
+/* Stacked header — large title above italic subtitle */
 .header {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  margin-bottom: 24px;
-  padding-bottom: 18px;
+  margin-bottom: 28px;
+  padding-bottom: 22px;
   border-bottom: 1px solid #e4ddd4;
 }
 
 .title {
-  font-size: 1.1rem;
+  font-size: 1.7rem;
   font-weight: 700;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.025em;
   color: #111110;
+  margin-bottom: 6px;
 }
 
 .subtitle {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: #9a9288;
   line-height: 1.5;
+  font-style: italic;
 }
 
-/* 3-column grid to match screenshot */
+/* 3-column grid */
 .grid {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  column-gap: 32px;
+  column-gap: 40px;
   gap: 0;
 }
 
 @media (max-width: 767px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 24px;
+    column-gap: 28px;
   }
 }
 
@@ -53,10 +53,10 @@
 .item {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 10px 0;
+  gap: 10px;
+  padding: 12px 0;
   border-bottom: 1px solid #ede9e3;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
 }
 
 .check {
@@ -71,7 +71,7 @@
 
 .price {
   font-weight: 600;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   color: #111110;
   margin-left: auto;
   white-space: nowrap;
@@ -85,7 +85,8 @@
 }
 
 .note {
-  margin-top: 18px;
-  font-size: 0.73rem;
+  margin-top: 20px;
+  font-size: 0.75rem;
   color: #9a9288;
+  font-style: italic;
 }

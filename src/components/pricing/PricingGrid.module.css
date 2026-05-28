@@ -76,6 +76,6 @@
 /* ─── Desktop: wider 2-col ───────────────────────────────────────────────── */
 @media (min-width: 900px) {
   .grid[data-count='2'] {
-    max-width: 820px;
+    max-width: 880px;
   }
 }

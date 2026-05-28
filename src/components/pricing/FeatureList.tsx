@@ -38,7 +38,7 @@ export default function FeatureList({ groups, dark = false }: Props) {
       {groups.map((group, i) => (
         <div key={group.label || i} className={styles.group}>
           {group.label && (
-            <span className={styles.groupLabel}>{group.label}</span>
+            <span className={styles.groupLabel}>{group.label}:</span>
           )}
           <ul className={styles.list}>
             {group.items.map(item => (

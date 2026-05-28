@@ -2,45 +2,45 @@
 .groups {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 22px;
 }
 
 .group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
-/* INTERIOR / EXTERIOR section label */
+/* "Interior:" / "Exterior:" — readable normal-case, not tiny uppercase */
 .groupLabel {
-  font-size: 0.56rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #9a9288;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #2e2c2a;
   display: block;
 }
 
-/* Flat list (Interior Only packages — no group labels) */
+/* Flat list (Interior Only packages) */
 .list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .item {
   display: flex;
   align-items: flex-start;
-  gap: 9px;
-  font-size: 0.83rem;
-  line-height: 1.42;
+  gap: 11px;
+  font-size: 0.86rem;
+  line-height: 1.5;
   color: #2e2c2a;
 }
 
 /* Orange check mark */
 .check {
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 3px;
   color: var(--color-orange);
 }
