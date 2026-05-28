@@ -58,12 +58,6 @@ export default function PricingCard({ pkg, isXL, categoryLabel, onBook }: Props)
       {/* Description */}
       <p className={styles.description}>{pkg.description}</p>
 
-      {/* Popular add-ons */}
-      <p className={styles.addons}>
-        <span className={styles.addonsLabel}>Popular add-ons: </span>
-        {pkg.popularAddons}
-      </p>
-
       {/* Feature list */}
       <FeatureList
         groups={pkg.features}

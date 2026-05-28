@@ -43,7 +43,7 @@ export const CATEGORIES: PricingCategory[] = [
         price: 159,
         xlPrice: 189,
         description:
-          "A complete maintenance detail designed for regularly maintained vehicles needing a clean, refreshed reset inside and out. Perfect for preserving your vehicle's appearance with premium-level care and attention.",
+          'Complete maintenance detail for regularly maintained vehicles. Fresh inside and out.',
         popularAddons:
           'Pet Hair Removal (+$30–80), Engine Bay Detail (+$50), Hydrophobic Spray Protection (+$40)',
         isFeatured: false,
@@ -51,25 +51,19 @@ export const CATEGORIES: PricingCategory[] = [
           {
             label: 'Interior',
             items: [
-              'Professional Interior Vacuum',
-              'Compressed Air Crevice Blowout (Vents, Cupholders, Seams, Tight Areas)',
-              'Wipe & Clean All Interior Surfaces',
-              'Floor Mats & Carpet Refresh',
-              'Seats Wiped & Refreshed',
-              'Interior Glass & Mirrors Cleaned',
-              'Trunk Vacuum & Wipe Down',
+              'Full vacuum & air crevice blowout',
+              'All surfaces, mats & seats wiped',
+              'Interior glass & mirrors cleaned',
+              'Trunk vacuumed',
             ],
           },
           {
             label: 'Exterior',
             items: [
-              'Safe Hand Wash',
-              'Wheel Faces & Tires Cleaned',
-              'Tire Dressing Applied',
-              'Exterior Trim Refreshed',
-              'Door Jambs Cleaned',
-              'Exterior Glass Cleaned',
-              'Spot-Free Dry Finish',
+              'Safe hand wash',
+              'Wheel & tire cleaning',
+              'Tire dressing applied',
+              'Spot-free dry finish',
             ],
           },
         ],
@@ -81,7 +75,7 @@ export const CATEGORIES: PricingCategory[] = [
         price: 239,
         xlPrice: 279,
         description:
-          'Our most comprehensive everyday detail featuring deeper interior cleaning, steam sanitization, stain treatment, and enhanced exterior protection for vehicles needing a more thorough transformation.',
+          'Deep clean with steam sanitization, stain treatment, and enhanced exterior protection.',
         popularAddons:
           'Pet Hair Removal (+$30–80), Seat Shampoo Extraction (+$50 Sedan / +$75 SUV), Engine Bay Detail (+$50), Odor Treatment (+$40)',
         isFeatured: true,
@@ -90,21 +84,18 @@ export const CATEGORIES: PricingCategory[] = [
           {
             label: 'Interior',
             items: [
-              '2-Step Deep Interior Vacuum',
-              'Full Interior Steam Cleaning (Seats, Carpets, Floor Mats, Panels & High-Touch Surfaces)',
-              'Light Stain Treatment',
-              'Leather Cleaning & Conditioning',
-              'Premium Matte Interior Finish',
-              'Additional Attention to Crevices & Detail Areas',
+              'Deep 2-step vacuum',
+              'Full steam cleaning & sanitization',
+              'Light stain treatment',
+              'Leather cleaning & conditioning',
             ],
           },
           {
             label: 'Exterior',
             items: [
-              'Pre-Wash Exterior Treatment (Bugs, Bird Droppings & Road Film)',
-              'Deep Wheel & Tire Cleaning',
-              'Hydrophobic Spray Protection',
-              'Enhanced Gloss Finish',
+              'Pre-wash bug & road film treatment',
+              'Deep wheel & tire cleaning',
+              'Hydrophobic spray protection',
             ],
           },
         ],
@@ -121,7 +112,7 @@ export const CATEGORIES: PricingCategory[] = [
         duration: '1.5–2 Hours',
         price: 179,
         xlPrice: 209,
-        description: 'Well-maintained interiors needing a refreshed, clean cabin reset.',
+        description: 'Interior refresh for well-maintained cabins.',
         popularAddons:
           'Pet Hair Removal (+$30–80), Odor Treatment (+$40), Seat Shampoo Extraction (+$50 Sedan / +$75 SUV)',
         isFeatured: false,
@@ -129,14 +120,10 @@ export const CATEGORIES: PricingCategory[] = [
           {
             label: 'Interior',
             items: [
-              'Professional Interior Vacuum',
-              'Compressed Air Crevice Blowout (Vents, Seams, Cupholders & Tight Areas)',
-              'Wipe & Clean All Interior Surfaces',
-              'Floor Mats Cleaned & Refreshed',
-              'Seats Wiped & Refreshed',
-              'Interior Glass & Mirrors Cleaned',
-              'Trunk Vacuum & Wipe Down',
-              'Light Steam Sanitation (High-Touch Areas)',
+              'Full vacuum & air crevice blowout',
+              'All surfaces, mats & seats wiped',
+              'Interior glass & mirrors cleaned',
+              'Light steam sanitation',
             ],
           },
         ],
@@ -148,7 +135,7 @@ export const CATEGORIES: PricingCategory[] = [
         price: 279,
         xlPrice: 309,
         description:
-          'Interiors needing deeper restoration, stain treatment, and reset detailing.',
+          'Full interior restoration for vehicles needing a deeper reset.',
         popularAddons:
           'Pet Hair Removal (+$30–80), Odor Treatment (+$40), Headliner Spot Treatment (+$40), Biohazard Cleanup (+$50+)',
         isFeatured: true,
@@ -157,13 +144,10 @@ export const CATEGORIES: PricingCategory[] = [
           {
             label: 'Interior',
             items: [
-              '2-Step Deep Interior Vacuum',
-              'Full Interior Steam Cleaning (Seats, Carpets, Floor Mats, Panels & Console)',
-              'Shampoo Extraction (Carpets, Cloth Seats & Floor Mats)',
-              'Light/Moderate Stain Treatment',
-              'Leather Cleaning & Conditioning',
-              'Premium Matte Interior Finish',
-              'Additional Attention to Crevices & Detail Areas',
+              'Deep 2-step vacuum',
+              'Full steam cleaning',
+              'Shampoo extraction — carpets & seats',
+              'Stain treatment & leather conditioning',
             ],
           },
         ],
