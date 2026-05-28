@@ -1,172 +1,314 @@
+/* ─── Section shell ───────────────────────────────────────────────────────── */
 .section {
-  background: var(--card-dark-bg);   /* #090B10 — matches featured pricing card */
-  padding-block: clamp(80px, 14vw, 140px);
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #08070605;
 }
 
-.container {
-  max-width: var(--container-max);
-  margin-inline: auto;
-  padding-inline: var(--container-padding);
+/* ─── Atmospheric layers ──────────────────────────────────────────────────── */
+.atmos {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 35% at 72% 100%, rgba(18,14,10,0.9) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 20% 20%, rgba(22,20,16,0.5) 0%, transparent 65%),
+    linear-gradient(125deg, #0b0a08 0%, #090806 35%, #0a0907 55%, #080605 75%, #060504 100%);
 }
 
-/* ─── Content block — left on desktop, centered on mobile ─────────────────── */
+/* Subtle showroom floor warmth */
+.floor {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 28%;
+  background:
+    radial-gradient(ellipse 80% 100% at 65% 100%, rgba(14,12,10,0.6) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 80% at 85% 100%, rgba(242,106,13,0.025) 0%, transparent 50%);
+}
+
+/* Left fade — protects text legibility while revealing car */
+.fadeLeft {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg,
+    rgba(8,7,6,0.97) 0%,
+    rgba(8,7,6,0.92) 28%,
+    rgba(8,7,6,0.68) 44%,
+    rgba(8,7,6,0.28) 58%,
+    rgba(8,7,6,0.06) 70%,
+    transparent 80%
+  );
+}
+
+/* ─── Car stage ───────────────────────────────────────────────────────────── */
+.carStage {
+  position: absolute;
+  right: -4%;
+  top: 5%;
+  bottom: 3%;
+  width: 66%;
+}
+
+/* Overhead key-light: showroom ceiling effect */
+.carKeyLight {
+  position: absolute;
+  top: 0; left: 8%; right: 5%;
+  height: 90px;
+  background: radial-gradient(ellipse 70% 100% at 52% 0%,
+    rgba(255,255,255,0.025) 0%, transparent 100%
+  );
+}
+
+/* Orange ambient: tail light bloom */
+.carRimGlow {
+  position: absolute;
+  right: 0; top: 8%; bottom: 15%;
+  width: 120px;
+  background: linear-gradient(270deg,
+    rgba(242,106,13,0.055) 0%,
+    rgba(242,106,13,0.02) 40%,
+    transparent 100%
+  );
+  filter: blur(18px);
+}
+
+/* Ground contact shadow */
+.carShadow {
+  position: absolute;
+  bottom: 14%; left: 10%; right: 4%;
+  height: 6px;
+  background: radial-gradient(ellipse 70% 100% at 50% 50%, rgba(0,0,0,0.9) 0%, transparent 100%);
+  filter: blur(4px);
+}
+
+/* SVG wrapper — car sits above the floor line */
+.carWrap {
+  position: absolute;
+  bottom: 15%;
+  left: 0; right: 0;
+  height: 65%;
+}
+
+.carSvg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Polished floor reflection line */
+.carFloorLine {
+  position: absolute;
+  bottom: 15%; left: 8%; right: 2%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.015) 15%,
+    rgba(255,255,255,0.05) 38%,
+    rgba(255,255,255,0.07) 55%,
+    rgba(255,255,255,0.04) 72%,
+    rgba(242,106,13,0.06) 88%,
+    transparent 100%
+  );
+}
+
+/* ─── Left content block ──────────────────────────────────────────────────── */
 .content {
-  max-width: 680px;
+  position: relative;
+  z-index: 20;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 110px clamp(20px, 5vw, 56px) clamp(40px, 5vw, 72px);
+  max-width: 580px;
 }
 
-@media (max-width: 639px) {
-  .content {
-    max-width: 100%;
-    /* Left-aligned on mobile — editorial intent matches desktop layout.
-       Centered text with unequal line lengths reads as accidentally broken. */
-  }
-
-  .ctas {
-    align-items: flex-start;
-  }
-
-  .trustBar {
-    justify-content: flex-start;
-  }
+/* Large typographic brand mark — premium automotive editorial treatment */
+.brandMark {
+  display: block;
+  font-size: clamp(0.7rem, 1.4vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.52em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.18);
+  margin-bottom: 20px;
+  line-height: 1;
 }
 
-/* ─── Eyebrow ─────────────────────────────────────────────────────────────── */
 .eyebrow {
   display: block;
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-size: 0.61rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 22px;
+  color: var(--color-orange);
+  margin-bottom: 20px;
 }
 
-/* ─── Heading ─────────────────────────────────────────────────────────────── */
 .heading {
-  font-size: clamp(2.75rem, 7vw, 5rem);
-  font-weight: 300;
+  font-size: clamp(2.8rem, 5.4vw, 4.8rem);
+  font-weight: 800;
+  line-height: 0.96;
   letter-spacing: -0.035em;
-  line-height: 1.05;
-  color: var(--color-white);
+  color: #fff;
   margin-bottom: 24px;
 }
 
-/* Second line — quieter, same weight as pricing headingAlt */
-.headingMuted {
-  color: rgba(255, 255, 255, 0.35);
+.orange {
+  color: var(--color-orange);
 }
 
-/* ─── Subheading ──────────────────────────────────────────────────────────── */
-.subheading {
-  font-size: clamp(0.95rem, 2vw, 1.05rem);
-  font-weight: 400;
-  line-height: 1.75;
-  color: rgba(255, 255, 255, 0.5);
-  max-width: 480px;
-  margin-bottom: 40px;
-  letter-spacing: 0.01em;
+.sub {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.44);
+  line-height: 1.72;
+  max-width: 340px;
+  margin-bottom: 44px;
 }
 
-@media (max-width: 639px) {
-  .subheading {
-    max-width: 100%;
-  }
-}
-
-/* ─── CTAs ────────────────────────────────────────────────────────────────── */
 .ctas {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 48px;
-}
-
-@media (max-width: 639px) {
-  .ctas {
-    justify-content: center;
-    flex-direction: column;
-    gap: 12px;
-  }
-}
-
-.primaryCta {
-  font-family: var(--font-sans);
-  font-size: 0.82rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-off-black);
-  background: var(--color-white);
-  border: none;
-  border-radius: 8px;
-  padding: 15px 32px;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  white-space: nowrap;
-}
-
-.primaryCta:hover {
-  background: #e8e5e0;
-}
-
-.secondaryCta {
-  font-size: 0.82rem;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.55);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 2px;
-  transition: color 0.18s, border-color 0.18s;
-  white-space: nowrap;
-}
-
-.secondaryCta:hover {
-  color: rgba(255, 255, 255, 0.85);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-/* ─── Trust bar ───────────────────────────────────────────────────────────── */
-.trustBar {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
 }
 
-@media (max-width: 639px) {
-  .trustBar {
-    justify-content: center;
-  }
-}
-
-.trustItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+.primaryCta {
+  font-family: var(--font-sans);
   font-size: 0.72rem;
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.3);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--color-orange);
+  border: none;
+  border-radius: 5px;
+  padding: 14px 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 6px 28px rgba(242,106,13,0.28);
+  transition: opacity 0.2s;
   white-space: nowrap;
 }
 
-.trustDot {
-  width: 3px;
-  height: 3px;
+.primaryCta:hover {
+  opacity: 0.88;
+}
+
+.secondaryCta {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  padding: 13px 24px;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.secondaryCta:hover {
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ─── Trust bar ───────────────────────────────────────────────────────────── */
+.trustBar {
+  position: relative;
+  z-index: 20;
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
+  display: flex;
+}
+
+.trustItem {
+  flex: 1;
+  padding: 22px clamp(20px, 5vw, 56px);
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.trustItem:last-child {
+  border-right: none;
+}
+
+.trustIcon {
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.65rem;
   flex-shrink: 0;
 }
 
-@media (max-width: 479px) {
-  .trustDot {
+.trustLabel {
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 3px;
+}
+
+.trustSub {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.18);
+}
+
+/* ─── Mobile ──────────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  /* Car hidden on mobile — not enough width for impact */
+  .carStage {
     display: none;
   }
 
+  /* Remove directional fade — full-bleed dark on mobile */
+  .fadeLeft {
+    background: linear-gradient(180deg,
+      rgba(8,7,6,0.95) 0%,
+      rgba(8,7,6,0.85) 100%
+    );
+  }
+
+  .content {
+    max-width: 100%;
+    padding-inline: clamp(20px, 5vw, 40px);
+  }
+
+  .heading {
+    font-size: clamp(2.4rem, 10vw, 3.6rem);
+  }
+
+  /* Trust bar: stack vertically on mobile */
   .trustBar {
     flex-direction: column;
-    gap: 6px;
+  }
+
+  .trustItem {
+    flex: none;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 16px clamp(20px, 5vw, 40px);
+  }
+
+  .trustItem:last-child {
+    border-bottom: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .carStage {
+    width: 55%;
   }
 }
