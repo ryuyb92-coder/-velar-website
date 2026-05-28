@@ -368,28 +368,35 @@ export default function BookingModal({ intent, onClose }: Props) {
                 >
                   ← Back
                 </button>
-                {step < 7 ? (
-                  <button
-                    className={styles.continueBtn}
-                    onClick={goNext}
-                    type="button"
-                    disabled={!isStepValid(step, state)}
-                  >
-                    Continue &nbsp;→
-                  </button>
-                ) : (
-                  <button
-                    className={styles.continueBtn}
-                    onClick={handleSubmit}
-                    type="button"
-                    // Guard on step 6 (contact info) — the real required fields.
-                    // isStepValid(7) unconditionally returns true; this ensures name/phone/email
-                    // are filled before submission even if the user somehow reaches step 7 directly.
-                    disabled={submitting || !isStepValid(6, state)}
-                  >
-                    {submitting ? 'Sending…' : 'Confirm Booking'}
-                  </button>
-                )}
+                <div className={styles.stepNavRight}>
+                  {step === 7 && submitError && (
+                    <p className={styles.errorMsg} style={{ textAlign: 'right', marginBottom: 8 }}>
+                      {submitError}
+                    </p>
+                  )}
+                  {step < 7 ? (
+                    <button
+                      className={styles.continueBtn}
+                      onClick={goNext}
+                      type="button"
+                      disabled={!isStepValid(step, state)}
+                    >
+                      Continue &nbsp;→
+                    </button>
+                  ) : (
+                    <button
+                      className={styles.continueBtn}
+                      onClick={handleSubmit}
+                      type="button"
+                      // Guard on step 6 (contact info) — the real required fields.
+                      // isStepValid(7) unconditionally returns true; this ensures name/phone/email
+                      // are filled before submission even if the user somehow reaches step 7 directly.
+                      disabled={submitting || !isStepValid(6, state)}
+                    >
+                      {submitting ? 'Sending…' : 'Confirm Booking'}
+                    </button>
+                  )}
+                </div>
               </div>
 
               <button
@@ -778,10 +785,7 @@ function Step6({ state, update }: { state: BookingState; update: (partial: Parti
 function Step7({ state, submitError }: { state: BookingState; submitError: string }) {
   const cat = CATEGORIES.find(c => c.id === state.categoryId);
   const pkg = cat?.packages.find(p => p.id === state.packageId);
-  const price = (() => {
-    if (!state.vehicleType || !pkg) return null;
-    return state.vehicleType === 'sedan' ? pkg.price : pkg.xlPrice;
-  })();
+  const price = computePrice(state);
   const vehicleLabel =
     state.vehicleType === 'sedan' ? 'Sedan / Coupe' :
     state.vehicleType === 'suv'   ? 'SUV / Truck'   :
@@ -860,9 +864,6 @@ function Step7({ state, submitError }: { state: BookingState; submitError: strin
         </div>
       )}
 
-      {submitError && (
-        <p className={styles.errorMsg}>{submitError}</p>
-      )}
     </>
   );
 }
