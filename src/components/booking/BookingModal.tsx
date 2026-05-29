@@ -5,7 +5,8 @@ import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { CATEGORIES, ADDON_GROUPS } from '@/lib/pricing-data';
 import { ADDON_ICON_MAP } from './AddonIcons';
-import { VELAR_PHONE, VELAR_PHONE_DISPLAY } from '@/lib/config';
+import { VELAR_PHONE, VELAR_PHONE_DISPLAY, MAPS_API_KEY } from '@/lib/config';
+import Script from 'next/script';
 import styles from './BookingModal.module.css';
 
 /* ─── Public interface ──────────────────────────────────────────────────── */
@@ -43,23 +44,23 @@ interface BookingState {
 }
 
 const STEPS = [
-  'Vehicle & Package',
-  'Add-ons',
-  'Date & Time',
-  'Location',
-  'Vehicle Details',
-  'Your Information',
-  'Review & Confirm',
+  'Location',           // 1 — address first (SHWASH-style)
+  'Vehicle & Package',  // 2
+  'Add-Ons',           // 3
+  'Date & Time',        // 4
+  'Vehicle Details',    // 5
+  'Your Information',   // 6
+  'Review & Confirm',   // 7
 ] as const;
 
 const STEP_TITLES = [
-  'Your Vehicle & Service',
-  'Optional Add-Ons',
-  'Date & Time',
-  'Your Location',
-  'Vehicle Details',
-  'Your Information',
-  'Review & Confirm',
+  'Service Address',       // 1
+  'Your Vehicle & Service', // 2
+  'Optional Add-Ons',      // 3
+  'Date & Time',            // 4
+  'Vehicle Details',        // 5
+  'Your Information',       // 6
+  'Review & Confirm',       // 7
 ] as const;
 
 const TIME_SLOTS = [
@@ -111,10 +112,10 @@ function computePrice(state: BookingState): number | null {
 
 function isStepValid(step: number, state: BookingState): boolean {
   switch (step) {
-    case 1: return state.vehicleType !== null && state.packageId !== null;
-    case 2: return true;
-    case 3: return state.preferredDate !== '' && state.preferredTime !== 'No preference';
-    case 4: return state.zip.trim().length >= 10; // enough text for a real street address
+    case 1: return state.zip.trim().length >= 10;  // service address (now Step 1)
+    case 2: return state.vehicleType !== null && state.packageId !== null;
+    case 3: return true;  // add-ons always skippable
+    case 4: return state.preferredDate !== '' && state.preferredTime !== 'No preference';
     case 5: return state.vehicleDescription.trim().length > 0;
     case 6: return (
       state.name.trim().length > 0 &&
@@ -258,8 +259,15 @@ export default function BookingModal({ intent, onClose }: Props) {
   if (!mounted) return null;
 
   const price = computePrice(state);
-  const cat = CATEGORIES.find(c => c.id === state.categoryId);
-  const pkg = cat?.packages.find(p => p.id === state.packageId);
+  const cat   = CATEGORIES.find(c => c.id === state.categoryId);
+  const pkg   = cat?.packages.find(p => p.id === state.packageId);
+  const vehicleLabel =
+    state.vehicleType === 'sedan' ? 'Sedan / Coupe' :
+    state.vehicleType === 'suv'   ? 'SUV / Truck (+$30)' :
+    state.vehicleType === 'xl'    ? 'XL Vehicle (+$30)' : null;
+
+  // Show map iframe when address is valid and API key is configured
+  const showMap = state.zip.trim().length >= 10 && MAPS_API_KEY.length > 0;
 
   return createPortal(
     <div
@@ -275,19 +283,33 @@ export default function BookingModal({ intent, onClose }: Props) {
           <SuccessState onClose={onClose} />
         ) : (
           <>
-            {/* ── DARK SIDEBAR ── */}
-            <div className={styles.sidebar}>
-              <div className={styles.sidebarTop}>
-                <div className={styles.sidebarLogo}>
-                  <Image
-                    src="/velar-logo.png"
-                    alt="VELAR Mobile Detailing"
-                    width={1238}
-                    height={1194}
-                    className={styles.sidebarLogoImg}
-                  />
-                </div>
+            {/* ── LEFT: MAP PANEL ────────────────────────────────────── */}
+            <div className={styles.mapPanel}>
+
+              {/* VELAR logo */}
+              <div className={styles.mapPanelHeader}>
+                <Image
+                  src="/velar-logo.png"
+                  alt="VELAR Mobile Detailing"
+                  width={1238}
+                  height={1194}
+                  className={styles.mapLogo}
+                  priority
+                />
               </div>
+
+              {/* Map or atmosphere */}
+              {showMap ? (
+                <iframe
+                  title="Service location"
+                  src={`https://www.google.com/maps/embed/v1/place?key=${MAPS_API_KEY}&q=${encodeURIComponent(state.zip)}&zoom=15`}
+                  className={styles.mapIframe}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              ) : (
+                <div className={styles.mapAtmosphere} />
+              )}
 
               {/* Booking summary */}
               <div className={styles.summary}>
@@ -295,18 +317,13 @@ export default function BookingModal({ intent, onClose }: Props) {
                 <div className={styles.summaryRow}>
                   <div className={styles.summaryKey}>Service</div>
                   <div className={styles.summaryVal}>
-                    {pkg
-                      ? pkg.name
-                      : <span className={styles.summaryEmpty}>—</span>}
+                    {pkg ? pkg.name : <span className={styles.summaryEmpty}>—</span>}
                   </div>
                 </div>
                 <div className={styles.summaryRow}>
                   <div className={styles.summaryKey}>Vehicle</div>
                   <div className={styles.summaryVal}>
-                    {state.vehicleType === 'sedan' ? 'Sedan / Coupe' :
-                     state.vehicleType === 'suv'   ? 'SUV / Truck (+$30)' :
-                     state.vehicleType === 'xl'    ? 'XL Vehicle (+$30)' :
-                     <span className={styles.summaryEmpty}>—</span>}
+                    {vehicleLabel ?? <span className={styles.summaryEmpty}>—</span>}
                   </div>
                 </div>
                 <div className={styles.summaryTotal}>
@@ -325,10 +342,9 @@ export default function BookingModal({ intent, onClose }: Props) {
               </div>
             </div>
 
-            {/* ── WHITE STEP PANEL ── */}
+            {/* ── RIGHT: STEP PANEL ──────────────────────────────────── */}
             <div className={styles.stepPanel}>
 
-              {/* Step indicator — replaces sidebar step list */}
               <div className={styles.stepIndicator}>
                 <span className={styles.stepCount}>
                   Step {step} of {STEPS.length}
@@ -383,9 +399,6 @@ export default function BookingModal({ intent, onClose }: Props) {
                       className={styles.continueBtn}
                       onClick={handleSubmit}
                       type="button"
-                      // Guard on step 6 (contact info) — the real required fields.
-                      // isStepValid(7) unconditionally returns true; this ensures name/phone/email
-                      // are filled before submission even if the user somehow reaches step 7 directly.
                       disabled={submitting || !isStepValid(6, state)}
                     >
                       {submitting ? 'Sending…' : 'Confirm Booking'}
@@ -393,8 +406,6 @@ export default function BookingModal({ intent, onClose }: Props) {
                   )}
                 </div>
               </div>
-
-              {/* No X button during active booking — users exit via Back from Step 1 */}
             </div>
           </>
         )}
@@ -418,10 +429,10 @@ interface StepContentProps {
 function StepContent(props: StepContentProps) {
   const { step, state, update, todayISO, timeSlots, submitError } = props;
   switch (step) {
-    case 1: return <Step1 state={state} update={update} />;
-    case 2: return <Step2 state={state} update={update} />;
-    case 3: return <Step3 state={state} update={update} todayISO={todayISO} timeSlots={timeSlots} />;
-    case 4: return <Step4 state={state} update={update} />;
+    case 1: return <Step1Location state={state} update={update} />;
+    case 2: return <Step2VehiclePkg state={state} update={update} />;
+    case 3: return <Step3Addons state={state} update={update} />;
+    case 4: return <Step4DateTime state={state} update={update} todayISO={todayISO} timeSlots={timeSlots} />;
     case 5: return <Step5 state={state} update={update} />;
     case 6: return <Step6 state={state} update={update} />;
     case 7: return <Step7 state={state} submitError={submitError} />;
@@ -430,7 +441,8 @@ function StepContent(props: StepContentProps) {
 }
 
 /* ─── Step placeholders (replaced in Tasks 5–8) ────────────────────────── */
-function Step1({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
+/* ─── Step 2: Vehicle & Package (was Step 1) ─────────────────────────────── */
+function Step2VehiclePkg({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   // Default to first category if none selected yet
   const activeCatId = state.categoryId ?? CATEGORIES[0].id;
   const selectedCat = CATEGORIES.find(c => c.id === activeCatId) ?? CATEGORIES[0];
@@ -537,7 +549,8 @@ function Step1({ state, update }: { state: BookingState; update: (partial: Parti
     </>
   );
 }
-function Step2({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
+/* ─── Step 3: Add-Ons (was Step 2) ──────────────────────────────────────── */
+function Step3Addons({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   function toggleEnhancement(name: string) {
     update(prev => ({
       enhancements: prev.enhancements.includes(name)
@@ -669,7 +682,8 @@ const CAL_MONTH_NAMES = [
 ];
 const CAL_DAY_LABELS = ['Mo','Tu','We','Th','Fr','Sa','Su'];
 
-function Step3({
+/* ─── Step 4: Date & Time (was Step 3) ──────────────────────────────────── */
+function Step4DateTime({
   state,
   update,
   todayISO,
@@ -894,13 +908,51 @@ function isDallasArea(addr: string): boolean {
   return DALLAS_AREA.some(kw => lower.includes(kw));
 }
 
-function Step4({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
+/* ─── Step 1: Service Address (now first — SHWASH-style) ─────────────────── */
+function Step1Location({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
+  const [mapsReady, setMapsReady] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const addressValid = state.zip.trim().length >= 10;
-  const confirmed = addressValid && isDallasArea(state.zip);
+  const confirmed    = addressValid && isDallasArea(state.zip);
   const { street, rest } = parsedAddress(state.zip);
+
+  // Attach Google Places Autocomplete when the Maps JS API has loaded
+  useEffect(() => {
+    if (!mapsReady || !inputRef.current) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const g = (window as any).google;
+    if (!g?.maps?.places?.Autocomplete) return;
+
+    const ac = new g.maps.places.Autocomplete(inputRef.current, {
+      types: ['address'],
+      componentRestrictions: { country: 'us' },
+      fields: ['formatted_address'],
+    });
+
+    const listener = ac.addListener('place_changed', () => {
+      const place = ac.getPlace();
+      if (place.formatted_address) {
+        update({ zip: place.formatted_address });
+      }
+    });
+
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).google?.maps?.event?.removeListener?.(listener);
+    };
+  }, [mapsReady, update]);
 
   return (
     <>
+      {/* Load Maps JS API + Places library if key is configured */}
+      {MAPS_API_KEY && (
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places&loading=async`}
+          strategy="afterInteractive"
+          onLoad={() => setMapsReady(true)}
+        />
+      )}
+
       <p className={styles.stepSub}>
         Enter the address where the vehicle will be serviced. We&apos;ll confirm availability by text.
       </p>
@@ -911,6 +963,7 @@ function Step4({ state, update }: { state: BookingState; update: (partial: Parti
           Service Address <span className={styles.req}>*</span>
         </label>
         <input
+          ref={inputRef}
           className={styles.fieldInput}
           id="bk-address"
           name="zip"
@@ -932,7 +985,6 @@ function Step4({ state, update }: { state: BookingState; update: (partial: Parti
         aria-hidden={!addressValid}
       >
         <div className={styles.locationCardTop}>
-          {/* Location pin icon */}
           <span className={styles.locationIcon}>
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <path
@@ -947,22 +999,14 @@ function Step4({ state, update }: { state: BookingState; update: (partial: Parti
             {rest && <span className={styles.locationRest}>{rest}</span>}
           </div>
         </div>
-
-        {/* Service area badge */}
         <div className={[
           styles.locationBadge,
           confirmed ? styles.locationBadgeConfirmed : '',
         ].filter(Boolean).join(' ')}>
           {confirmed ? (
-            <>
-              <span className={styles.locationBadgeCheck}>✓</span>
-              Dallas Service Area · Confirmed
-            </>
+            <><span className={styles.locationBadgeCheck}>✓</span> Dallas Service Area · Confirmed</>
           ) : (
-            <>
-              <span className={styles.locationBadgeCheck}>◎</span>
-              We&apos;ll confirm service coverage by text
-            </>
+            <><span className={styles.locationBadgeCheck}>◎</span> We&apos;ll confirm service coverage by text</>
           )}
         </div>
       </div>

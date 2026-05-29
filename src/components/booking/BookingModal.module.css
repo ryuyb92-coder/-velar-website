@@ -1,58 +1,94 @@
-/* ─── Overlay ─────────────────────────────────────────────────────────────── */
+/* ─── Overlay — full-screen solid container ──────────────────────────────── */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(8, 7, 6, 0.62);
   z-index: 100;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: #080706;    /* frame fills this entirely; color prevents flash */
 }
 
-@media (max-width: 639px) {
-  .overlay {
-    align-items: flex-end;
-    padding: 0;
-  }
-}
-
-/* ─── Modal frame ─────────────────────────────────────────────────────────── */
+/* ─── Frame — full-screen two-panel booking experience ───────────────────── */
 .frame {
   display: flex;
   width: 100%;
-  max-width: 940px;
-  min-height: 580px;
-  max-height: 90dvh;
-  border-radius: 18px;
+  height: 100dvh;
   overflow: hidden;
-  box-shadow:
-    0 2px 4px rgba(0,0,0,0.06),
-    0 12px 40px rgba(0,0,0,0.18),
-    0 48px 100px rgba(0,0,0,0.22);
-  animation: fadeScale 0.22s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+  animation: fsEnter 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes fadeScale {
-  from { transform: scale(0.97); opacity: 0; }
-  to   { transform: scale(1);    opacity: 1; }
+@keyframes fsEnter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-@media (max-width: 639px) {
+@media (max-width: 767px) {
   .frame {
     flex-direction: column;
-    border-radius: 20px 20px 0 0;
-    min-height: auto;
-    max-height: 96dvh;
-    animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 }
 
-@keyframes slideUp {
-  from { transform: translateY(48px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+/* ─── Left panel: Google Maps + VELAR branding + booking summary ─────────── */
+.mapPanel {
+  width: 45%;
+  flex-shrink: 0;
+  background: #080806;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top edge orange accent — same as previous sidebar */
+.mapPanel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-orange) 0%, rgba(242,106,13,0.2) 50%, transparent 100%);
+  opacity: 0.75;
+  z-index: 1;
+}
+
+@media (max-width: 767px) {
+  .mapPanel {
+    display: none;
+  }
+}
+
+/* VELAR logo in the map panel header */
+.mapPanelHeader {
+  padding: 22px 24px 20px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+  z-index: 1;
+}
+
+.mapLogo {
+  height: 32px;
+  width: auto;
+  display: block;
+  opacity: 0.9;
+  object-fit: contain;
+}
+
+/* Atmospheric gradient shown before address is entered */
+.mapAtmosphere {
+  flex: 1;
+  background:
+    radial-gradient(ellipse 70% 50% at 35% 55%, rgba(22,18,12,0.85) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 70% at 75% 25%, rgba(18,14,10,0.6) 0%, transparent 55%),
+    linear-gradient(145deg, #0e0c0a 0%, #080706 50%, #0a0807 100%);
+}
+
+/* Map iframe (Google Embed API — always free) */
+.mapIframe {
+  flex: 1;
+  border: none;
+  display: block;
+  width: 100%;
+  min-height: 0;
+  filter: saturate(0.85) brightness(0.9);   /* toned down for VELAR dark aesthetic */
 }
 
 /* ─── Dark sidebar ────────────────────────────────────────────────────────── */

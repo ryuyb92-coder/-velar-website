@@ -59,3 +59,31 @@ body {
   color: var(--color-off-black);
   line-height: 1.6;
 }
+
+/* ─── Booking transition curtain ─────────────────────────────────────────── */
+/* Sits above both the gate (z:100) and booking modal (z:100) during handoff  */
+.bookingCurtain {
+  position: fixed;
+  inset: 0;
+  background: #080706;
+  z-index: 200;
+  pointer-events: none;
+}
+
+.bookingCurtainRising {
+  animation: curtainRise 360ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.bookingCurtainFalling {
+  animation: curtainFall 320ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes curtainRise {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes curtainFall {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}

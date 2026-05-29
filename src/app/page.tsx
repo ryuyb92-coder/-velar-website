@@ -14,22 +14,35 @@ import ContactGateModal from '@/components/booking/ContactGateModal';
 import BookingModal from '@/components/booking/BookingModal';
 import type { BookingIntent } from '@/components/booking/BookingModal';
 
-export default function Home() {
-  // gateIntent: non-null while the entry gate is open
-  const [gateIntent, setGateIntent] = useState<BookingIntent | null>(null);
-  // intent: non-null while the 7-step booking modal is open
-  const [intent, setIntent] = useState<BookingIntent | null>(null);
+type CurtainState = 'hidden' | 'rising' | 'falling';
 
-  // All "Book Now" entry points open the gate first
+export default function Home() {
+  const [gateIntent, setGateIntent] = useState<BookingIntent | null>(null);
+  const [intent, setIntent]         = useState<BookingIntent | null>(null);
+  const [curtain, setCurtain]       = useState<CurtainState>('hidden');
+
   function openBooking(i: BookingIntent = {}) {
     setGateIntent(i);
   }
 
-  // Gate → 7-step: merge package intent with contact prefill
   function onGateContinue(phone: string, name: string) {
     if (!gateIntent) return;
-    setGateIntent(null);
-    setIntent({ ...gateIntent, prefillPhone: phone, prefillName: name });
+    const combined: BookingIntent = { ...gateIntent, prefillPhone: phone, prefillName: name };
+
+    // Phase 1: Curtain rises (360ms) — covers gate + website
+    setCurtain('rising');
+
+    setTimeout(() => {
+      // Phase 2: Under the covered screen — swap components
+      setGateIntent(null);
+      setIntent(combined);
+      // Phase 3: Curtain falls (320ms) — booking fades in simultaneously
+      setCurtain('falling');
+
+      setTimeout(() => {
+        setCurtain('hidden');
+      }, 330);
+    }, 370);
   }
 
   function closeGate() {
@@ -56,6 +69,7 @@ export default function Home() {
 
       <StickyMobileCTA onBook={openBooking} />
 
+      {/* Gate — unchanged, exactly as-is */}
       {gateIntent !== null && (
         <ContactGateModal
           intent={gateIntent}
@@ -64,6 +78,14 @@ export default function Home() {
         />
       )}
 
+      {/* Transition curtain — rises above gate, falls to reveal booking */}
+      {curtain !== 'hidden' && (
+        <div className={
+          curtain === 'rising' ? 'bookingCurtain bookingCurtainRising' : 'bookingCurtain bookingCurtainFalling'
+        } />
+      )}
+
+      {/* Full-screen booking experience */}
       {intent !== null && (
         <BookingModal intent={intent} onClose={closeBooking} />
       )}
