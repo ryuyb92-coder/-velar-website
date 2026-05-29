@@ -144,13 +144,8 @@ export default function BookingModal({ intent, onClose }: Props) {
     return () => { document.body.style.overflow = prev; };
   }, []);
 
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
-    }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  // Escape intentionally does NOT close the modal during active booking.
+  // Users exit via Back (and backing out of Step 1) or by completing the flow.
 
   useEffect(() => {
     panelRef.current
@@ -267,7 +262,6 @@ export default function BookingModal({ intent, onClose }: Props) {
     <div
       className={styles.overlay}
       ref={overlayRef}
-      onClick={e => { if (e.target === overlayRef.current) onClose(); }}
       role="dialog"
       aria-modal="true"
       aria-label="Book a detail"
@@ -361,11 +355,10 @@ export default function BookingModal({ intent, onClose }: Props) {
               <div className={styles.stepNav}>
                 <button
                   className={styles.backBtn}
-                  onClick={goBack}
+                  onClick={step === 1 ? onClose : goBack}
                   type="button"
-                  style={{ visibility: step === 1 ? 'hidden' : 'visible' }}
                 >
-                  ← Back
+                  {step === 1 ? '✕ Cancel' : '← Back'}
                 </button>
                 <div className={styles.stepNavRight}>
                   {step === 7 && submitError && (
@@ -398,21 +391,7 @@ export default function BookingModal({ intent, onClose }: Props) {
                 </div>
               </div>
 
-              <button
-                className={styles.closeBtn}
-                onClick={onClose}
-                aria-label="Close booking"
-                type="button"
-              >
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-                  <path
-                    d="M1 1l11 11M12 1L1 12"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
+              {/* No X button during active booking — users exit via Back from Step 1 */}
             </div>
           </>
         )}
