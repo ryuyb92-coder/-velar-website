@@ -29,6 +29,128 @@ export interface Enhancement {
   price: string;
 }
 
+/* ─── Grouped add-on data for the booking modal premium service menu ──────── */
+
+export interface EnhancementItem {
+  name: string;
+  description: string;
+  price: string;
+  numericPrice?: number;  // undefined = excluded from running subtotal (Contact Us / variable)
+  iconId: string;
+}
+
+export interface EnhancementGroup {
+  groupLabel: string;
+  items: EnhancementItem[];
+}
+
+export const ADDON_GROUPS: EnhancementGroup[] = [
+  {
+    groupLabel: 'Pet Hair & Odor',
+    items: [
+      {
+        name: 'Light Pet Hair Removal',
+        description: 'Light to moderate coverage',
+        price: '$35',
+        numericPrice: 35,
+        iconId: 'pet',
+      },
+      {
+        name: 'Heavy Pet Hair Removal',
+        description: 'Dense or embedded hair',
+        price: '$69',
+        numericPrice: 69,
+        iconId: 'pet',
+      },
+      {
+        name: 'Ozone Odor Treatment',
+        description: 'Eliminates persistent odors',
+        price: '$55',
+        numericPrice: 55,
+        iconId: 'airflow',
+      },
+    ],
+  },
+  {
+    groupLabel: 'Interior Care',
+    items: [
+      {
+        name: 'Individual Seat Cleaning',
+        description: 'Deep clean per seat',
+        price: '$40',
+        numericPrice: 40,
+        iconId: 'seat',
+      },
+      {
+        name: 'Headliner Deep Cleaning',
+        description: 'Interior ceiling surface',
+        price: '$55',
+        numericPrice: 55,
+        iconId: 'headliner',
+      },
+      {
+        name: 'Bio Cleaning Fee',
+        description: 'Biohazard sanitation service',
+        price: '$55',
+        numericPrice: 55,
+        iconId: 'bio',
+      },
+      {
+        name: 'Mold Treatment',
+        description: 'Assessment & treatment',
+        price: 'Contact Us',
+        numericPrice: undefined,
+        iconId: 'droplet',
+      },
+    ],
+  },
+  {
+    groupLabel: 'Exterior & Engine',
+    items: [
+      {
+        name: 'Engine Bay Detail',
+        description: 'Full engine compartment',
+        price: '$65',
+        numericPrice: 65,
+        iconId: 'engine',
+      },
+      {
+        name: 'Clay Bar Treatment',
+        description: 'Surface contaminant removal',
+        price: '$55',
+        numericPrice: 55,
+        iconId: 'clay',
+      },
+      {
+        name: 'Headlight Restoration (pair)',
+        description: 'Restore lens clarity',
+        price: '$110',
+        numericPrice: 110,
+        iconId: 'headlight',
+      },
+      {
+        name: 'Swirl Mark Removal',
+        description: 'Light paint correction',
+        price: 'Contact Us',
+        numericPrice: undefined,
+        iconId: 'swirl',
+      },
+    ],
+  },
+  {
+    groupLabel: 'Condition',
+    items: [
+      {
+        name: 'Extra Dirty Fee',
+        description: 'For vehicles needing extra time',
+        price: '$50+/hr',
+        numericPrice: undefined,
+        iconId: 'alert',
+      },
+    ],
+  },
+];
+
 export const XL_SURCHARGE = 30;
 
 export const CATEGORIES: PricingCategory[] = [

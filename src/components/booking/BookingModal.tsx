@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
-import { CATEGORIES, ENHANCEMENTS } from '@/lib/pricing-data';
+import { CATEGORIES, ADDON_GROUPS } from '@/lib/pricing-data';
+import { ADDON_ICON_MAP } from './AddonIcons';
 import { VELAR_PHONE, VELAR_PHONE_DISPLAY } from '@/lib/config';
 import styles from './BookingModal.module.css';
 
@@ -563,30 +564,114 @@ function Step2({ state, update }: { state: BookingState; update: (partial: Parti
     }));
   }
 
+  // Running subtotal calculation
+  const basePrice = computePrice(state);
+  const addonSum = state.enhancements.reduce((sum, name) => {
+    for (const group of ADDON_GROUPS) {
+      const item = group.items.find(i => i.name === name);
+      if (item?.numericPrice != null) return sum + item.numericPrice;
+    }
+    return sum;
+  }, 0);
+  const hasNonNumericSelected = state.enhancements.some(name => {
+    for (const group of ADDON_GROUPS) {
+      const item = group.items.find(i => i.name === name);
+      if (item && item.numericPrice == null) return true;
+    }
+    return false;
+  });
+
   return (
     <>
-      <p className={styles.stepSub}>Optional add-ons — select any that apply. You can always skip this step.</p>
+      <p className={styles.stepSub}>
+        Customize your service with optional upgrades. Skip anything that doesn&apos;t apply.
+      </p>
 
-      <div className={styles.enhancementGrid}>
-        {ENHANCEMENTS.map(e => {
-          const isSelected = state.enhancements.includes(e.name);
-          return (
-            <button
-              key={e.name}
-              type="button"
-              className={[
-                styles.enhChip,
-                isSelected ? styles.enhSelected : '',
-              ].filter(Boolean).join(' ')}
-              onClick={() => toggleEnhancement(e.name)}
-              aria-pressed={isSelected}
+      {/* Premium add-on service menu */}
+      {ADDON_GROUPS.map((group, gi) => (
+        <div
+          key={group.groupLabel}
+          className={styles.addonSection}
+          style={{ animationDelay: `${gi * 55}ms` }}
+        >
+          <span className={styles.addonSectionHeader}>{group.groupLabel}</span>
+
+          {group.items.map(item => {
+            const isSelected = state.enhancements.includes(item.name);
+            const IconComponent = ADDON_ICON_MAP[item.iconId];
+
+            return (
+              <div
+                key={item.name}
+                role="button"
+                tabIndex={0}
+                aria-pressed={isSelected}
+                className={[
+                  styles.addonRow,
+                  isSelected ? styles.addonRowSelected : '',
+                ].filter(Boolean).join(' ')}
+                onClick={() => toggleEnhancement(item.name)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleEnhancement(item.name);
+                  }
+                }}
+              >
+                {/* Icon */}
+                <div className={styles.addonIconWrap}>
+                  {IconComponent && <IconComponent />}
+                </div>
+
+                {/* Name + description */}
+                <div className={styles.addonInfo}>
+                  <span className={styles.addonName}>{item.name}</span>
+                  <span className={styles.addonDesc}>{item.description}</span>
+                </div>
+
+                {/* Price */}
+                {item.numericPrice != null ? (
+                  <span className={styles.addonPrice}>{item.price}</span>
+                ) : (
+                  <span className={styles.addonPriceContact}>{item.price}</span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      ))}
+
+      {/* Running subtotal */}
+      {basePrice != null && (
+        <div className={styles.addonSubtotal}>
+          <div className={styles.addonSubtotalRow}>
+            <span className={styles.addonSubtotalKey}>Base Package</span>
+            <span className={styles.addonSubtotalVal}>${basePrice}</span>
+          </div>
+          <div className={styles.addonSubtotalRow}>
+            <span className={styles.addonSubtotalKey}>Selected Add-ons</span>
+            <span className={styles.addonSubtotalVal}>
+              {addonSum > 0 ? `+$${addonSum}` : '—'}
+            </span>
+          </div>
+          <div className={styles.addonSubtotalDivider} />
+          <div className={styles.addonSubtotalTotalRow}>
+            <span className={styles.addonSubtotalTotalKey}>Estimated Total</span>
+            {/* key change re-triggers the pulse animation on every update */}
+            <span
+              key={basePrice + addonSum}
+              className={styles.addonSubtotalTotalVal}
             >
-              {e.name}
-              <span className={styles.enhPrice}>{e.price}</span>
-            </button>
-          );
-        })}
-      </div>
+              ${basePrice + addonSum}
+            </span>
+          </div>
+          {hasNonNumericSelected && (
+            <p className={styles.addonSubtotalNote}>
+              * Some selected services require a custom quote and aren&apos;t reflected above.
+            </p>
+          )}
+        </div>
+      )}
     </>
   );
 }
