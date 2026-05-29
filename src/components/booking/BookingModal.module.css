@@ -970,21 +970,21 @@
   animation: addonSectionIn 200ms ease-out both;
 }
 
-/* Clear visual gap between sections — this is what makes them feel separate */
+/* Clear visual gap between sections */
 .addonSection + .addonSection {
   margin-top: 28px;
 }
 
-/* Section label — large, visible, acts as a headline for the group */
+/* Section label — dark-on-white, readable */
 .addonSectionHeader {
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.42);
+  color: var(--color-text-muted);       /* #7a7068 — same muted system as field labels */
   display: block;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--color-border);  /* #e4ddd4 — same warm divider */
   margin-bottom: 4px;
 }
 
@@ -995,10 +995,10 @@
   gap: 16px;
   min-height: 64px;
   padding: 12px 12px 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--color-border);   /* #e4ddd4 — original chip divider tone */
   cursor: pointer;
 
-  /* Selected indicator lives as a left border */
+  /* Selected indicator — left bar */
   border-left: 3px solid transparent;
   padding-left: 12px;
   margin-left: -12px;
@@ -1017,12 +1017,12 @@
 }
 
 .addonRow:hover:not(.addonRowSelected) {
-  background: rgba(255, 255, 255, 0.04);
+  background: #f8f6f3;                  /* same as ctaLight hover in pricing cards */
 }
 
-/* Selected: orange left bar + warm glow + elevated background */
+/* Selected: orange left bar + warm background + inset glow */
 .addonRowSelected {
-  background: rgba(242, 106, 13, 0.08);
+  background: rgba(242, 106, 13, 0.06); /* same as .enhSelected original */
   border-left-color: var(--color-orange);
   box-shadow: inset 0 0 0 1px rgba(242, 106, 13, 0.12);
 }
@@ -1032,13 +1032,13 @@
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #f5f2ee;                  /* warm light — matches warm-bg tone */
+  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: rgba(255, 255, 255, 0.5);
+  color: #9a9288;                       /* same muted warm as .muted token */
   transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
 }
 
@@ -1049,8 +1049,8 @@
 }
 
 .addonRowSelected .addonIconWrap {
-  background: rgba(242, 106, 13, 0.16);
-  border-color: rgba(242, 106, 13, 0.25);
+  background: rgba(242, 106, 13, 0.08);
+  border-color: rgba(242, 106, 13, 0.22);
   color: var(--color-orange);
 }
 
@@ -1063,37 +1063,37 @@
   gap: 3px;
 }
 
-/* Name — highest contrast element after the icon */
+/* Name — full dark, same as field labels */
 .addonName {
   font-size: 0.9rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.86);
+  color: var(--color-off-black);        /* #111111 — max contrast on white */
   line-height: 1.25;
   letter-spacing: -0.01em;
   transition: color 160ms ease;
 }
 
 .addonRowSelected .addonName {
-  color: #ffffff;
+  color: var(--color-off-black);        /* stays dark — white background */
 }
 
-/* Description — secondary, truly muted but legible */
+/* Description — muted warm, same as subtitle system */
 .addonDesc {
   font-size: 0.73rem;
-  color: rgba(255, 255, 255, 0.36);
+  color: var(--color-text-muted);       /* #7a7068 — consistent with form labels */
   line-height: 1.3;
   transition: color 160ms ease;
 }
 
 .addonRowSelected .addonDesc {
-  color: rgba(242, 106, 13, 0.6);
+  color: var(--color-orange);
 }
 
 /* ─── Price ────────────────────────────────────────────────────────────────  */
 .addonPrice {
   font-size: 0.86rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-off-black);        /* #111111 — clear, readable price */
   white-space: nowrap;
   flex-shrink: 0;
   font-feature-settings: "tnum" 1;
@@ -1102,12 +1102,12 @@
 }
 
 .addonRowSelected .addonPrice {
-  color: var(--color-orange);
+  color: var(--color-orange);           /* orange on selected — same as .enhSelected */
 }
 
 .addonPriceContact {
   font-size: 0.73rem;
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--color-text-muted);       /* #7a7068 — muted, matches description */
   font-style: italic;
   flex-shrink: 0;
 }
@@ -1116,8 +1116,8 @@
 .addonSubtotal {
   margin-top: 28px;
   padding: 18px 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #f8f5f1;                  /* warm off-white — lifted above the white panel */
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -1132,19 +1132,19 @@
 }
 
 .addonSubtotalKey {
-  color: rgba(255, 255, 255, 0.36);
+  color: var(--color-text-muted);       /* #7a7068 */
   letter-spacing: 0.01em;
 }
 
 .addonSubtotalVal {
-  color: rgba(255, 255, 255, 0.52);
+  color: var(--color-off-black);        /* #111111 */
   font-weight: 500;
   font-feature-settings: "tnum" 1;
 }
 
 .addonSubtotalDivider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-border);      /* #e4ddd4 */
   margin: 3px 0;
 }
 
@@ -1157,14 +1157,14 @@
 .addonSubtotalTotalKey {
   font-size: 0.82rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--color-off-black);        /* #111111 */
   letter-spacing: 0.01em;
 }
 
 .addonSubtotalTotalVal {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-orange);
+  color: var(--color-orange);           /* unchanged — orange reads on white */
   letter-spacing: -0.03em;
   font-feature-settings: "tnum" 1;
   animation: totalPulse 220ms ease-out;
@@ -1172,7 +1172,7 @@
 
 .addonSubtotalNote {
   font-size: 0.66rem;
-  color: rgba(255, 255, 255, 0.22);
+  color: var(--color-text-muted);       /* #7a7068 */
   font-style: italic;
   margin-top: 2px;
 }
