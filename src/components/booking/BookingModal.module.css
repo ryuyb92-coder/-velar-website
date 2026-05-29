@@ -1224,6 +1224,11 @@
   color: rgba(242, 106, 13, 0.7);
 }
 
+/* ─── Required field asterisk ────────────────────────────────────────────── */
+.req {
+  color: var(--color-orange);
+}
+
 /* ─── Optional field label modifier ──────────────────────────────────────── */
 .fieldLabelOptional {
   font-weight: 400;

@@ -33,7 +33,8 @@ interface BookingState {
   enhancements: string[];
   preferredDate: string;
   preferredTime: string;
-  zip: string;
+  zip: string;              // stores full service address (sent to Notion "Service Address" column)
+  accessNotes: string;      // gate code, parking info — merged into notes on submit
   vehicleDescription: string;
   name: string;
   phone: string;
@@ -91,6 +92,7 @@ function buildInitialState(intent: BookingIntent): BookingState {
     preferredDate: '',
     preferredTime: 'No preference',
     zip: '',
+    accessNotes: '',
     vehicleDescription: '',
     name: intent.prefillName ?? '',
     phone: intent.prefillPhone ?? '',
@@ -112,7 +114,7 @@ function isStepValid(step: number, state: BookingState): boolean {
     case 1: return state.vehicleType !== null && state.packageId !== null;
     case 2: return true;
     case 3: return state.preferredDate !== '' && state.preferredTime !== 'No preference';
-    case 4: return /^\d{5}$/.test(state.zip);
+    case 4: return state.zip.trim().length >= 10; // enough text for a real street address
     case 5: return state.vehicleDescription.trim().length > 0;
     case 6: return (
       state.name.trim().length > 0 &&
@@ -213,10 +215,11 @@ export default function BookingModal({ intent, onClose }: Props) {
       state.vehicleType === 'sedan' ? 'Sedan/Coupe' :
       state.vehicleType === 'suv'   ? 'SUV/Truck'   : 'XL Vehicle';
 
-    const noteParts = [state.notes.trim()];
-    if (state.enhancements.length > 0) {
-      noteParts.push(`Add-ons requested: ${state.enhancements.join(', ')}`);
-    }
+    const noteParts = [
+      state.accessNotes.trim() ? `Access Notes: ${state.accessNotes.trim()}` : '',
+      state.notes.trim(),
+      state.enhancements.length > 0 ? `Add-ons requested: ${state.enhancements.join(', ')}` : '',
+    ];
 
     const payload = {
       name:           state.name,
@@ -875,23 +878,42 @@ function Step3({
 function Step4({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   return (
     <>
-      <p className={styles.stepSub}>We serve Dallas and surrounding areas. Enter your ZIP to confirm we cover your area.</p>
+      <p className={styles.stepSub}>
+        Enter the address where the vehicle will be serviced. We&apos;ll confirm availability by text.
+      </p>
 
+      {/* Service address — required */}
       <div className={styles.field}>
-        <label className={styles.fieldLabel} htmlFor="bk-zip">
-          ZIP Code
+        <label className={styles.fieldLabel} htmlFor="bk-address">
+          Service Address <span className={styles.req}>*</span>
         </label>
         <input
           className={styles.fieldInput}
-          id="bk-zip"
+          id="bk-address"
           name="zip"
           type="text"
           required
-          placeholder="75201"
-          inputMode="numeric"
-          maxLength={5}
+          placeholder="Street address, city, state, ZIP"
+          autoComplete="street-address"
           value={state.zip}
-          onChange={e => update({ zip: e.target.value.replace(/\D/g, '').slice(0, 5) })}
+          onChange={e => update({ zip: e.target.value })}
+        />
+      </div>
+
+      {/* Access notes — optional */}
+      <div className={styles.field}>
+        <label className={styles.fieldLabel} htmlFor="bk-access">
+          Access Notes{' '}
+          <span className={styles.fieldLabelOptional}>(optional)</span>
+        </label>
+        <textarea
+          className={styles.fieldTextarea}
+          id="bk-access"
+          name="access_notes"
+          placeholder="Gate code, apartment number, parking instructions, or anything we should know."
+          rows={3}
+          value={state.accessNotes}
+          onChange={e => update({ accessNotes: e.target.value })}
         />
       </div>
     </>
@@ -1045,7 +1067,7 @@ function Step7({ state, submitError }: { state: BookingState; submitError: strin
           <span className={styles.reviewVal}>{state.preferredTime}</span>
         </div>
         <div className={styles.reviewRow}>
-          <span className={styles.reviewKey}>ZIP</span>
+          <span className={styles.reviewKey}>Address</span>
           <span className={styles.reviewVal}>{state.zip}</span>
         </div>
       </div>
