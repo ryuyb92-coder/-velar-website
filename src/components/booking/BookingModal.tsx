@@ -50,6 +50,16 @@ const STEPS = [
   'Review & Confirm',
 ] as const;
 
+const STEP_TITLES = [
+  'Your Vehicle & Service',
+  'Optional Add-Ons',
+  'Date & Time',
+  'Your Location',
+  'Vehicle Details',
+  'Your Information',
+  'Review & Confirm',
+] as const;
+
 const TIME_SLOTS = [
   'No preference',
   '8:00 AM – 10:00 AM',
@@ -279,31 +289,6 @@ export default function BookingModal({ intent, onClose }: Props) {
                     className={styles.sidebarLogoImg}
                   />
                 </div>
-
-                <nav className={styles.stepList} aria-label="Booking steps">
-                  {STEPS.map((label, i) => {
-                    const n = i + 1;
-                    const isActive = n === step;
-                    const isDone = n < step;
-                    return (
-                      <div key={n} className={styles.stepItem}>
-                        <div
-                          className={[
-                            styles.stepRow,
-                            isActive ? styles.stepActive : '',
-                            isDone   ? styles.stepDone   : '',
-                          ].join(' ')}
-                        >
-                          <div className={styles.stepNum}>{n}</div>
-                          <span className={styles.stepName}>{label}</span>
-                        </div>
-                        {n < STEPS.length && (
-                          <div className={styles.stepConnector} />
-                        )}
-                      </div>
-                    );
-                  })}
-                </nav>
               </div>
 
               {/* Booking summary */}
@@ -344,11 +329,21 @@ export default function BookingModal({ intent, onClose }: Props) {
 
             {/* ── WHITE STEP PANEL ── */}
             <div className={styles.stepPanel}>
-              <div className={styles.progress}>
-                <div
-                  className={styles.progressFill}
-                  style={{ width: `${(step / STEPS.length) * 100}%` }}
-                />
+
+              {/* Step indicator — replaces sidebar step list */}
+              <div className={styles.stepIndicator}>
+                <span className={styles.stepCount}>
+                  Step {step} of {STEPS.length}
+                </span>
+                <h2 className={styles.stepTitle}>
+                  {STEP_TITLES[step - 1]}
+                </h2>
+                <div className={styles.progress}>
+                  <div
+                    className={styles.progressFill}
+                    style={{ width: `${(step / STEPS.length) * 100}%` }}
+                  />
+                </div>
               </div>
 
               <div className={styles.stepContent}>
@@ -464,8 +459,6 @@ function Step1({ state, update }: { state: BookingState; update: (partial: Parti
 
   return (
     <>
-      <span className={styles.stepEye}>Step 1 of 7</span>
-      <h3 className={styles.stepHeading}>Your vehicle and service level.</h3>
       <p className={styles.stepSub}>This helps us give you accurate pricing before you confirm.</p>
 
       {/* Service type toggle */}
@@ -572,8 +565,6 @@ function Step2({ state, update }: { state: BookingState; update: (partial: Parti
 
   return (
     <>
-      <span className={styles.stepEye}>Step 2 of 7</span>
-      <h3 className={styles.stepHeading}>Anything else we can do?</h3>
       <p className={styles.stepSub}>Optional add-ons — select any that apply. You can always skip this step.</p>
 
       <div className={styles.enhancementGrid}>
@@ -612,8 +603,6 @@ function Step3({
 }) {
   return (
     <>
-      <span className={styles.stepEye}>Step 3 of 7</span>
-      <h3 className={styles.stepHeading}>When works for you?</h3>
       <p className={styles.stepSub}>We&apos;ll confirm availability and reach out to finalize your appointment.</p>
 
       <div className={styles.fieldRow}>
@@ -655,8 +644,6 @@ function Step3({
 function Step4({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   return (
     <>
-      <span className={styles.stepEye}>Step 4 of 7</span>
-      <h3 className={styles.stepHeading}>Where are you located?</h3>
       <p className={styles.stepSub}>We serve Dallas and surrounding areas. Enter your ZIP to confirm we cover your area.</p>
 
       <div className={styles.field}>
@@ -682,8 +669,6 @@ function Step4({ state, update }: { state: BookingState; update: (partial: Parti
 function Step5({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   return (
     <>
-      <span className={styles.stepEye}>Step 5 of 7</span>
-      <h3 className={styles.stepHeading}>Tell us about your vehicle.</h3>
       <p className={styles.stepSub}>Year, make, and model help us arrive prepared with the right products.</p>
 
       <div className={styles.field}>
@@ -707,8 +692,6 @@ function Step5({ state, update }: { state: BookingState; update: (partial: Parti
 function Step6({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
   return (
     <>
-      <span className={styles.stepEye}>Step 6 of 7</span>
-      <h3 className={styles.stepHeading}>How do we reach you?</h3>
       <p className={styles.stepSub}>We&apos;ll confirm and coordinate your appointment via phone or email.</p>
 
       <div className={styles.fieldRow}>
@@ -796,8 +779,6 @@ function Step7({ state, submitError }: { state: BookingState; submitError: strin
 
   return (
     <>
-      <span className={styles.stepEye}>Step 7 of 7</span>
-      <h3 className={styles.stepHeading}>Review your booking.</h3>
       <p className={styles.stepSub}>Confirm the details below. We&apos;ll be in touch to finalize.</p>
 
       {/* Service */}
