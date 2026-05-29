@@ -875,7 +875,30 @@ function Step3({
     </>
   );
 }
+// Dallas-area keywords for service area confirmation
+const DALLAS_AREA = [
+  'dallas','plano','frisco','mckinney','allen','richardson','garland',
+  'mesquite','irving','carrollton','addison','highland park','university park',
+  'lewisville','flower mound','grapevine','southlake','keller','colleyville',
+  ' tx ',' tx,','texas',
+];
+
+function parsedAddress(addr: string): { street: string; rest: string | null } {
+  const parts = addr.trim().split(',');
+  if (parts.length >= 2) return { street: parts[0].trim(), rest: parts.slice(1).join(',').trim() };
+  return { street: addr.trim(), rest: null };
+}
+
+function isDallasArea(addr: string): boolean {
+  const lower = addr.toLowerCase() + ' ';
+  return DALLAS_AREA.some(kw => lower.includes(kw));
+}
+
 function Step4({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
+  const addressValid = state.zip.trim().length >= 10;
+  const confirmed = addressValid && isDallasArea(state.zip);
+  const { street, rest } = parsedAddress(state.zip);
+
   return (
     <>
       <p className={styles.stepSub}>
@@ -898,6 +921,50 @@ function Step4({ state, update }: { state: BookingState; update: (partial: Parti
           value={state.zip}
           onChange={e => update({ zip: e.target.value })}
         />
+      </div>
+
+      {/* Location confirmation card — fades in once address is valid */}
+      <div
+        className={[
+          styles.locationCard,
+          addressValid ? styles.locationCardVisible : '',
+        ].filter(Boolean).join(' ')}
+        aria-hidden={!addressValid}
+      >
+        <div className={styles.locationCardTop}>
+          {/* Location pin icon */}
+          <span className={styles.locationIcon}>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <path
+                d="M9 1.5C6.1 1.5 3.75 3.85 3.75 6.75C3.75 10.875 9 16.5 9 16.5C9 16.5 14.25 10.875 14.25 6.75C14.25 3.85 11.9 1.5 9 1.5Z"
+                stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"
+              />
+              <circle cx="9" cy="6.75" r="1.75" stroke="currentColor" strokeWidth="1.4"/>
+            </svg>
+          </span>
+          <div className={styles.locationAddress}>
+            <span className={styles.locationStreet}>{street}</span>
+            {rest && <span className={styles.locationRest}>{rest}</span>}
+          </div>
+        </div>
+
+        {/* Service area badge */}
+        <div className={[
+          styles.locationBadge,
+          confirmed ? styles.locationBadgeConfirmed : '',
+        ].filter(Boolean).join(' ')}>
+          {confirmed ? (
+            <>
+              <span className={styles.locationBadgeCheck}>✓</span>
+              Dallas Service Area · Confirmed
+            </>
+          ) : (
+            <>
+              <span className={styles.locationBadgeCheck}>◎</span>
+              We&apos;ll confirm service coverage by text
+            </>
+          )}
+        </div>
       </div>
 
       {/* Access notes — optional */}
