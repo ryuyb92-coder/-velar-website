@@ -676,10 +676,16 @@ function Step2({ state, update }: { state: BookingState; update: (partial: Parti
   );
 }
 const ARRIVAL_WINDOWS = [
-  { label: 'Morning',    window: '8:00 AM – 10:00 AM',  note: 'Early start' },
-  { label: 'Midday',     window: '12:00 PM – 2:00 PM',  note: 'Midday arrival' },
-  { label: 'Afternoon',  window: '3:00 PM – 5:00 PM',   note: 'Late afternoon' },
+  { label: 'Morning',    window: '8:00 AM – 10:00 AM',  note: 'Early start'      },
+  { label: 'Midday',     window: '12:00 PM – 2:00 PM',  note: 'Midday arrival'   },
+  { label: 'Afternoon',  window: '3:00 PM – 5:00 PM',   note: 'Late afternoon'   },
 ] as const;
+
+const CAL_MONTH_NAMES = [
+  'January','February','March','April','May','June',
+  'July','August','September','October','November','December',
+];
+const CAL_DAY_LABELS = ['Mo','Tu','We','Th','Fr','Sa','Su'];
 
 function Step3({
   state,
@@ -691,7 +697,67 @@ function Step3({
   todayISO: string;
   timeSlots: string[]; // kept in signature for interface compatibility
 }) {
-  // Booking context summary
+  // Initialise calendar to the selected month (if already chosen) or current month
+  const [calYear, setCalYear] = useState<number>(() =>
+    state.preferredDate ? parseInt(state.preferredDate.slice(0, 4), 10) : parseInt(todayISO.slice(0, 4), 10)
+  );
+  const [calMonth, setCalMonth] = useState<number>(() =>
+    state.preferredDate ? parseInt(state.preferredDate.slice(5, 7), 10) - 1 : parseInt(todayISO.slice(5, 7), 10) - 1
+  );
+
+  // ── Calendar navigation ──────────────────────────────────────────────────
+  const todayYear = parseInt(todayISO.slice(0, 4), 10);
+  const todayMonthIdx = parseInt(todayISO.slice(5, 7), 10) - 1;
+  const canGoPrev = !(calYear === todayYear && calMonth === todayMonthIdx);
+
+  function prevMonth() {
+    if (!canGoPrev) return;
+    if (calMonth === 0) { setCalYear(y => y - 1); setCalMonth(11); }
+    else setCalMonth(m => m - 1);
+  }
+  function nextMonth() {
+    if (calMonth === 11) { setCalYear(y => y + 1); setCalMonth(0); }
+    else setCalMonth(m => m + 1);
+  }
+
+  // ── Date helpers ─────────────────────────────────────────────────────────
+  function toISO(day: number): string {
+    return `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  }
+  function isCellDisabled(day: number): boolean {
+    return toISO(day) < todayISO; // ISO lexicographic comparison
+  }
+  function isCellToday(day: number): boolean {
+    return toISO(day) === todayISO;
+  }
+
+  function selectDate(day: number) {
+    if (isCellDisabled(day)) return;
+    const iso = toISO(day);
+    // Clear arrival window if date changes so the user must re-confirm
+    update({ preferredDate: iso, preferredTime: iso !== state.preferredDate ? 'No preference' : state.preferredTime });
+  }
+
+  // ── Build grid cells ─────────────────────────────────────────────────────
+  const firstDayOfWeek = (new Date(calYear, calMonth, 1).getDay() + 6) % 7; // Mon = 0
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const cells: (number | null)[] = [
+    ...Array<null>(firstDayOfWeek).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+
+  // ── Display helpers ──────────────────────────────────────────────────────
+  function formatDisplayDate(iso: string): string {
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', {
+      weekday: 'short', month: 'short', day: 'numeric',
+    });
+  }
+
+  const dateSelected = state.preferredDate !== '';
+  const timeSelected = state.preferredTime !== 'No preference';
+
+  // ── Booking context ──────────────────────────────────────────────────────
   const cat = CATEGORIES.find(c => c.id === state.categoryId);
   const pkg = cat?.packages.find(p => p.id === state.packageId);
   const price = computePrice(state);
@@ -706,69 +772,123 @@ function Step3({
         Choose your preferred date and arrival window. We&apos;ll confirm availability by text.
       </p>
 
-      {/* Booking context — what they've chosen so far */}
+      {/* Booking context card */}
       {pkg && (
         <div className={styles.dtSummary}>
           <div className={styles.dtSummaryLeft}>
             <span className={styles.dtSummaryPkg}>{pkg.name}</span>
-            {vehicleLabel && (
-              <span className={styles.dtSummaryVehicle}>{vehicleLabel}</span>
+            {vehicleLabel && <span className={styles.dtSummaryVehicle}>{vehicleLabel}</span>}
+            {dateSelected && (
+              <span className={styles.dtSummarySchedule}>
+                {formatDisplayDate(state.preferredDate)}
+                {timeSelected && <> &nbsp;·&nbsp; {state.preferredTime}</>}
+              </span>
             )}
           </div>
-          {price != null && (
-            <span className={styles.dtSummaryPrice}>${price}</span>
-          )}
+          {price != null && <span className={styles.dtSummaryPrice}>${price}</span>}
         </div>
       )}
 
-      {/* Date picker */}
-      <div className={styles.field} style={{ marginBottom: 24 }}>
-        <label className={styles.fieldLabel} htmlFor="bk-date">
-          Preferred Date
-        </label>
-        <input
-          className={styles.fieldInput}
-          id="bk-date"
-          name="preferred_date"
-          type="date"
-          required
-          min={todayISO}
-          value={state.preferredDate || undefined}
-          onChange={e => update({ preferredDate: e.target.value })}
-        />
+      {/* ── Custom calendar ── */}
+      <div className={styles.calendar}>
+
+        {/* Month navigation */}
+        <div className={styles.calHeader}>
+          <button
+            className={styles.calNav}
+            type="button"
+            onClick={prevMonth}
+            disabled={!canGoPrev}
+            aria-label="Previous month"
+          >
+            ←
+          </button>
+          <span className={styles.calMonthLabel}>
+            {CAL_MONTH_NAMES[calMonth]} {calYear}
+          </span>
+          <button
+            className={styles.calNav}
+            type="button"
+            onClick={nextMonth}
+            aria-label="Next month"
+          >
+            →
+          </button>
+        </div>
+
+        {/* Day-of-week headers + date grid */}
+        <div className={styles.calGrid}>
+          {CAL_DAY_LABELS.map(d => (
+            <div key={d} className={styles.calDayLabel}>{d}</div>
+          ))}
+          {cells.map((day, i) => {
+            if (day === null) return <div key={`e${i}`} />;
+            const iso = toISO(day);
+            const disabled = isCellDisabled(day);
+            const selected = state.preferredDate === iso;
+            const isToday = isCellToday(day);
+            return (
+              <button
+                key={iso}
+                type="button"
+                disabled={disabled}
+                aria-pressed={selected}
+                aria-label={`${CAL_MONTH_NAMES[calMonth]} ${day}`}
+                className={[
+                  styles.calCell,
+                  disabled ? styles.calCellDisabled : '',
+                  selected ? styles.calCellSelected : '',
+                  isToday && !selected ? styles.calCellToday : '',
+                ].filter(Boolean).join(' ')}
+                onClick={() => selectDate(day)}
+              >
+                {day}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Arrival window cards */}
-      <span className={styles.fieldLabel} style={{ display: 'block', marginBottom: 12 }}>
-        Arrival Window
-      </span>
-      <div className={styles.timeSlotGrid}>
-        {ARRIVAL_WINDOWS.map(slot => {
-          const isSelected = state.preferredTime === slot.window;
-          return (
-            <div
-              key={slot.label}
-              role="button"
-              tabIndex={0}
-              aria-pressed={isSelected}
-              className={[
-                styles.timeSlotCard,
-                isSelected ? styles.timeSlotSelected : '',
-              ].filter(Boolean).join(' ')}
-              onClick={() => update({ preferredTime: slot.window })}
-              onKeyDown={e => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  update({ preferredTime: slot.window });
-                }
-              }}
-            >
-              <span className={styles.timeSlotLabel}>{slot.label}</span>
-              <span className={styles.timeSlotWindow}>{slot.window}</span>
-              <span className={styles.timeSlotNote}>{slot.note}</span>
-            </div>
-          );
-        })}
+      {/* ── Arrival windows ── */}
+      <div className={[
+        styles.timeSlotSection,
+        !dateSelected ? styles.timeSlotSectionLocked : '',
+      ].filter(Boolean).join(' ')}>
+        <span className={styles.timeSlotSectionLabel}>
+          {dateSelected
+            ? `Arrival Window — ${formatDisplayDate(state.preferredDate)}`
+            : 'Arrival Window — select a date above'}
+        </span>
+        <div className={styles.timeSlotGrid}>
+          {ARRIVAL_WINDOWS.map(slot => {
+            const isSelected = state.preferredTime === slot.window;
+            return (
+              <div
+                key={slot.label}
+                role="button"
+                tabIndex={dateSelected ? 0 : -1}
+                aria-pressed={isSelected}
+                aria-disabled={!dateSelected}
+                className={[
+                  styles.timeSlotCard,
+                  isSelected ? styles.timeSlotSelected : '',
+                  !dateSelected ? styles.timeSlotCardDisabled : '',
+                ].filter(Boolean).join(' ')}
+                onClick={() => { if (dateSelected) update({ preferredTime: slot.window }); }}
+                onKeyDown={e => {
+                  if (dateSelected && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    update({ preferredTime: slot.window });
+                  }
+                }}
+              >
+                <span className={styles.timeSlotLabel}>{slot.label}</span>
+                <span className={styles.timeSlotWindow}>{slot.window}</span>
+                <span className={styles.timeSlotNote}>{slot.note}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </>
   );

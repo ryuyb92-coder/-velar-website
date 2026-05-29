@@ -946,16 +946,16 @@
    STEP 3 — DATE & TIME
 ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Booking context summary card */
+/* ─── Booking context summary card ─────────────────────────────────────── */
 .dtSummary {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   background: #f8f5f1;
   border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 14px 18px;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   gap: 12px;
 }
 
@@ -978,6 +978,13 @@
   color: var(--color-text-muted);
 }
 
+.dtSummarySchedule {
+  font-size: 0.72rem;
+  color: var(--color-orange);
+  font-weight: 500;
+  margin-top: 1px;
+}
+
 .dtSummaryPrice {
   font-size: 1.2rem;
   font-weight: 700;
@@ -985,6 +992,156 @@
   letter-spacing: -0.03em;
   flex-shrink: 0;
   font-feature-settings: "tnum" 1;
+}
+
+/* ─── Custom calendar ───────────────────────────────────────────────────── */
+.calendar {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 22px;
+  background: #fff;
+}
+
+/* Month header */
+.calHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #faf8f5;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.calNav {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--color-off-black);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 140ms ease, color 140ms ease;
+  line-height: 1;
+}
+
+.calNav:hover:not(:disabled) {
+  background: var(--color-border);
+}
+
+.calNav:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.calMonthLabel {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-off-black);
+  letter-spacing: -0.015em;
+}
+
+/* 7-column grid for day labels + date cells */
+.calGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  padding: 10px 10px 14px;
+}
+
+.calDayLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Date cell — base */
+.calCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--color-off-black);
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+  line-height: 1;
+}
+
+/* Hover — available dates */
+.calCell:hover:not(.calCellDisabled):not(.calCellSelected) {
+  background: rgba(242, 106, 13, 0.08);
+  color: var(--color-orange);
+}
+
+/* Today — subtle orange label, dot indicator */
+.calCellToday {
+  font-weight: 700;
+  color: var(--color-orange);
+  position: relative;
+}
+
+.calCellToday::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-orange);
+  opacity: 0.6;
+}
+
+/* Selected — solid orange */
+.calCellSelected {
+  background: var(--color-orange) !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+/* Past / unavailable */
+.calCellDisabled {
+  color: rgba(0, 0, 0, 0.18);
+  cursor: not-allowed;
+}
+
+/* ─── Arrival window section ─────────────────────────────────────────────── */
+.timeSlotSection {
+  transition: opacity 200ms ease;
+}
+
+.timeSlotSectionLocked {
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
+}
+
+.timeSlotSectionLabel {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
 }
 
 /* Time slot grid — 3 columns desktop, 1 column mobile */
@@ -1019,12 +1176,17 @@
   user-select: none;
 }
 
-.timeSlotCard:hover:not(.timeSlotSelected) {
+.timeSlotCard:hover:not(.timeSlotSelected):not(.timeSlotCardDisabled) {
   border-color: #c8bfb5;
   background: #faf8f5;
 }
 
-/* Selected: orange border + warm tint + inset glow */
+/* Locked (no date selected) */
+.timeSlotCardDisabled {
+  cursor: not-allowed;
+}
+
+/* Selected: orange border + warm tint + glow */
 .timeSlotSelected {
   border-color: var(--color-orange);
   background: rgba(242, 106, 13, 0.05);
