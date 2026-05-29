@@ -952,59 +952,62 @@
 
 /* ═══════════════════════════════════════════════════════════════════════════
    PREMIUM ADD-ON SERVICE MENU (Step 2)
-   Row-based layout with icons, descriptions, smooth selection states.
 ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Section fade-in stagger animation */
 @keyframes addonSectionIn {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes totalPulse {
   0%   { opacity: 1; }
-  40%  { opacity: 0.5; }
+  40%  { opacity: 0.45; }
   100% { opacity: 1; }
 }
 
-/* ─── Section container ────────────────────────────────────────────────────  */
+/* ─── Section block ─────────────────────────────────────────────────────── */
 .addonSection {
   animation: addonSectionIn 200ms ease-out both;
 }
 
-.addonSectionHeader {
-  font-size: 0.54rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.22);
-  padding: 20px 0 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  display: block;
+/* Clear visual gap between sections — this is what makes them feel separate */
+.addonSection + .addonSection {
+  margin-top: 28px;
 }
 
-/* Remove top border from first section header */
-.addonSection:first-of-type .addonSectionHeader {
-  border-top: none;
-  padding-top: 0;
+/* Section label — large, visible, acts as a headline for the group */
+.addonSectionHeader {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+  display: block;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 4px;
 }
 
 /* ─── Add-on row ────────────────────────────────────────────────────────── */
 .addonRow {
   display: flex;
   align-items: center;
-  gap: 14px;
-  min-height: 60px;
-  padding: 10px 0;
+  gap: 16px;
+  min-height: 64px;
+  padding: 12px 12px 12px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   cursor: pointer;
+
+  /* Selected indicator lives as a left border */
   border-left: 3px solid transparent;
-  padding-left: 10px;
-  margin-left: -10px;
-  border-radius: 0 6px 6px 0;
+  padding-left: 12px;
+  margin-left: -12px;
+  border-radius: 0 8px 8px 0;
+
   transition:
-    background 150ms ease,
-    border-color 150ms ease;
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1014,121 +1017,135 @@
 }
 
 .addonRow:hover:not(.addonRowSelected) {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
 }
 
+/* Selected: orange left bar + warm glow + elevated background */
 .addonRowSelected {
-  background: rgba(242, 106, 13, 0.06);
+  background: rgba(242, 106, 13, 0.08);
   border-left-color: var(--color-orange);
+  box-shadow: inset 0 0 0 1px rgba(242, 106, 13, 0.12);
 }
 
-/* ─── Icon container ─────────────────────────────────────────────────────── */
+/* ─── Icon — primary visual hook ─────────────────────────────────────────── */
 .addonIconWrap {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: rgba(255, 255, 255, 0.35);
-  transition: background 150ms ease, color 150ms ease;
+  color: rgba(255, 255, 255, 0.5);
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+/* Icons render at 24px within the 44px container */
+.addonIconWrap svg {
+  width: 24px;
+  height: 24px;
 }
 
 .addonRowSelected .addonIconWrap {
-  background: rgba(242, 106, 13, 0.14);
+  background: rgba(242, 106, 13, 0.16);
+  border-color: rgba(242, 106, 13, 0.25);
   color: var(--color-orange);
 }
 
-/* ─── Add-on text content ────────────────────────────────────────────────── */
+/* ─── Text block ──────────────────────────────────────────────────────────  */
 .addonInfo {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
+/* Name — highest contrast element after the icon */
 .addonName {
-  font-size: 0.86rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.72);
-  line-height: 1.3;
-  transition: color 150ms ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  transition: color 160ms ease;
 }
 
 .addonRowSelected .addonName {
-  color: #fff;
+  color: #ffffff;
 }
 
+/* Description — secondary, truly muted but legible */
 .addonDesc {
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.28);
+  font-size: 0.73rem;
+  color: rgba(255, 255, 255, 0.36);
   line-height: 1.3;
-  transition: color 150ms ease;
+  transition: color 160ms ease;
 }
 
 .addonRowSelected .addonDesc {
-  color: rgba(242, 106, 13, 0.55);
+  color: rgba(242, 106, 13, 0.6);
 }
 
-/* ─── Price label ─────────────────────────────────────────────────────────── */
+/* ─── Price ────────────────────────────────────────────────────────────────  */
 .addonPrice {
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.38);
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
   white-space: nowrap;
   flex-shrink: 0;
-  transition: color 150ms ease;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: -0.01em;
+  transition: color 160ms ease;
 }
 
 .addonRowSelected .addonPrice {
   color: var(--color-orange);
-  font-weight: 600;
 }
 
 .addonPriceContact {
-  font-size: 0.72rem;
+  font-size: 0.73rem;
   color: rgba(255, 255, 255, 0.25);
   font-style: italic;
+  flex-shrink: 0;
 }
 
-/* ─── Running subtotal block ─────────────────────────────────────────────── */
+/* ─── Running subtotal ─────────────────────────────────────────────────────  */
 .addonSubtotal {
-  margin-top: 20px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 28px;
+  padding: 18px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
 }
 
 .addonSubtotalRow {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  font-size: 0.76rem;
+  font-size: 0.78rem;
 }
 
 .addonSubtotalKey {
-  color: rgba(255, 255, 255, 0.32);
+  color: rgba(255, 255, 255, 0.36);
   letter-spacing: 0.01em;
 }
 
 .addonSubtotalVal {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.52);
   font-weight: 500;
   font-feature-settings: "tnum" 1;
 }
 
 .addonSubtotalDivider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.07);
-  margin: 4px 0;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 3px 0;
 }
 
 .addonSubtotalTotalRow {
@@ -1138,38 +1155,46 @@
 }
 
 .addonSubtotalTotalKey {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
-  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.01em;
 }
 
 .addonSubtotalTotalVal {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--color-orange);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   font-feature-settings: "tnum" 1;
   animation: totalPulse 220ms ease-out;
 }
 
 .addonSubtotalNote {
   font-size: 0.66rem;
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.22);
   font-style: italic;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
+/* ─── Mobile ───────────────────────────────────────────────────────────────  */
 @media (max-width: 639px) {
+  .addonSection + .addonSection {
+    margin-top: 22px;
+  }
   .addonRow {
-    min-height: 54px;
-    gap: 12px;
+    min-height: 58px;
+    gap: 13px;
   }
   .addonIconWrap {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
+  }
+  .addonIconWrap svg {
+    width: 22px;
+    height: 22px;
   }
   .addonName {
-    font-size: 0.83rem;
+    font-size: 0.87rem;
   }
 }
