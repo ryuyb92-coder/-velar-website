@@ -111,7 +111,7 @@ function isStepValid(step: number, state: BookingState): boolean {
   switch (step) {
     case 1: return state.vehicleType !== null && state.packageId !== null;
     case 2: return true;
-    case 3: return state.preferredDate !== '';
+    case 3: return state.preferredDate !== '' && state.preferredTime !== 'No preference';
     case 4: return /^\d{5}$/.test(state.zip);
     case 5: return state.vehicleDescription.trim().length > 0;
     case 6: return (
@@ -675,53 +675,100 @@ function Step2({ state, update }: { state: BookingState; update: (partial: Parti
     </>
   );
 }
+const ARRIVAL_WINDOWS = [
+  { label: 'Morning',    window: '8:00 AM – 10:00 AM',  note: 'Early start' },
+  { label: 'Midday',     window: '12:00 PM – 2:00 PM',  note: 'Midday arrival' },
+  { label: 'Afternoon',  window: '3:00 PM – 5:00 PM',   note: 'Late afternoon' },
+] as const;
+
 function Step3({
   state,
   update,
   todayISO,
-  timeSlots,
 }: {
   state: BookingState;
   update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void;
   todayISO: string;
-  timeSlots: string[];
+  timeSlots: string[]; // kept in signature for interface compatibility
 }) {
+  // Booking context summary
+  const cat = CATEGORIES.find(c => c.id === state.categoryId);
+  const pkg = cat?.packages.find(p => p.id === state.packageId);
+  const price = computePrice(state);
+  const vehicleLabel =
+    state.vehicleType === 'sedan' ? 'Sedan / Coupe' :
+    state.vehicleType === 'suv'   ? 'SUV / Truck'   :
+    state.vehicleType === 'xl'    ? 'XL Vehicle'     : null;
+
   return (
     <>
-      <p className={styles.stepSub}>We&apos;ll confirm availability and reach out to finalize your appointment.</p>
+      <p className={styles.stepSub}>
+        Choose your preferred date and arrival window. We&apos;ll confirm availability by text.
+      </p>
 
-      <div className={styles.fieldRow}>
-        <div className={styles.field}>
-          <label className={styles.fieldLabel} htmlFor="bk-date">
-            Preferred Date
-          </label>
-          <input
-            className={styles.fieldInput}
-            id="bk-date"
-            name="preferred_date"
-            type="date"
-            required
-            min={todayISO}
-            value={state.preferredDate || undefined}
-            onChange={e => update({ preferredDate: e.target.value })}
-          />
+      {/* Booking context — what they've chosen so far */}
+      {pkg && (
+        <div className={styles.dtSummary}>
+          <div className={styles.dtSummaryLeft}>
+            <span className={styles.dtSummaryPkg}>{pkg.name}</span>
+            {vehicleLabel && (
+              <span className={styles.dtSummaryVehicle}>{vehicleLabel}</span>
+            )}
+          </div>
+          {price != null && (
+            <span className={styles.dtSummaryPrice}>${price}</span>
+          )}
         </div>
-        <div className={styles.field}>
-          <label className={styles.fieldLabel} htmlFor="bk-time">
-            Preferred Time
-          </label>
-          <select
-            className={styles.fieldSelect}
-            id="bk-time"
-            name="preferred_time"
-            value={state.preferredTime}
-            onChange={e => update({ preferredTime: e.target.value })}
-          >
-            {timeSlots.map(t => (
-              <option key={t} value={t}>{t}</option>
-            ))}
-          </select>
-        </div>
+      )}
+
+      {/* Date picker */}
+      <div className={styles.field} style={{ marginBottom: 24 }}>
+        <label className={styles.fieldLabel} htmlFor="bk-date">
+          Preferred Date
+        </label>
+        <input
+          className={styles.fieldInput}
+          id="bk-date"
+          name="preferred_date"
+          type="date"
+          required
+          min={todayISO}
+          value={state.preferredDate || undefined}
+          onChange={e => update({ preferredDate: e.target.value })}
+        />
+      </div>
+
+      {/* Arrival window cards */}
+      <span className={styles.fieldLabel} style={{ display: 'block', marginBottom: 12 }}>
+        Arrival Window
+      </span>
+      <div className={styles.timeSlotGrid}>
+        {ARRIVAL_WINDOWS.map(slot => {
+          const isSelected = state.preferredTime === slot.window;
+          return (
+            <div
+              key={slot.label}
+              role="button"
+              tabIndex={0}
+              aria-pressed={isSelected}
+              className={[
+                styles.timeSlotCard,
+                isSelected ? styles.timeSlotSelected : '',
+              ].filter(Boolean).join(' ')}
+              onClick={() => update({ preferredTime: slot.window })}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  update({ preferredTime: slot.window });
+                }
+              }}
+            >
+              <span className={styles.timeSlotLabel}>{slot.label}</span>
+              <span className={styles.timeSlotWindow}>{slot.window}</span>
+              <span className={styles.timeSlotNote}>{slot.note}</span>
+            </div>
+          );
+        })}
       </div>
     </>
   );

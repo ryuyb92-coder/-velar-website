@@ -942,6 +942,126 @@
   letter-spacing: -0.03em;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   STEP 3 — DATE & TIME
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Booking context summary card */
+.dtSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8f5f1;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 22px;
+  gap: 12px;
+}
+
+.dtSummaryLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.dtSummaryPkg {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-off-black);
+  letter-spacing: -0.01em;
+}
+
+.dtSummaryVehicle {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.dtSummaryPrice {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-orange);
+  letter-spacing: -0.03em;
+  flex-shrink: 0;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Time slot grid — 3 columns desktop, 1 column mobile */
+.timeSlotGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 479px) {
+  .timeSlotGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Individual time slot card */
+.timeSlotCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.timeSlotCard:hover:not(.timeSlotSelected) {
+  border-color: #c8bfb5;
+  background: #faf8f5;
+}
+
+/* Selected: orange border + warm tint + inset glow */
+.timeSlotSelected {
+  border-color: var(--color-orange);
+  background: rgba(242, 106, 13, 0.05);
+  box-shadow: 0 0 0 1px rgba(242, 106, 13, 0.15);
+}
+
+.timeSlotLabel {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-off-black);
+  letter-spacing: -0.01em;
+  transition: color 160ms ease;
+}
+
+.timeSlotSelected .timeSlotLabel {
+  color: var(--color-orange);
+}
+
+.timeSlotWindow {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-off-black);
+  line-height: 1.3;
+  transition: color 160ms ease;
+}
+
+.timeSlotNote {
+  font-size: 0.64rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+  transition: color 160ms ease;
+}
+
+.timeSlotSelected .timeSlotNote {
+  color: rgba(242, 106, 13, 0.7);
+}
+
 /* ─── Optional field label modifier ──────────────────────────────────────── */
 .fieldLabelOptional {
   font-weight: 400;
