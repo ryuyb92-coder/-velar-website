@@ -202,7 +202,10 @@ export default function BookingModal({ intent, onClose }: Props) {
 
     const script = document.createElement('script');
     script.id = SCRIPT_ID;
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places&loading=async`;
+    // No &loading=async — that parameter causes script.onload to fire before
+    // window.google.maps is ready, so the map init effect silently exits.
+    // script.async (HTML attribute) is sufficient for non-blocking load.
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places`;
     script.async = true;
     script.onload = () => setMapsReady(true);
     document.head.appendChild(script);
@@ -262,11 +265,26 @@ export default function BookingModal({ intent, onClose }: Props) {
 
   // Initialize the JS API map once Maps is loaded
   useEffect(() => {
-    if (!mapsReady || !mapContainerRef.current || mapRef.current) return;
+    if (!mapsReady) return;
+    console.log('[VELAR Maps] API loaded, mapsReady=true');
+
+    if (!mapContainerRef.current) {
+      console.warn('[VELAR Maps] mapContainerRef is null — map div not in DOM yet');
+      return;
+    }
+    if (mapRef.current) {
+      console.log('[VELAR Maps] map already initialized, skipping');
+      return;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const g = (window as any).google;
-    if (!g?.maps?.Map) return;
+    if (!g?.maps?.Map) {
+      console.warn('[VELAR Maps] google.maps.Map not available after onload — check loading=async URL param');
+      return;
+    }
 
+    console.log('[VELAR Maps] creating map in container', mapContainerRef.current);
     mapRef.current = new g.maps.Map(mapContainerRef.current, {
       center: DALLAS_CENTER,
       zoom: 13,
@@ -279,6 +297,7 @@ export default function BookingModal({ intent, onClose }: Props) {
       clickableIcons: false,
       gestureHandling: 'cooperative',
     });
+    console.log('[VELAR Maps] map created, center:', mapRef.current.getCenter()?.toJSON());
   }, [mapsReady]);
 
   // Attach Google Places Autocomplete — adds geometry field for smooth map animation
