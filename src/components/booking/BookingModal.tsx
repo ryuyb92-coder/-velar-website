@@ -524,7 +524,7 @@ export default function BookingModal({ intent, onClose }: Props) {
                 className={styles.addressSearchInput}
                 id="phase1-address"
                 type="text"
-                placeholder="400 Crescent Ct, Dallas, TX 75201"
+                placeholder="Enter the street number and full address"
                 value={state.zip}
                 onChange={e => update({ zip: e.target.value })}
                 autoComplete="street-address"
@@ -550,25 +550,40 @@ export default function BookingModal({ intent, onClose }: Props) {
       {/* ── PHASE 2: Booking experience overlaid on the same map ─────────── */}
       {phase === 'booking' && (
         <>
-          {/* Logo — top-left */}
-          <div className={styles.mapFloatingLogo}>
-            <Image
-              src="/velar-logo.png"
-              alt="VELAR Mobile Detailing"
-              width={1238}
-              height={1194}
-              className={styles.mapLogo}
-              priority
-            />
-          </div>
-
-          {/* Address confirmed pill — top-center */}
-          {state.zip.trim().length > 0 && (
-            <div className={styles.mapAddressBar}>
-              <span className={styles.mapAddressPin}>{PinIcon}</span>
-              <span className={styles.mapAddressText}>{state.zip}</span>
+          {/* Persistent address card — same as Phase 1 but no Cancel/Next buttons.
+              Input remains editable; Google Places autocomplete stays attached.
+              Matches SHWASH where the address bar stays visible throughout. */}
+          <div className={styles.addressTopCard}>
+            <div className={styles.addressTopRow}>
+              <Image
+                src="/velar-logo.png"
+                alt="VELAR Mobile Detailing"
+                width={1238}
+                height={1194}
+                className={styles.addressLogo}
+                priority
+              />
+              {/* No Cancel button in Phase 2 */}
             </div>
-          )}
+
+            <h1 className={styles.addressHeadline}>
+              Let&apos;s Schedule Your Appointment
+            </h1>
+
+            <div className={styles.addressSearchRow}>
+              <div className={styles.addressSearchIcon}>{PinIcon}</div>
+              <input
+                ref={addressInputRef}
+                className={styles.addressSearchInput}
+                type="text"
+                placeholder="Enter the street number and full address"
+                value={state.zip}
+                onChange={e => update({ zip: e.target.value })}
+                autoComplete="street-address"
+                aria-label="Service address"
+              />
+            </div>
+          </div>
 
           {/* Summary bar — bottom of screen (left of panel) */}
           {(pkg || price != null) && (
