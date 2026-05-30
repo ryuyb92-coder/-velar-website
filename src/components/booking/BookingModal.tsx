@@ -511,6 +511,16 @@ export default function BookingModal({ intent, onClose }: Props) {
     state.vehicleType === 'suv'   ? 'SUV / Truck (+$30)' :
     state.vehicleType === 'xl'    ? 'XL Vehicle (+$30)' : null;
 
+  // Running add-on total — used in the step 2 sticky price bar
+  const addonSum = state.enhancements.reduce((sum, name) => {
+    for (const group of ADDON_GROUPS) {
+      const item = group.items.find(i => i.name === name);
+      if (item?.numericPrice != null) return sum + item.numericPrice;
+    }
+    return sum;
+  }, 0);
+  const estimatedTotal = (price ?? 0) + addonSum;
+
   const addressValid = state.zip.trim().length >= 10;
 
   const PinIcon = (
@@ -684,6 +694,23 @@ export default function BookingModal({ intent, onClose }: Props) {
                       </p>
                     )}
                     {step < 6 ? (
+                      /* Step 2 (add-ons): show live running total in the CTA */
+                      step === 2 && price != null ? (
+                        <button
+                          className={styles.continueBtnPriced}
+                          onClick={goNext}
+                          type="button"
+                        >
+                          <span className={styles.continueBtnLabel}>Continue</span>
+                          <span className={styles.continueBtnDot}>·</span>
+                          <span
+                            key={estimatedTotal}
+                            className={styles.continueBtnPrice}
+                          >
+                            ${estimatedTotal}
+                          </span>
+                        </button>
+                      ) : (
                       <button
                         className={styles.continueBtn}
                         onClick={goNext}
@@ -692,6 +719,7 @@ export default function BookingModal({ intent, onClose }: Props) {
                       >
                         Continue &nbsp;→
                       </button>
+                      )
                     ) : (
                       <button
                         className={styles.continueBtn}
@@ -934,37 +962,7 @@ function Step3Addons({ state, update }: { state: BookingState; update: (partial:
         </div>
       ))}
 
-      {/* Running subtotal */}
-      {basePrice != null && (
-        <div className={styles.addonSubtotal}>
-          <div className={styles.addonSubtotalRow}>
-            <span className={styles.addonSubtotalKey}>Base Package</span>
-            <span className={styles.addonSubtotalVal}>${basePrice}</span>
-          </div>
-          <div className={styles.addonSubtotalRow}>
-            <span className={styles.addonSubtotalKey}>Selected Add-ons</span>
-            <span className={styles.addonSubtotalVal}>
-              {addonSum > 0 ? `+$${addonSum}` : '—'}
-            </span>
-          </div>
-          <div className={styles.addonSubtotalDivider} />
-          <div className={styles.addonSubtotalTotalRow}>
-            <span className={styles.addonSubtotalTotalKey}>Estimated Total</span>
-            {/* key change re-triggers the pulse animation on every update */}
-            <span
-              key={basePrice + addonSum}
-              className={styles.addonSubtotalTotalVal}
-            >
-              ${basePrice + addonSum}
-            </span>
-          </div>
-          {hasNonNumericSelected && (
-            <p className={styles.addonSubtotalNote}>
-              * Some selected services require a custom quote and aren&apos;t reflected above.
-            </p>
-          )}
-        </div>
-      )}
+      {/* Subtotal removed — pricing is shown in the sticky Continue button */}
     </>
   );
 }

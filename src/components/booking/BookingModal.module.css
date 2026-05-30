@@ -799,6 +799,54 @@
   box-shadow: none;
 }
 
+/* ─── Step 2 priced Continue button — shows live total ───────────────────── */
+.continueBtnPriced {
+  font-family: var(--font-sans);
+  background: var(--color-orange);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 12px 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(242,106,13,0.24);
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.continueBtnPriced:hover {
+  opacity: 0.88;
+}
+
+.continueBtnLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.continueBtnDot {
+  font-size: 0.75rem;
+  opacity: 0.55;
+  font-weight: 300;
+}
+
+.continueBtnPrice {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-feature-settings: "tnum" 1;
+  /* Pulse animation on price change */
+  animation: priceUpdate 220ms ease-out;
+}
+
+@keyframes priceUpdate {
+  0%   { opacity: 1; }
+  40%  { opacity: 0.45; }
+  100% { opacity: 1; }
+}
+
 /* ─── Close button ────────────────────────────────────────────────────────── */
 .closeBtn {
   position: absolute;
