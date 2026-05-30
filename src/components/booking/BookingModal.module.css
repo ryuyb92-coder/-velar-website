@@ -29,7 +29,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  right: 0;        /* Phase 1: full width */
   z-index: 10;
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(8px);
@@ -37,6 +37,17 @@
   padding: 20px clamp(20px, 5vw, 52px) 28px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow: 0 2px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Phase 2: constrain card to left map canvas; does not overlay booking panel */
+.addressTopCardBooking {
+  right: max(40%, 380px);  /* mirrors booking panel: width 40% min-width 380px */
+}
+
+@media (max-width: 767px) {
+  .addressTopCardBooking {
+    right: 0;  /* mobile: panel is full-width, card is hidden behind it anyway */
+  }
 }
 
 .addressTopRow {

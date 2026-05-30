@@ -301,12 +301,12 @@ export default function BookingModal({ intent, onClose }: Props) {
         mapRef.current.setZoom(16);
         mapRef.current.panTo(selectedLocRef.current);
 
-        // panBy sign convention: positive x moves camera EAST (right), which makes
-        // the pin appear to move WEST (left) on screen — toward the visible left area.
-        // The panel covers the RIGHT 40%, so we shift the camera right by half the
-        // panel width, pushing the pin into the center of the visible left area.
+        // panBy offsets the camera so the pin centers in the visible left area.
+        // Positive x → camera moves east → pin appears west (left) on screen.
+        // Negative y → camera moves north → pin appears lower on screen.
+        // Using 30% of panel width (reduced from 50%) to avoid over-shooting left.
         const panelWidth = Math.max(380, window.innerWidth * 0.4);
-        mapRef.current.panBy(panelWidth / 2, 0);
+        mapRef.current.panBy(panelWidth * 0.3, -40);
       }
     }, 450); // 30ms buffer after the 420ms panel animation
 
@@ -550,10 +550,10 @@ export default function BookingModal({ intent, onClose }: Props) {
       {/* ── PHASE 2: Booking experience overlaid on the same map ─────────── */}
       {phase === 'booking' && (
         <>
-          {/* Persistent address card — same as Phase 1 but no Cancel/Next buttons.
+          {/* Persistent address card — constrained to LEFT canvas, does not overlay panel.
               Input remains editable; Google Places autocomplete stays attached.
               Matches SHWASH where the address bar stays visible throughout. */}
-          <div className={styles.addressTopCard}>
+          <div className={[styles.addressTopCard, styles.addressTopCardBooking].join(' ')}>
             <div className={styles.addressTopRow}>
               <Image
                 src="/velar-logo.png"
