@@ -196,11 +196,21 @@ export default function BookingModal({ intent, onClose }: Props) {
   // Load Google Maps JS API via direct script injection — reliable inside createPortal.
   // next/script onLoad does not fire reliably when rendered inside a portal.
   useEffect(() => {
-    if (!MAPS_API_KEY) return;
+    // DIAGNOSTIC #1 — API key presence
+    console.log('[VELAR Diag] MAPS_API_KEY present:', !!MAPS_API_KEY, '| length:', MAPS_API_KEY.length);
+    if (MAPS_API_KEY.length > 8) {
+      console.log('[VELAR Diag] key prefix/suffix:', MAPS_API_KEY.slice(0, 4), '...', MAPS_API_KEY.slice(-4));
+    }
+
+    if (!MAPS_API_KEY) {
+      console.warn('[VELAR Diag] MAPS_API_KEY is empty — map will not load');
+      return;
+    }
 
     // Already loaded
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window as any).google?.maps) {
+      console.log('[VELAR Diag] google.maps already on window — setting ready immediately');
       setMapsReady(true);
       return;
     }
@@ -208,21 +218,30 @@ export default function BookingModal({ intent, onClose }: Props) {
     // Avoid duplicate script tags
     const SCRIPT_ID = 'velar-gmaps';
     if (document.getElementById(SCRIPT_ID)) {
-      // Script is loading — wait for it
+      console.log('[VELAR Diag] script tag already exists — attaching load listener');
       const existing = document.getElementById(SCRIPT_ID) as HTMLScriptElement;
-      const onLoad = () => setMapsReady(true);
+      const onLoad = () => { console.log('[VELAR Diag] existing script fired load'); setMapsReady(true); };
       existing.addEventListener('load', onLoad);
       return () => existing.removeEventListener('load', onLoad);
     }
 
     const script = document.createElement('script');
     script.id = SCRIPT_ID;
-    // No &loading=async — that parameter causes script.onload to fire before
-    // window.google.maps is ready, so the map init effect silently exits.
-    // script.async (HTML attribute) is sufficient for non-blocking load.
     script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places`;
     script.async = true;
-    script.onload = () => setMapsReady(true);
+    script.onerror = (e) => console.error('[VELAR Diag] Maps script FAILED to load:', e);
+    script.onload = () => {
+      // DIAGNOSTIC #2 — Script loaded
+      console.log('[VELAR Diag] Maps script onload fired');
+      // DIAGNOSTIC #3 — window.google.maps
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const g = (window as any).google;
+      console.log('[VELAR Diag] window.google exists:', !!g);
+      console.log('[VELAR Diag] window.google.maps exists:', !!g?.maps);
+      console.log('[VELAR Diag] window.google.maps.Map exists:', !!g?.maps?.Map);
+      setMapsReady(true);
+    };
+    console.log('[VELAR Diag] appending Maps script to head:', script.src);
     document.head.appendChild(script);
     // Do not remove on unmount — it's a global resource
   }, []);
@@ -316,12 +335,23 @@ export default function BookingModal({ intent, onClose }: Props) {
   // Initialize the JS API map once Maps is loaded
   useEffect(() => {
     if (!mapsReady) return;
-    console.log('[VELAR Maps] API loaded, mapsReady=true');
+    console.log('[VELAR Maps] mapsReady=true — entering init effect');
 
     if (!mapContainerRef.current) {
       console.warn('[VELAR Maps] mapContainerRef is null — map div not in DOM yet');
       return;
     }
+
+    // DIAGNOSTIC #4 — container dimensions
+    const el = mapContainerRef.current;
+    console.log('[VELAR Maps] container dimensions:', {
+      offsetWidth: el.offsetWidth,
+      offsetHeight: el.offsetHeight,
+      clientWidth: el.clientWidth,
+      clientHeight: el.clientHeight,
+      boundingRect: el.getBoundingClientRect(),
+    });
+
     if (mapRef.current) {
       console.log('[VELAR Maps] map already initialized, skipping');
       return;
@@ -330,12 +360,12 @@ export default function BookingModal({ intent, onClose }: Props) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const g = (window as any).google;
     if (!g?.maps?.Map) {
-      console.warn('[VELAR Maps] google.maps.Map not available after onload — check loading=async URL param');
+      console.warn('[VELAR Maps] google.maps.Map not available after onload');
       return;
     }
 
-    console.log('[VELAR Maps] creating map in container', mapContainerRef.current);
-    mapRef.current = new g.maps.Map(mapContainerRef.current, {
+    console.log('[VELAR Maps] creating map in container', el);
+    mapRef.current = new g.maps.Map(el, {
       center: DALLAS_CENTER,
       zoom: 15,  // neighborhood-level — address and nearby streets clearly visible
       styles: VELAR_MAP_STYLES,
