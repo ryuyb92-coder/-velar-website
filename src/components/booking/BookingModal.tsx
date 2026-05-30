@@ -542,14 +542,16 @@ export default function BookingModal({ intent, onClose }: Props) {
           {/* White glass card — logo + headline + search */}
           <div className={styles.addressTopCard}>
             <div className={styles.addressTopRow}>
-              <Image
-                src="/velar-logo-white.png"
-                alt="VELAR Mobile Detailing"
-                width={1774}
-                height={887}
-                className={styles.addressLogo}
-                priority
-              />
+              <div className={styles.addressLogoWrap}>
+                <Image
+                  src="/velar-logo-white.png"
+                  alt="VELAR Mobile Detailing"
+                  width={1774}
+                  height={887}
+                  className={styles.addressLogo}
+                  priority
+                />
+              </div>
               <button
                 className={styles.addressCancelBtn}
                 onClick={onClose}
@@ -601,14 +603,16 @@ export default function BookingModal({ intent, onClose }: Props) {
               Matches SHWASH where the address bar stays visible throughout. */}
           <div className={[styles.addressTopCard, styles.addressTopCardBooking].join(' ')}>
             <div className={styles.addressTopRow}>
-              <Image
-                src="/velar-logo-white.png"
-                alt="VELAR Mobile Detailing"
-                width={1774}
-                height={887}
-                className={styles.addressLogo}
-                priority
-              />
+              <div className={styles.addressLogoWrap}>
+                <Image
+                  src="/velar-logo-white.png"
+                  alt="VELAR Mobile Detailing"
+                  width={1774}
+                  height={887}
+                  className={styles.addressLogo}
+                  priority
+                />
+              </div>
               {/* No Cancel button in Phase 2 */}
             </div>
 

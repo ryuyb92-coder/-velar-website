@@ -67,17 +67,27 @@
   margin-bottom: 20px;
 }
 
-/* White landscape logo — 1774×887px source, displayed at SHWASH-comparable scale */
+/* Wrapper crops bottom ~28% of the logo (hides "Mobile Detailing" text).
+   Image source: 1774×887. Cropped view: 1774×638 (top 72% of height).
+   aspect-ratio = 1774/638 ≈ 2.78 ensures the container clips the bottom rows. */
+.addressLogoWrap {
+  display: block;
+  overflow: hidden;
+  flex-shrink: 0;
+  width: clamp(180px, 26vw, 260px);
+  aspect-ratio: 1774 / 638;   /* 1774 wide × 72% of 887 = 638 tall */
+  line-height: 0;
+}
+
 .addressLogo {
-  width: clamp(140px, 18vw, 190px);
+  width: 100%;
   height: auto;
   display: block;
-  object-fit: contain;
 }
 
 @media (max-width: 639px) {
-  .addressLogo {
-    width: clamp(120px, 38vw, 160px);
+  .addressLogoWrap {
+    width: clamp(140px, 42vw, 190px);
   }
 }
 
