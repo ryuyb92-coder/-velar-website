@@ -31,12 +31,22 @@
   left: 0;
   right: 0;        /* Phase 1: full width */
   z-index: 10;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  /* Fully opaque — map must not bleed through the logo/headline area */
+  background: #ffffff;
   padding: 20px clamp(20px, 5vw, 52px) 28px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient fade from solid white into the map below */
+.addressTopCard::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: linear-gradient(to bottom, #ffffff, transparent);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Phase 2: constrain card to left map canvas; does not overlay booking panel */
