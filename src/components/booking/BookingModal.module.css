@@ -67,26 +67,17 @@
   margin-bottom: 20px;
 }
 
-/* Wrapper crops bottom ~28% of the logo (hides "Mobile Detailing" text).
-   Image source: 1774×887. Cropped view: 1774×638 (top 72% of height).
-   aspect-ratio = 1774/638 ≈ 2.78 ensures the container clips the bottom rows. */
-.addressLogoWrap {
-  display: block;
-  overflow: hidden;
-  flex-shrink: 0;
-  width: clamp(180px, 26vw, 260px);
-  aspect-ratio: 1774 / 638;   /* 1774 wide × 72% of 887 = 638 tall */
-  line-height: 0;
-}
-
+/* Booking header logo — velar-wordmark.png, full image, no cropping */
 .addressLogo {
-  width: 100%;
+  width: clamp(180px, 26vw, 260px);
   height: auto;
   display: block;
+  flex-shrink: 0;
+  object-fit: contain;
 }
 
 @media (max-width: 639px) {
-  .addressLogoWrap {
+  .addressLogo {
     width: clamp(140px, 42vw, 190px);
   }
 }
