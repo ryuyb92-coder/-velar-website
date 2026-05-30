@@ -186,6 +186,9 @@ export default function BookingModal({ intent, onClose }: Props) {
   const mapRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const markerRef = useRef<any>(null);
+  // Stores the google.maps.LatLng of the selected address so we can re-center after layout changes
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const selectedLocRef = useRef<any>(null);
   const todayISO = new Date().toISOString().split('T')[0];
 
   useEffect(() => { setMounted(true); }, []);
@@ -275,16 +278,33 @@ export default function BookingModal({ intent, onClose }: Props) {
     return () => document.removeEventListener('keydown', onTab);
   }, []); // runs once; panelRef is stable
 
-  // When booking phase begins, offset the map left so the pin is centered
-  // in the visible left area rather than the full viewport (which the panel covers ~40% of).
+  // When booking phase begins, re-center the map after the panel animation completes.
+  // Runs after a delay so layout has settled, then: resize → panTo → offset left.
   useEffect(() => {
     if (phase !== 'booking' || !mapRef.current) return;
-    if (typeof window === 'undefined' || window.innerWidth <= 767) return; // mobile: panel is full-width, no offset
+    if (typeof window === 'undefined' || window.innerWidth <= 767) return; // mobile: panel is full-width
 
-    // Booking panel width: matches CSS (40% of viewport, min 380px)
-    const panelWidth = Math.max(380, window.innerWidth * 0.4);
-    // Pan left by half the panel width to center pin in the visible map area
-    mapRef.current.panBy(-(panelWidth / 2), 0);
+    // Panel slide-in animation is 420ms. Wait for it to complete before re-centering.
+    const timer = setTimeout(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const g = (window as any).google;
+      if (!mapRef.current) return;
+
+      // Tell Google Maps to re-evaluate its container (handles any layout shift)
+      if (g?.maps?.event) {
+        g.maps.event.trigger(mapRef.current, 'resize');
+      }
+
+      // Re-center on the stored selected location
+      if (selectedLocRef.current) {
+        mapRef.current.panTo(selectedLocRef.current);
+        // Shift left by half the panel width so pin is centered in the visible left area
+        const panelWidth = Math.max(380, window.innerWidth * 0.4);
+        mapRef.current.panBy(-(panelWidth / 2), 0);
+      }
+    }, 450); // 30ms buffer after the 420ms panel animation
+
+    return () => clearTimeout(timer);
   }, [phase]);
 
   // Initialize the JS API map once Maps is loaded
@@ -341,11 +361,13 @@ export default function BookingModal({ intent, onClose }: Props) {
       if (place.formatted_address) {
         setState(prev => ({ ...prev, zip: place.formatted_address ?? '' }));
 
-        // Pan to selected address — no zoom change, keep wide city view
+        // Store location for re-centering when the booking panel opens
         const loc = place.geometry?.location;
+        if (loc) selectedLocRef.current = loc;
+
+        // Pan to selected address — no zoom change, keep address-level view
         if (loc && mapRef.current) {
           mapRef.current.panTo(loc);
-          // No setZoom — map stays at the same wide metro level (11)
 
           // Drop/move the marker
           if (markerRef.current) markerRef.current.setMap(null);
