@@ -1,19 +1,13 @@
-/* ─── Overlay — full-screen solid container ──────────────────────────────── */
-.overlay {
+/* ═══════════════════════════════════════════════════════════════════════════
+   PHASE 1 — Full-screen address selection (SHWASH-style)
+═══════════════════════════════════════════════════════════════════════════ */
+
+.addressPhase {
   position: fixed;
   inset: 0;
   z-index: 100;
-  display: flex;
-  background: #080706;    /* frame fills this entirely; color prevents flash */
-}
-
-/* ─── Frame — full-screen two-panel booking experience ───────────────────── */
-.frame {
-  display: flex;
-  width: 100%;
-  height: 100dvh;
-  overflow: hidden;
-  animation: fsEnter 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  background: #e8eaed;    /* fallback color while map loads */
+  animation: fsEnter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes fsEnter {
@@ -21,10 +15,210 @@
   to   { opacity: 1; }
 }
 
-@media (max-width: 767px) {
-  .frame {
-    flex-direction: column;
+/* White glass card floating over the map — headline + search */
+.addressTopCard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 20px clamp(20px, 5vw, 52px) 28px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.1);
+}
+
+.addressTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.addressLogo {
+  height: 30px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.addressCancelBtn {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px 0;
+  letter-spacing: 0.02em;
+  transition: color 0.18s;
+}
+
+.addressCancelBtn:hover { color: var(--color-off-black); }
+
+.addressHeadline {
+  font-family: var(--font-sans);
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  font-weight: 700;
+  color: #111110;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.addressSearchRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  padding: 0 16px;
+  height: 52px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  transition: border-color 0.18s;
+}
+
+.addressSearchRow:focus-within {
+  border-color: var(--color-orange);
+}
+
+.addressSearchIcon {
+  flex-shrink: 0;
+  color: var(--color-orange);
+  display: flex;
+  align-items: center;
+}
+
+.addressSearchInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  color: #111;
+  background: transparent;
+  padding: 0;
+}
+
+.addressSearchInput::placeholder {
+  color: #9a9288;
+}
+
+/* Continue button — floating at bottom center */
+.addressContinueWrap {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.addressContinueBtn {
+  font-family: var(--font-sans);
+  background: var(--color-orange);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 15px 48px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(242, 106, 13, 0.35), 0 8px 40px rgba(0,0,0,0.15);
+  transition: opacity 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+
+.addressContinueBtn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.addressContinueBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Mobile Phase 1 */
+@media (max-width: 639px) {
+  .addressTopCard {
+    padding: 16px 20px 22px;
   }
+  .addressHeadline {
+    font-size: 1.3rem;
+    text-align: left;
+  }
+  .addressContinueBtn {
+    padding: 14px 40px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PHASE 2 — Map background + booking panel drawer
+═══════════════════════════════════════════════════════════════════════════ */
+
+.bookingPhase {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #e8eaed;
+}
+
+/* Booking panel — slides in from the right over the map */
+.bookingPanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 40%;
+  min-width: 380px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: -4px 0 40px rgba(0,0,0,0.18), -2px 0 8px rgba(0,0,0,0.08);
+  animation: panelSlideIn 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes panelSlideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+/* Mobile Phase 2 — panel becomes full-width */
+@media (max-width: 767px) {
+  .bookingPanel {
+    width: 100%;
+    min-width: 0;
+    box-shadow: none;
+  }
+}
+
+/* Legacy .overlay and .frame — keep for SuccessState compatibility */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  background: #080706;
+}
+
+.frame {
+  display: flex;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 /* ─── Left panel: immersive Google Maps experience (SHWASH-style) ────────── */

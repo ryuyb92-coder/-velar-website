@@ -43,24 +43,23 @@ interface BookingState {
   notes: string;
 }
 
+// Location is now the address pre-step (Phase 1), not counted in the booking steps
 const STEPS = [
-  'Location',           // 1 — address first (SHWASH-style)
-  'Vehicle & Package',  // 2
-  'Add-Ons',           // 3
-  'Date & Time',        // 4
-  'Vehicle Details',    // 5
-  'Your Information',   // 6
-  'Review & Confirm',   // 7
+  'Vehicle & Package',  // 1
+  'Add-Ons',            // 2
+  'Date & Time',        // 3
+  'Vehicle Details',    // 4
+  'Your Information',   // 5
+  'Review & Confirm',   // 6
 ] as const;
 
 const STEP_TITLES = [
-  'Service Address',       // 1
-  'Your Vehicle & Service', // 2
-  'Optional Add-Ons',      // 3
-  'Date & Time',            // 4
-  'Vehicle Details',        // 5
-  'Your Information',       // 6
-  'Review & Confirm',       // 7
+  'Your Vehicle & Service', // 1
+  'Optional Add-Ons',       // 2
+  'Date & Time',            // 3
+  'Vehicle Details',        // 4
+  'Your Information',       // 5
+  'Review & Confirm',       // 6
 ] as const;
 
 const TIME_SLOTS = [
@@ -112,17 +111,16 @@ function computePrice(state: BookingState): number | null {
 
 function isStepValid(step: number, state: BookingState): boolean {
   switch (step) {
-    case 1: return state.zip.trim().length >= 10;  // service address (now Step 1)
-    case 2: return state.vehicleType !== null && state.packageId !== null;
-    case 3: return true;  // add-ons always skippable
-    case 4: return state.preferredDate !== '' && state.preferredTime !== 'No preference';
-    case 5: return state.vehicleDescription.trim().length > 0;
-    case 6: return (
+    case 1: return state.vehicleType !== null && state.packageId !== null;
+    case 2: return true;   // add-ons always skippable
+    case 3: return state.preferredDate !== '' && state.preferredTime !== 'No preference';
+    case 4: return state.vehicleDescription.trim().length > 0;
+    case 5: return (
       state.name.trim().length > 0 &&
       state.phone.trim().length >= 7 &&
       /\S+@\S+\.\S+/.test(state.email)
     );
-    case 7: return true;
+    case 6: return true;
     default: return false;
   }
 }
@@ -130,6 +128,7 @@ function isStepValid(step: number, state: BookingState): boolean {
 /* ─── Main component ────────────────────────────────────────────────────── */
 export default function BookingModal({ intent, onClose }: Props) {
   const [mounted, setMounted] = useState(false);
+  const [phase, setPhase] = useState<'address' | 'booking'>('address');
   const [step, setStep] = useState(1);
   const [state, setState] = useState<BookingState>(() => buildInitialState(intent));
   const [submitting, setSubmitting] = useState(false);
@@ -292,195 +291,228 @@ export default function BookingModal({ intent, onClose }: Props) {
     state.vehicleType === 'suv'   ? 'SUV / Truck (+$30)' :
     state.vehicleType === 'xl'    ? 'XL Vehicle (+$30)' : null;
 
-  // Map shows immediately with Dallas as default; updates when a valid address is entered
+  // Map: Dallas default until a valid address is entered
   const mapQuery = state.zip.trim().length >= 10 ? state.zip : 'Dallas, TX';
   const mapZoom  = state.zip.trim().length >= 10 ? 15 : 11;
   const mapSrc   = MAPS_API_KEY
     ? `https://www.google.com/maps/embed/v1/place?key=${MAPS_API_KEY}&q=${encodeURIComponent(mapQuery)}&zoom=${mapZoom}`
     : null;
 
+  // Address is valid once the customer has entered enough text
+  const addressValid = state.zip.trim().length >= 10;
+
+  const MapIframe = mapSrc ? (
+    <iframe
+      title="Service location"
+      src={mapSrc}
+      className={styles.mapIframe}
+      loading="eager"
+      referrerPolicy="no-referrer-when-downgrade"
+    />
+  ) : (
+    <div className={styles.mapAtmosphere} />
+  );
+
+  const PinIcon = (
+    <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <path d="M9 1.5C6.1 1.5 3.75 3.85 3.75 6.75C3.75 10.875 9 16.5 9 16.5C9 16.5 14.25 10.875 14.25 6.75C14.25 3.85 11.9 1.5 9 1.5Z"
+        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx="9" cy="6.75" r="1.75" stroke="currentColor" strokeWidth="1.5"/>
+    </svg>
+  );
+
+  /* ── PHASE 1: Full-screen address selection ────────────────────────────── */
+  if (phase === 'address') {
+    return createPortal(
+      <div
+        className={styles.addressPhase}
+        ref={overlayRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Enter service address"
+      >
+        {/* Load Maps API */}
+        {MAPS_API_KEY && (
+          <Script
+            src={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places&loading=async`}
+            strategy="afterInteractive"
+            onLoad={() => setMapsReady(true)}
+          />
+        )}
+
+        {/* Full-screen map background */}
+        {MapIframe}
+
+        {/* Floating top area — white glass card with headline + search */}
+        <div className={styles.addressTopCard}>
+          <div className={styles.addressTopRow}>
+            <Image
+              src="/velar-logo.png"
+              alt="VELAR Mobile Detailing"
+              width={1238}
+              height={1194}
+              className={styles.addressLogo}
+              priority
+            />
+            <button
+              className={styles.addressCancelBtn}
+              onClick={onClose}
+              type="button"
+              aria-label="Cancel booking"
+            >
+              Cancel
+            </button>
+          </div>
+
+          <h1 className={styles.addressHeadline}>
+            Let&apos;s Schedule Your Appointment
+          </h1>
+
+          <div className={styles.addressSearchRow}>
+            <div className={styles.addressSearchIcon}>{PinIcon}</div>
+            <input
+              ref={addressInputRef}
+              className={styles.addressSearchInput}
+              id="phase1-address"
+              type="text"
+              placeholder="400 Crescent Ct, Dallas, TX 75201"
+              value={state.zip}
+              onChange={e => update({ zip: e.target.value })}
+              autoComplete="street-address"
+              aria-label="Service address"
+            />
+          </div>
+        </div>
+
+        {/* Continue — bottom center, disabled until address valid */}
+        <div className={styles.addressContinueWrap}>
+          <button
+            className={styles.addressContinueBtn}
+            type="button"
+            disabled={!addressValid}
+            onClick={() => setPhase('booking')}
+          >
+            Next &nbsp;→
+          </button>
+        </div>
+      </div>,
+      document.body
+    );
+  }
+
+  /* ── PHASE 2: Booking experience — map background + sliding panel ──────── */
   return createPortal(
     <div
-      className={styles.overlay}
+      className={styles.bookingPhase}
       ref={overlayRef}
       role="dialog"
       aria-modal="true"
       aria-label="Book a detail"
     >
-      <div className={styles.frame} ref={panelRef}>
+      {/* Full-screen map background */}
+      {MapIframe}
+
+      {/* Confirmed address pill — top-center of map */}
+      {state.zip.trim().length > 0 && (
+        <div className={styles.mapAddressBar}>
+          <span className={styles.mapAddressPin}>{PinIcon}</span>
+          <span className={styles.mapAddressText}>{state.zip}</span>
+        </div>
+      )}
+
+      {/* VELAR logo — top-left over map */}
+      <div className={styles.mapFloatingLogo}>
+        <Image
+          src="/velar-logo.png"
+          alt="VELAR Mobile Detailing"
+          width={1238}
+          height={1194}
+          className={styles.mapLogo}
+          priority
+        />
+      </div>
+
+      {/* Booking summary — glass bar at bottom of map */}
+      {(pkg || price != null) && (
+        <div className={styles.mapSummaryBar}>
+          <div className={styles.mapSummaryInner}>
+            <div className={styles.mapSummaryLeft}>
+              <div className={styles.mapSummaryPkg}>{pkg ? pkg.name : '—'}</div>
+              {vehicleLabel && <div className={styles.mapSummaryMeta}>{vehicleLabel}</div>}
+            </div>
+            {price != null && <div className={styles.mapSummaryPrice}>${price}</div>}
+          </div>
+        </div>
+      )}
+
+      {/* Booking panel — slides in from right */}
+      <div className={styles.bookingPanel} ref={panelRef}>
 
         {submitted ? (
           <SuccessState onClose={onClose} />
         ) : (
           <>
-            {/* ── LEFT: IMMERSIVE MAP PANEL (SHWASH-style) ─────────── */}
-            <div className={styles.mapPanel}>
-
-              {/* Load Maps API once — in parent so autocomplete attaches here */}
-              {MAPS_API_KEY && (
-                <Script
-                  src={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places&loading=async`}
-                  strategy="afterInteractive"
-                  onLoad={() => setMapsReady(true)}
+            <div className={styles.stepIndicator}>
+              <span className={styles.stepCount}>
+                Step {step} of {STEPS.length}
+              </span>
+              <h2 className={styles.stepTitle}>{STEP_TITLES[step - 1]}</h2>
+              <div className={styles.progress}>
+                <div
+                  className={styles.progressFill}
+                  style={{ width: `${(step / STEPS.length) * 100}%` }}
                 />
-              )}
-
-              {/* Map fills entire left panel */}
-              {mapSrc ? (
-                <iframe
-                  title="Service location"
-                  src={mapSrc}
-                  className={styles.mapIframe}
-                  loading="eager"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              ) : (
-                <div className={styles.mapAtmosphere} />
-              )}
-
-              {/* Floating overlay — all elements above the map */}
-              <div className={styles.mapOverlay}>
-
-                {/* VELAR logo — top-left, always visible */}
-                <div className={styles.mapFloatingLogo}>
-                  <Image
-                    src="/velar-logo.png"
-                    alt="VELAR Mobile Detailing"
-                    width={1238}
-                    height={1194}
-                    className={styles.mapLogo}
-                    priority
-                  />
-                </div>
-
-                {/* Step 1: headline + floating address search */}
-                {step === 1 && (
-                  <div className={styles.mapHeroContent}>
-                    <h1 className={styles.mapHeadline}>
-                      Let&apos;s Schedule Your Detail
-                    </h1>
-                    <div className={styles.mapSearchBox}>
-                      <span className={styles.mapSearchIcon} aria-hidden="true">
-                        <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
-                          <path d="M9 1.5C6.1 1.5 3.75 3.85 3.75 6.75C3.75 10.875 9 16.5 9 16.5C9 16.5 14.25 10.875 14.25 6.75C14.25 3.85 11.9 1.5 9 1.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          <circle cx="9" cy="6.75" r="1.75" stroke="currentColor" strokeWidth="1.5"/>
-                        </svg>
-                      </span>
-                      <input
-                        ref={addressInputRef}
-                        className={styles.mapSearchInput}
-                        type="text"
-                        placeholder="Enter your service address…"
-                        value={state.zip}
-                        onChange={e => update({ zip: e.target.value })}
-                        autoComplete="street-address"
-                        aria-label="Service address"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Steps 2-7: confirmed address pill at top */}
-                {step > 1 && state.zip.trim().length > 0 && (
-                  <div className={styles.mapAddressBar}>
-                    <span className={styles.mapAddressPin} aria-hidden="true">
-                      <svg width="13" height="13" viewBox="0 0 18 18" fill="none">
-                        <path d="M9 1.5C6.1 1.5 3.75 3.85 3.75 6.75C3.75 10.875 9 16.5 9 16.5C9 16.5 14.25 10.875 14.25 6.75C14.25 3.85 11.9 1.5 9 1.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        <circle cx="9" cy="6.75" r="1.75" stroke="currentColor" strokeWidth="1.5"/>
-                      </svg>
-                    </span>
-                    <span className={styles.mapAddressText}>{state.zip}</span>
-                  </div>
-                )}
-
-                {/* Booking summary — glass panel at bottom */}
-                <div className={styles.mapSummaryBar}>
-                  <div className={styles.mapSummaryInner}>
-                    <div className={styles.mapSummaryLeft}>
-                      <div className={styles.mapSummaryPkg}>
-                        {pkg ? pkg.name : 'No package selected yet'}
-                      </div>
-                      {vehicleLabel && (
-                        <div className={styles.mapSummaryMeta}>{vehicleLabel}</div>
-                      )}
-                    </div>
-                    {price != null && (
-                      <div className={styles.mapSummaryPrice}>${price}</div>
-                    )}
-                  </div>
-                </div>
-
               </div>
             </div>
 
-            {/* ── RIGHT: STEP PANEL ──────────────────────────────────── */}
-            <div className={styles.stepPanel}>
+            <div className={styles.stepContent}>
+              <StepContent
+                step={step}
+                state={state}
+                update={update}
+                todayISO={todayISO}
+                timeSlots={TIME_SLOTS}
+                submitError={submitError}
+              />
+            </div>
 
-              <div className={styles.stepIndicator}>
-                <span className={styles.stepCount}>
-                  Step {step} of {STEPS.length}
-                </span>
-                <h2 className={styles.stepTitle}>
-                  {STEP_TITLES[step - 1]}
-                </h2>
-                <div className={styles.progress}>
-                  <div
-                    className={styles.progressFill}
-                    style={{ width: `${(step / STEPS.length) * 100}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.stepContent}>
-                <StepContent
-                  step={step}
-                  state={state}
-                  update={update}
-                  todayISO={todayISO}
-                  timeSlots={TIME_SLOTS}
-                  submitError={submitError}
-                />
-              </div>
-
-              <div className={styles.stepNav}>
-                <button
-                  className={styles.backBtn}
-                  onClick={step === 1 ? onClose : goBack}
-                  type="button"
-                >
-                  {step === 1 ? '✕ Cancel' : '← Back'}
-                </button>
-                <div className={styles.stepNavRight}>
-                  {step === 7 && submitError && (
-                    <p className={styles.errorMsg} style={{ textAlign: 'right', marginBottom: 8 }}>
-                      {submitError}
-                    </p>
-                  )}
-                  {step < 7 ? (
-                    <button
-                      className={styles.continueBtn}
-                      onClick={goNext}
-                      type="button"
-                      disabled={!isStepValid(step, state)}
-                    >
-                      Continue &nbsp;→
-                    </button>
-                  ) : (
-                    <button
-                      className={styles.continueBtn}
-                      onClick={handleSubmit}
-                      type="button"
-                      disabled={submitting || !isStepValid(6, state)}
-                    >
-                      {submitting ? 'Sending…' : 'Confirm Booking'}
-                    </button>
-                  )}
-                </div>
+            <div className={styles.stepNav}>
+              <button
+                className={styles.backBtn}
+                onClick={step === 1 ? () => setPhase('address') : goBack}
+                type="button"
+              >
+                {step === 1 ? '← Address' : '← Back'}
+              </button>
+              <div className={styles.stepNavRight}>
+                {step === 6 && submitError && (
+                  <p className={styles.errorMsg} style={{ textAlign: 'right', marginBottom: 8 }}>
+                    {submitError}
+                  </p>
+                )}
+                {step < 6 ? (
+                  <button
+                    className={styles.continueBtn}
+                    onClick={goNext}
+                    type="button"
+                    disabled={!isStepValid(step, state)}
+                  >
+                    Continue &nbsp;→
+                  </button>
+                ) : (
+                  <button
+                    className={styles.continueBtn}
+                    onClick={handleSubmit}
+                    type="button"
+                    disabled={submitting || !isStepValid(5, state)}
+                  >
+                    {submitting ? 'Sending…' : 'Confirm Booking'}
+                  </button>
+                )}
               </div>
             </div>
           </>
         )}
-
       </div>
     </div>,
     document.body
@@ -500,13 +532,12 @@ interface StepContentProps {
 function StepContent(props: StepContentProps) {
   const { step, state, update, todayISO, timeSlots, submitError } = props;
   switch (step) {
-    case 1: return <Step1Location state={state} update={update} />;
-    case 2: return <Step2VehiclePkg state={state} update={update} />;
-    case 3: return <Step3Addons state={state} update={update} />;
-    case 4: return <Step4DateTime state={state} update={update} todayISO={todayISO} timeSlots={timeSlots} />;
-    case 5: return <Step5 state={state} update={update} />;
-    case 6: return <Step6 state={state} update={update} />;
-    case 7: return <Step7 state={state} submitError={submitError} />;
+    case 1: return <Step2VehiclePkg state={state} update={update} />;
+    case 2: return <Step3Addons state={state} update={update} />;
+    case 3: return <Step4DateTime state={state} update={update} todayISO={todayISO} timeSlots={timeSlots} />;
+    case 4: return <Step5 state={state} update={update} />;
+    case 5: return <Step6 state={state} update={update} />;
+    case 6: return <Step7 state={state} submitError={submitError} />;
     default: return null;
   }
 }
