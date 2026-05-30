@@ -297,8 +297,8 @@ export default function BookingModal({ intent, onClose }: Props) {
 
       // Re-center on the stored selected location
       if (selectedLocRef.current) {
-        // Explicitly set zoom so it's correct regardless of prior state
-        mapRef.current.setZoom(15);
+        // Zoom in tighter after panel opens — matches SHWASH property-level view
+        mapRef.current.setZoom(16);
         mapRef.current.panTo(selectedLocRef.current);
 
         // panBy sign convention: positive x moves camera EAST (right), which makes
