@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { CATEGORIES, ADDON_GROUPS } from '@/lib/pricing-data';
 import { ADDON_ICON_MAP } from './AddonIcons';
 import { VELAR_PHONE, VELAR_PHONE_DISPLAY, MAPS_API_KEY } from '@/lib/config';
-import Script from 'next/script';
+// next/script removed — manual script injection used instead (reliable inside createPortal)
 import styles from './BookingModal.module.css';
 
 /* ─── Public interface ──────────────────────────────────────────────────── */
@@ -177,6 +177,37 @@ export default function BookingModal({ intent, onClose }: Props) {
   const todayISO = new Date().toISOString().split('T')[0];
 
   useEffect(() => { setMounted(true); }, []);
+
+  // Load Google Maps JS API via direct script injection — reliable inside createPortal.
+  // next/script onLoad does not fire reliably when rendered inside a portal.
+  useEffect(() => {
+    if (!MAPS_API_KEY) return;
+
+    // Already loaded
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((window as any).google?.maps) {
+      setMapsReady(true);
+      return;
+    }
+
+    // Avoid duplicate script tags
+    const SCRIPT_ID = 'velar-gmaps';
+    if (document.getElementById(SCRIPT_ID)) {
+      // Script is loading — wait for it
+      const existing = document.getElementById(SCRIPT_ID) as HTMLScriptElement;
+      const onLoad = () => setMapsReady(true);
+      existing.addEventListener('load', onLoad);
+      return () => existing.removeEventListener('load', onLoad);
+    }
+
+    const script = document.createElement('script');
+    script.id = SCRIPT_ID;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places&loading=async`;
+    script.async = true;
+    script.onload = () => setMapsReady(true);
+    document.head.appendChild(script);
+    // Do not remove on unmount — it's a global resource
+  }, []);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -382,20 +413,8 @@ export default function BookingModal({ intent, onClose }: Props) {
       aria-modal="true"
       aria-label={phase === 'address' ? 'Enter service address' : 'Book a detail'}
     >
-      {/* Load Maps JS API once — persists across phase transitions */}
-      {MAPS_API_KEY && (
-        <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places&loading=async`}
-          strategy="afterInteractive"
-          onLoad={() => setMapsReady(true)}
-        />
-      )}
-
       {/* Map container — ALWAYS MOUNTED so the map persists across phases */}
-      <div
-        ref={mapContainerRef}
-        className={[styles.mapContainer, mapsReady ? styles.mapContainerReady : ''].filter(Boolean).join(' ')}
-      />
+      <div ref={mapContainerRef} className={styles.mapContainer} />
 
       {/* Fallback atmosphere — shown when no API key */}
       {!MAPS_API_KEY && <div className={styles.mapAtmosphere} />}
