@@ -275,6 +275,18 @@ export default function BookingModal({ intent, onClose }: Props) {
     return () => document.removeEventListener('keydown', onTab);
   }, []); // runs once; panelRef is stable
 
+  // When booking phase begins, offset the map left so the pin is centered
+  // in the visible left area rather than the full viewport (which the panel covers ~40% of).
+  useEffect(() => {
+    if (phase !== 'booking' || !mapRef.current) return;
+    if (typeof window === 'undefined' || window.innerWidth <= 767) return; // mobile: panel is full-width, no offset
+
+    // Booking panel width: matches CSS (40% of viewport, min 380px)
+    const panelWidth = Math.max(380, window.innerWidth * 0.4);
+    // Pan left by half the panel width to center pin in the visible map area
+    mapRef.current.panBy(-(panelWidth / 2), 0);
+  }, [phase]);
+
   // Initialize the JS API map once Maps is loaded
   useEffect(() => {
     if (!mapsReady) return;
@@ -299,7 +311,7 @@ export default function BookingModal({ intent, onClose }: Props) {
     console.log('[VELAR Maps] creating map in container', mapContainerRef.current);
     mapRef.current = new g.maps.Map(mapContainerRef.current, {
       center: DALLAS_CENTER,
-      zoom: 14,  // neighborhood-level — address visible with nearby roads
+      zoom: 15,  // neighborhood-level — address and nearby streets clearly visible
       styles: VELAR_MAP_STYLES,
       disableDefaultUI: true,
       zoomControl: true,
