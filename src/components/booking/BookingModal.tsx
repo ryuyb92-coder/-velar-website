@@ -290,17 +290,23 @@ export default function BookingModal({ intent, onClose }: Props) {
       const g = (window as any).google;
       if (!mapRef.current) return;
 
-      // Tell Google Maps to re-evaluate its container (handles any layout shift)
+      // Tell Google Maps to re-evaluate its container
       if (g?.maps?.event) {
         g.maps.event.trigger(mapRef.current, 'resize');
       }
 
       // Re-center on the stored selected location
       if (selectedLocRef.current) {
+        // Explicitly set zoom so it's correct regardless of prior state
+        mapRef.current.setZoom(15);
         mapRef.current.panTo(selectedLocRef.current);
-        // Shift left by half the panel width so pin is centered in the visible left area
+
+        // panBy sign convention: positive x moves camera EAST (right), which makes
+        // the pin appear to move WEST (left) on screen — toward the visible left area.
+        // The panel covers the RIGHT 40%, so we shift the camera right by half the
+        // panel width, pushing the pin into the center of the visible left area.
         const panelWidth = Math.max(380, window.innerWidth * 0.4);
-        mapRef.current.panBy(-(panelWidth / 2), 0);
+        mapRef.current.panBy(panelWidth / 2, 0);
       }
     }, 450); // 30ms buffer after the 420ms panel animation
 
