@@ -543,10 +543,10 @@ export default function BookingModal({ intent, onClose }: Props) {
           <div className={styles.addressTopCard}>
             <div className={styles.addressTopRow}>
               <Image
-                src="/velar-logo.png"
+                src="/velar-logo-white.png"
                 alt="VELAR Mobile Detailing"
-                width={1238}
-                height={1194}
+                width={1774}
+                height={887}
                 className={styles.addressLogo}
                 priority
               />
@@ -602,10 +602,10 @@ export default function BookingModal({ intent, onClose }: Props) {
           <div className={[styles.addressTopCard, styles.addressTopCardBooking].join(' ')}>
             <div className={styles.addressTopRow}>
               <Image
-                src="/velar-logo.png"
+                src="/velar-logo-white.png"
                 alt="VELAR Mobile Detailing"
-                width={1238}
-                height={1194}
+                width={1774}
+                height={887}
                 className={styles.addressLogo}
                 priority
               />
