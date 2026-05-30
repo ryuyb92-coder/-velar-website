@@ -299,7 +299,7 @@ export default function BookingModal({ intent, onClose }: Props) {
     console.log('[VELAR Maps] creating map in container', mapContainerRef.current);
     mapRef.current = new g.maps.Map(mapContainerRef.current, {
       center: DALLAS_CENTER,
-      zoom: 11,  // wide city/metro view — matches SHWASH
+      zoom: 14,  // neighborhood-level — address visible with nearby roads
       styles: VELAR_MAP_STYLES,
       disableDefaultUI: true,
       zoomControl: true,
