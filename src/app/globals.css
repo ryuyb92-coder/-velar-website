@@ -60,6 +60,112 @@ body {
   line-height: 1.6;
 }
 
+/* ─── Google Places Autocomplete — VELAR premium override ────────────────── */
+/*
+ * Google injects .pac-container directly into document.body (outside React).
+ * These global rules override the default Google Maps autocomplete appearance.
+ * Functionality is untouched — only visual presentation is changed.
+ */
+
+/* Dropdown container */
+.pac-container {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-top: none;                  /* visually attached under the input */
+  border-radius: 0 0 12px 12px;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 16px 40px rgba(0, 0, 0, 0.07);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  margin-top: 0;
+  z-index: 9999 !important;         /* above the full-screen map (z:100) */
+}
+
+/* Remove "Powered by Google" logo footer */
+.pac-container::after {
+  display: none !important;
+}
+
+/* Individual suggestion row */
+.pac-item {
+  display: flex;
+  align-items: center;
+  padding: 11px 16px;
+  border-top: 1px solid #f5f0ea;    /* warm light divider */
+  cursor: pointer;
+  transition: background 130ms ease;
+  min-height: 48px;
+  line-height: 1.4;
+}
+
+.pac-item:first-child {
+  border-top: none;
+}
+
+/* Hover / keyboard-selected state */
+.pac-item:hover,
+.pac-item-selected {
+  background: #fdf9f5;              /* warm cream — VELAR off-white */
+}
+
+/* Location pin icon — overrides Google's default sprite with an orange SVG pin */
+.pac-icon,
+.pac-icon-marker {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='18' viewBox='0 0 14 18'%3E%3Cpath d='M7 0C3.13 0 0 3.13 0 7c0 4.5 7 11 7 11s7-6.5 7-11C14 3.13 10.87 0 7 0z' fill='%23f26a0d'/%3E%3Ccircle cx='7' cy='7' r='2.8' fill='white'/%3E%3C/svg%3E") !important;
+  background-size: 14px 18px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0;
+  margin-top: 0 !important;
+  margin-right: 10px !important;
+}
+
+/* Main address text — the street number and name */
+.pac-item-query {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #111110;
+  padding-right: 4px;
+}
+
+/* Matched portion — what the user typed, appears bold */
+.pac-matched {
+  font-weight: 700;
+  color: #111110;
+}
+
+/* Secondary text — city, state, country */
+.pac-secondary-text {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: #9a9288;
+  margin-left: 2px;
+}
+
+/* Mobile */
+@media (max-width: 639px) {
+  .pac-container {
+    border-radius: 0 0 10px 10px;
+    font-size: 0.9rem;
+  }
+
+  .pac-item {
+    padding: 10px 14px;
+    min-height: 44px;
+  }
+
+  .pac-item-query {
+    font-size: 0.85rem;
+  }
+
+  .pac-secondary-text {
+    font-size: 0.76rem;
+  }
+}
+
 /* ─── Booking transition curtain ─────────────────────────────────────────── */
 /* Sits above both the gate (z:100) and booking modal (z:100) during handoff  */
 .bookingCurtain {
