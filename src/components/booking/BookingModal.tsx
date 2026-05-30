@@ -125,22 +125,15 @@ function isStepValid(step: number, state: BookingState): boolean {
   }
 }
 
-/* ─── Custom map styles — clean, bright, minimal POI ─────────────────────── */
+/* ─── Custom map styles ───────────────────────────────────────────────────── */
+// SHWASH analysis: uses near-default Google Maps. Premium feel = full-screen
+// presentation, not heavy styling. Strategy: keep default appearance, remove
+// noise (POIs, transit, local labels, neighborhood names).
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const VELAR_MAP_STYLES: Record<string, any>[] = [
-  { featureType: 'landscape',           stylers: [{ color: '#f2f0ed' }] },
-  { featureType: 'landscape.man_made',  stylers: [{ color: '#f5f3f0' }] },
-  { featureType: 'road',                elementType: 'geometry.fill',   stylers: [{ color: '#ffffff' }] },
-  { featureType: 'road',                elementType: 'geometry.stroke', stylers: [{ color: '#e8e0d8' }, { weight: 0.5 }] },
-  { featureType: 'road.local',          elementType: 'labels.text.fill',stylers: [{ color: '#aaa' }] },
-  { featureType: 'road.arterial',       elementType: 'geometry.fill',   stylers: [{ color: '#f8f4ee' }] },
-  { featureType: 'road.highway',        elementType: 'geometry.fill',   stylers: [{ color: '#fde68a' }] },
-  { featureType: 'road.highway',        elementType: 'geometry.stroke', stylers: [{ color: '#f5d040' }] },
-  { featureType: 'road.highway',        elementType: 'labels.text.fill',stylers: [{ color: '#777' }] },
-  { featureType: 'water',               elementType: 'geometry',        stylers: [{ color: '#c5d9eb' }] },
-  { featureType: 'water',               elementType: 'labels.text.fill',stylers: [{ color: '#8aaec8' }] },
-  { featureType: 'poi.park',            elementType: 'geometry',        stylers: [{ color: '#d8ecd4' }] },
-  { featureType: 'poi.park',            elementType: 'labels',          stylers: [{ visibility: 'simplified' }] },
+
+  // ── POI — remove all business clutter, keep parks ──────────────────────────
+  { featureType: 'poi',                 elementType: 'labels',           stylers: [{ visibility: 'off' }] },
   { featureType: 'poi.business',        stylers: [{ visibility: 'off' }] },
   { featureType: 'poi.attraction',      stylers: [{ visibility: 'off' }] },
   { featureType: 'poi.medical',         stylers: [{ visibility: 'off' }] },
@@ -148,9 +141,28 @@ const VELAR_MAP_STYLES: Record<string, any>[] = [
   { featureType: 'poi.sports_complex',  stylers: [{ visibility: 'off' }] },
   { featureType: 'poi.government',      stylers: [{ visibility: 'off' }] },
   { featureType: 'poi.place_of_worship',stylers: [{ visibility: 'off' }] },
+  // Parks: keep geometry (green areas look good), remove their labels
+  { featureType: 'poi.park',            elementType: 'labels',           stylers: [{ visibility: 'off' }] },
+
+  // ── Transit — remove entirely ───────────────────────────────────────────────
   { featureType: 'transit',             stylers: [{ visibility: 'off' }] },
-  { featureType: 'administrative',      elementType: 'labels.text.fill',stylers: [{ color: '#999' }] },
-  { featureType: 'administrative.neighborhood', stylers: [{ visibility: 'off' }] },
+
+  // ── Road labels — local roads have no labels; arterials are simplified ──────
+  { featureType: 'road.local',          elementType: 'labels',           stylers: [{ visibility: 'off' }] },
+  { featureType: 'road.arterial',       elementType: 'labels',           stylers: [{ visibility: 'simplified' }] },
+
+  // ── Administrative — hide granular neighborhood/parcel names ────────────────
+  { featureType: 'administrative.neighborhood',  stylers: [{ visibility: 'off' }] },
+  { featureType: 'administrative.land_parcel',   stylers: [{ visibility: 'off' }] },
+
+  // ── Land — soft warm light (matches SHWASH default-style appearance) ────────
+  { featureType: 'landscape',           elementType: 'geometry',         stylers: [{ color: '#f4f1ec' }] },
+  { featureType: 'landscape.man_made',  elementType: 'geometry',         stylers: [{ color: '#f7f4ef' }] },
+
+  // ── Water — soft blue, matches SHWASH ──────────────────────────────────────
+  { featureType: 'water',               elementType: 'geometry',         stylers: [{ color: '#b8d4e8' }] },
+  { featureType: 'water',               elementType: 'labels.text.fill', stylers: [{ color: '#6a9abf' }] },
+  { featureType: 'water',               elementType: 'labels.text.stroke',stylers: [{ color: '#ffffff' }] },
 ];
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
