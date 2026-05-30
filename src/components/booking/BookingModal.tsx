@@ -135,8 +135,10 @@ export default function BookingModal({ intent, onClose }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [mapsReady, setMapsReady] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const addressInputRef = useRef<HTMLInputElement>(null);
   const todayISO = new Date().toISOString().split('T')[0];
 
   useEffect(() => { setMounted(true); }, []);
@@ -191,6 +193,30 @@ export default function BookingModal({ intent, onClose }: Props) {
     document.addEventListener('keydown', onTab);
     return () => document.removeEventListener('keydown', onTab);
   }, []); // runs once; panelRef is stable
+
+  // Attach Google Places Autocomplete to the left-panel address search input
+  useEffect(() => {
+    if (!mapsReady || !addressInputRef.current) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const g = (window as any).google;
+    if (!g?.maps?.places?.Autocomplete) return;
+
+    const ac = new g.maps.places.Autocomplete(addressInputRef.current, {
+      types: ['address'],
+      componentRestrictions: { country: 'us' },
+      fields: ['formatted_address'],
+    });
+    const listener = ac.addListener('place_changed', () => {
+      const place = ac.getPlace();
+      if (place.formatted_address) {
+        setState(prev => ({ ...prev, zip: place.formatted_address ?? '' }));
+      }
+    });
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).google?.maps?.event?.removeListener?.(listener);
+    };
+  }, [mapsReady]);
 
   function update(partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) {
     setState(prev => ({
@@ -266,8 +292,12 @@ export default function BookingModal({ intent, onClose }: Props) {
     state.vehicleType === 'suv'   ? 'SUV / Truck (+$30)' :
     state.vehicleType === 'xl'    ? 'XL Vehicle (+$30)' : null;
 
-  // Show map iframe when address is valid and API key is configured
-  const showMap = state.zip.trim().length >= 10 && MAPS_API_KEY.length > 0;
+  // Map shows immediately with Dallas as default; updates when a valid address is entered
+  const mapQuery = state.zip.trim().length >= 10 ? state.zip : 'Dallas, TX';
+  const mapZoom  = state.zip.trim().length >= 10 ? 15 : 11;
+  const mapSrc   = MAPS_API_KEY
+    ? `https://www.google.com/maps/embed/v1/place?key=${MAPS_API_KEY}&q=${encodeURIComponent(mapQuery)}&zoom=${mapZoom}`
+    : null;
 
   return createPortal(
     <div
@@ -283,62 +313,103 @@ export default function BookingModal({ intent, onClose }: Props) {
           <SuccessState onClose={onClose} />
         ) : (
           <>
-            {/* ── LEFT: MAP PANEL ────────────────────────────────────── */}
+            {/* ── LEFT: IMMERSIVE MAP PANEL (SHWASH-style) ─────────── */}
             <div className={styles.mapPanel}>
 
-              {/* VELAR logo */}
-              <div className={styles.mapPanelHeader}>
-                <Image
-                  src="/velar-logo.png"
-                  alt="VELAR Mobile Detailing"
-                  width={1238}
-                  height={1194}
-                  className={styles.mapLogo}
-                  priority
+              {/* Load Maps API once — in parent so autocomplete attaches here */}
+              {MAPS_API_KEY && (
+                <Script
+                  src={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places&loading=async`}
+                  strategy="afterInteractive"
+                  onLoad={() => setMapsReady(true)}
                 />
-              </div>
+              )}
 
-              {/* Map or atmosphere */}
-              {showMap ? (
+              {/* Map fills entire left panel */}
+              {mapSrc ? (
                 <iframe
                   title="Service location"
-                  src={`https://www.google.com/maps/embed/v1/place?key=${MAPS_API_KEY}&q=${encodeURIComponent(state.zip)}&zoom=15`}
+                  src={mapSrc}
                   className={styles.mapIframe}
-                  loading="lazy"
+                  loading="eager"
                   referrerPolicy="no-referrer-when-downgrade"
                 />
               ) : (
                 <div className={styles.mapAtmosphere} />
               )}
 
-              {/* Booking summary */}
-              <div className={styles.summary}>
-                <div className={styles.summaryHeader}>Booking Summary</div>
-                <div className={styles.summaryRow}>
-                  <div className={styles.summaryKey}>Service</div>
-                  <div className={styles.summaryVal}>
-                    {pkg ? pkg.name : <span className={styles.summaryEmpty}>—</span>}
-                  </div>
+              {/* Floating overlay — all elements above the map */}
+              <div className={styles.mapOverlay}>
+
+                {/* VELAR logo — top-left, always visible */}
+                <div className={styles.mapFloatingLogo}>
+                  <Image
+                    src="/velar-logo.png"
+                    alt="VELAR Mobile Detailing"
+                    width={1238}
+                    height={1194}
+                    className={styles.mapLogo}
+                    priority
+                  />
                 </div>
-                <div className={styles.summaryRow}>
-                  <div className={styles.summaryKey}>Vehicle</div>
-                  <div className={styles.summaryVal}>
-                    {vehicleLabel ?? <span className={styles.summaryEmpty}>—</span>}
+
+                {/* Step 1: headline + floating address search */}
+                {step === 1 && (
+                  <div className={styles.mapHeroContent}>
+                    <h1 className={styles.mapHeadline}>
+                      Let&apos;s Schedule Your Detail
+                    </h1>
+                    <div className={styles.mapSearchBox}>
+                      <span className={styles.mapSearchIcon} aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                          <path d="M9 1.5C6.1 1.5 3.75 3.85 3.75 6.75C3.75 10.875 9 16.5 9 16.5C9 16.5 14.25 10.875 14.25 6.75C14.25 3.85 11.9 1.5 9 1.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <circle cx="9" cy="6.75" r="1.75" stroke="currentColor" strokeWidth="1.5"/>
+                        </svg>
+                      </span>
+                      <input
+                        ref={addressInputRef}
+                        className={styles.mapSearchInput}
+                        type="text"
+                        placeholder="Enter your service address…"
+                        value={state.zip}
+                        onChange={e => update({ zip: e.target.value })}
+                        autoComplete="street-address"
+                        aria-label="Service address"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className={styles.summaryTotal}>
-                  <div className={styles.summaryTotalKey}>Est. Total</div>
-                  {price != null ? (
-                    <>
-                      <div className={styles.summaryTotalVal}>${price}</div>
-                      <div className={styles.summaryTotalNote}>
-                        {pkg?.duration} · subject to review
+                )}
+
+                {/* Steps 2-7: confirmed address pill at top */}
+                {step > 1 && state.zip.trim().length > 0 && (
+                  <div className={styles.mapAddressBar}>
+                    <span className={styles.mapAddressPin} aria-hidden="true">
+                      <svg width="13" height="13" viewBox="0 0 18 18" fill="none">
+                        <path d="M9 1.5C6.1 1.5 3.75 3.85 3.75 6.75C3.75 10.875 9 16.5 9 16.5C9 16.5 14.25 10.875 14.25 6.75C14.25 3.85 11.9 1.5 9 1.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <circle cx="9" cy="6.75" r="1.75" stroke="currentColor" strokeWidth="1.5"/>
+                      </svg>
+                    </span>
+                    <span className={styles.mapAddressText}>{state.zip}</span>
+                  </div>
+                )}
+
+                {/* Booking summary — glass panel at bottom */}
+                <div className={styles.mapSummaryBar}>
+                  <div className={styles.mapSummaryInner}>
+                    <div className={styles.mapSummaryLeft}>
+                      <div className={styles.mapSummaryPkg}>
+                        {pkg ? pkg.name : 'No package selected yet'}
                       </div>
-                    </>
-                  ) : (
-                    <div className={styles.summaryTotalValEmpty}>TBD</div>
-                  )}
+                      {vehicleLabel && (
+                        <div className={styles.mapSummaryMeta}>{vehicleLabel}</div>
+                      )}
+                    </div>
+                    {price != null && (
+                      <div className={styles.mapSummaryPrice}>${price}</div>
+                    )}
+                  </div>
                 </div>
+
               </div>
             </div>
 
@@ -910,60 +981,25 @@ function isDallasArea(addr: string): boolean {
 
 /* ─── Step 1: Service Address (now first — SHWASH-style) ─────────────────── */
 function Step1Location({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
-  const [mapsReady, setMapsReady] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  // Maps API and autocomplete are handled by the parent (left panel search input).
+  // This component shows the confirmation card + access notes.
+  // On mobile the left panel is hidden, so we show the address input here instead.
   const addressValid = state.zip.trim().length >= 10;
   const confirmed    = addressValid && isDallasArea(state.zip);
   const { street, rest } = parsedAddress(state.zip);
 
-  // Attach Google Places Autocomplete when the Maps JS API has loaded
-  useEffect(() => {
-    if (!mapsReady || !inputRef.current) return;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const g = (window as any).google;
-    if (!g?.maps?.places?.Autocomplete) return;
-
-    const ac = new g.maps.places.Autocomplete(inputRef.current, {
-      types: ['address'],
-      componentRestrictions: { country: 'us' },
-      fields: ['formatted_address'],
-    });
-
-    const listener = ac.addListener('place_changed', () => {
-      const place = ac.getPlace();
-      if (place.formatted_address) {
-        update({ zip: place.formatted_address });
-      }
-    });
-
-    return () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).google?.maps?.event?.removeListener?.(listener);
-    };
-  }, [mapsReady, update]);
-
   return (
     <>
-      {/* Load Maps JS API + Places library if key is configured */}
-      {MAPS_API_KEY && (
-        <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places&loading=async`}
-          strategy="afterInteractive"
-          onLoad={() => setMapsReady(true)}
-        />
-      )}
-
       <p className={styles.stepSub}>
         Enter the address where the vehicle will be serviced. We&apos;ll confirm availability by text.
       </p>
 
-      {/* Service address — required */}
-      <div className={styles.field}>
+      {/* Address input — mobile only (desktop uses the left-panel floating search) */}
+      <div className={styles.mobileOnlyField}>
         <label className={styles.fieldLabel} htmlFor="bk-address">
           Service Address <span className={styles.req}>*</span>
         </label>
         <input
-          ref={inputRef}
           className={styles.fieldInput}
           id="bk-address"
           name="zip"

@@ -27,26 +27,13 @@
   }
 }
 
-/* ─── Left panel: Google Maps + VELAR branding + booking summary ─────────── */
+/* ─── Left panel: immersive Google Maps experience (SHWASH-style) ────────── */
 .mapPanel {
-  width: 45%;
+  width: 62%;                    /* ~60% map, ~40% booking panel */
   flex-shrink: 0;
-  background: #080806;
-  display: flex;
-  flex-direction: column;
   position: relative;
   overflow: hidden;
-}
-
-/* Top edge orange accent — same as previous sidebar */
-.mapPanel::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-orange) 0%, rgba(242,106,13,0.2) 50%, transparent 100%);
-  opacity: 0.75;
-  z-index: 1;
+  /* No background — map or atmosphere fills it completely */
 }
 
 @media (max-width: 767px) {
@@ -55,40 +42,210 @@
   }
 }
 
-/* VELAR logo in the map panel header */
-.mapPanelHeader {
-  padding: 22px 24px 20px;
-  flex-shrink: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  position: relative;
-  z-index: 1;
-}
-
-.mapLogo {
-  height: 32px;
-  width: auto;
+/* Map iframe — fills the entire left panel, no header/footer blocking it */
+.mapIframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
   display: block;
-  opacity: 0.9;
-  object-fit: contain;
 }
 
-/* Atmospheric gradient shown before address is entered */
+/* Atmospheric gradient — shown when no API key (fallback) */
 .mapAtmosphere {
-  flex: 1;
+  position: absolute;
+  inset: 0;
   background:
     radial-gradient(ellipse 70% 50% at 35% 55%, rgba(22,18,12,0.85) 0%, transparent 60%),
     radial-gradient(ellipse 50% 70% at 75% 25%, rgba(18,14,10,0.6) 0%, transparent 55%),
     linear-gradient(145deg, #0e0c0a 0%, #080706 50%, #0a0807 100%);
 }
 
-/* Map iframe (Google Embed API — always free) */
-.mapIframe {
+/* ─── Floating overlay — sits above the map ─────────────────────────────── */
+.mapOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;  /* pass through to map by default */
+  z-index: 2;
+}
+
+/* VELAR logo — top-left, floating above map */
+.mapFloatingLogo {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  pointer-events: auto;
+}
+
+.mapLogo {
+  height: 30px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));
+}
+
+/* Hero content — centered over map (Step 1 only) */
+.mapHeroContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -58%);
+  width: 86%;
+  max-width: 420px;
+  text-align: center;
+  pointer-events: auto;
+}
+
+.mapHeadline {
+  font-family: var(--font-sans);
+  font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin-bottom: 18px;
+  text-shadow:
+    0 1px 4px rgba(0,0,0,0.6),
+    0 6px 20px rgba(0,0,0,0.4);
+}
+
+/* Floating address search bar — over the map */
+.mapSearchBox {
+  background: #fff;
+  border-radius: 10px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.25),
+    0 16px 48px rgba(0,0,0,0.18);
+}
+
+.mapSearchIcon {
+  flex-shrink: 0;
+  color: var(--color-orange);
+  display: flex;
+  align-items: center;
+}
+
+.mapSearchInput {
   flex: 1;
   border: none;
-  display: block;
-  width: 100%;
-  min-height: 0;
-  filter: saturate(0.85) brightness(0.9);   /* toned down for VELAR dark aesthetic */
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  color: #111;
+  background: transparent;
+  padding: 0;
+  min-width: 0;
+}
+
+.mapSearchInput::placeholder {
+  color: #9a9288;
+}
+
+/* Confirmed address pill — shown on steps 2-7 */
+.mapAddressBar {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 100px;
+  padding: 8px 16px 8px 12px;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.18);
+  pointer-events: auto;
+  max-width: 80%;
+}
+
+.mapAddressPin {
+  color: var(--color-orange);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.mapAddressText {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Summary bar — glass panel at bottom of map */
+.mapSummaryBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(8, 7, 6, 0.68);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: auto;
+}
+
+.mapSummaryInner {
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mapSummaryLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mapSummaryPkg {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mapSummaryMeta {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.mapSummaryPrice {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-orange);
+  letter-spacing: -0.03em;
+  flex-shrink: 0;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Mobile-only address field inside Step1Location right panel */
+.mobileOnlyField {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobileOnlyField {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
 }
 
 /* ─── Dark sidebar ────────────────────────────────────────────────────────── */
