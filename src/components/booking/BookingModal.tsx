@@ -299,7 +299,7 @@ export default function BookingModal({ intent, onClose }: Props) {
     console.log('[VELAR Maps] creating map in container', mapContainerRef.current);
     mapRef.current = new g.maps.Map(mapContainerRef.current, {
       center: DALLAS_CENTER,
-      zoom: 13,
+      zoom: 11,  // wide city/metro view — matches SHWASH
       styles: VELAR_MAP_STYLES,
       disableDefaultUI: true,
       zoomControl: true,
@@ -329,11 +329,11 @@ export default function BookingModal({ intent, onClose }: Props) {
       if (place.formatted_address) {
         setState(prev => ({ ...prev, zip: place.formatted_address ?? '' }));
 
-        // Animate map to selected address
+        // Pan to selected address — no zoom change, keep wide city view
         const loc = place.geometry?.location;
         if (loc && mapRef.current) {
           mapRef.current.panTo(loc);
-          mapRef.current.setZoom(16);
+          // No setZoom — map stays at the same wide metro level (11)
 
           // Drop/move the marker
           if (markerRef.current) markerRef.current.setMap(null);
