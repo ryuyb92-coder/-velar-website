@@ -149,6 +149,28 @@
   color: #9a9288;
 }
 
+/* X clear button — appears inside the input when address is entered */
+.addressClearBtn {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  color: #c8bfb5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.addressClearBtn:hover {
+  background: #f0ebe4;
+  color: var(--color-off-black);
+}
+
 /* Continue button — floating at bottom center */
 .addressContinueWrap {
   position: absolute;

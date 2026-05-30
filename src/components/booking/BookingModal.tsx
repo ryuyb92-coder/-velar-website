@@ -452,6 +452,31 @@ export default function BookingModal({ intent, onClose }: Props) {
     }));
   }
 
+  /** Clear the address, remove the marker, reset map to Dallas, refocus input. */
+  function handleClearAddress() {
+    // Clear state
+    update({ zip: '' });
+    selectedLocRef.current = null;
+
+    // Remove marker from map
+    if (markerRef.current) {
+      markerRef.current.setMap(null);
+      markerRef.current = null;
+    }
+
+    // Pan map back to Dallas at initial zoom
+    if (mapRef.current) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const g = (window as any).google;
+      if (g?.maps?.event) g.maps.event.trigger(mapRef.current, 'resize');
+      mapRef.current.setZoom(15);
+      mapRef.current.panTo(DALLAS_CENTER);
+    }
+
+    // Refocus the input so autocomplete re-activates immediately
+    setTimeout(() => addressInputRef.current?.focus(), 30);
+  }
+
   function goNext() {
     if (step < 7) setStep(s => s + 1);
   }
@@ -595,9 +620,21 @@ export default function BookingModal({ intent, onClose }: Props) {
                 placeholder="Enter the street number and full address"
                 value={state.zip}
                 onChange={e => update({ zip: e.target.value })}
-                autoComplete="street-address"
+                autoComplete="off"
                 aria-label="Service address"
               />
+              {state.zip.trim().length > 0 && (
+                <button
+                  type="button"
+                  className={styles.addressClearBtn}
+                  onClick={handleClearAddress}
+                  aria-label="Clear address"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
 
@@ -647,9 +684,21 @@ export default function BookingModal({ intent, onClose }: Props) {
                 placeholder="Enter the street number and full address"
                 value={state.zip}
                 onChange={e => update({ zip: e.target.value })}
-                autoComplete="street-address"
+                autoComplete="off"
                 aria-label="Service address"
               />
+              {state.zip.trim().length > 0 && (
+                <button
+                  type="button"
+                  className={styles.addressClearBtn}
+                  onClick={handleClearAddress}
+                  aria-label="Clear address"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
 
