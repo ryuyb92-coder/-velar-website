@@ -125,6 +125,37 @@ function isStepValid(step: number, state: BookingState): boolean {
   }
 }
 
+/* ─── Custom map styles — clean, bright, minimal POI ─────────────────────── */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const VELAR_MAP_STYLES: Record<string, any>[] = [
+  { featureType: 'landscape',           stylers: [{ color: '#f2f0ed' }] },
+  { featureType: 'landscape.man_made',  stylers: [{ color: '#f5f3f0' }] },
+  { featureType: 'road',                elementType: 'geometry.fill',   stylers: [{ color: '#ffffff' }] },
+  { featureType: 'road',                elementType: 'geometry.stroke', stylers: [{ color: '#e8e0d8' }, { weight: 0.5 }] },
+  { featureType: 'road.local',          elementType: 'labels.text.fill',stylers: [{ color: '#aaa' }] },
+  { featureType: 'road.arterial',       elementType: 'geometry.fill',   stylers: [{ color: '#f8f4ee' }] },
+  { featureType: 'road.highway',        elementType: 'geometry.fill',   stylers: [{ color: '#fde68a' }] },
+  { featureType: 'road.highway',        elementType: 'geometry.stroke', stylers: [{ color: '#f5d040' }] },
+  { featureType: 'road.highway',        elementType: 'labels.text.fill',stylers: [{ color: '#777' }] },
+  { featureType: 'water',               elementType: 'geometry',        stylers: [{ color: '#c5d9eb' }] },
+  { featureType: 'water',               elementType: 'labels.text.fill',stylers: [{ color: '#8aaec8' }] },
+  { featureType: 'poi.park',            elementType: 'geometry',        stylers: [{ color: '#d8ecd4' }] },
+  { featureType: 'poi.park',            elementType: 'labels',          stylers: [{ visibility: 'simplified' }] },
+  { featureType: 'poi.business',        stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi.attraction',      stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi.medical',         stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi.school',          stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi.sports_complex',  stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi.government',      stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi.place_of_worship',stylers: [{ visibility: 'off' }] },
+  { featureType: 'transit',             stylers: [{ visibility: 'off' }] },
+  { featureType: 'administrative',      elementType: 'labels.text.fill',stylers: [{ color: '#999' }] },
+  { featureType: 'administrative.neighborhood', stylers: [{ visibility: 'off' }] },
+];
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+const DALLAS_CENTER = { lat: 32.7767, lng: -96.7970 };
+
 /* ─── Main component ────────────────────────────────────────────────────── */
 export default function BookingModal({ intent, onClose }: Props) {
   const [mounted, setMounted] = useState(false);
@@ -138,6 +169,11 @@ export default function BookingModal({ intent, onClose }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const addressInputRef = useRef<HTMLInputElement>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const markerRef = useRef<any>(null);
   const todayISO = new Date().toISOString().split('T')[0];
 
   useEffect(() => { setMounted(true); }, []);
@@ -193,7 +229,28 @@ export default function BookingModal({ intent, onClose }: Props) {
     return () => document.removeEventListener('keydown', onTab);
   }, []); // runs once; panelRef is stable
 
-  // Attach Google Places Autocomplete to the left-panel address search input
+  // Initialize the JS API map once Maps is loaded
+  useEffect(() => {
+    if (!mapsReady || !mapContainerRef.current || mapRef.current) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const g = (window as any).google;
+    if (!g?.maps?.Map) return;
+
+    mapRef.current = new g.maps.Map(mapContainerRef.current, {
+      center: DALLAS_CENTER,
+      zoom: 13,
+      styles: VELAR_MAP_STYLES,
+      disableDefaultUI: true,
+      zoomControl: true,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: false,
+      clickableIcons: false,
+      gestureHandling: 'cooperative',
+    });
+  }, [mapsReady]);
+
+  // Attach Google Places Autocomplete — adds geometry field for smooth map animation
   useEffect(() => {
     if (!mapsReady || !addressInputRef.current) return;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -203,12 +260,27 @@ export default function BookingModal({ intent, onClose }: Props) {
     const ac = new g.maps.places.Autocomplete(addressInputRef.current, {
       types: ['address'],
       componentRestrictions: { country: 'us' },
-      fields: ['formatted_address'],
+      fields: ['formatted_address', 'geometry'],
     });
     const listener = ac.addListener('place_changed', () => {
       const place = ac.getPlace();
       if (place.formatted_address) {
         setState(prev => ({ ...prev, zip: place.formatted_address ?? '' }));
+
+        // Animate map to selected address
+        const loc = place.geometry?.location;
+        if (loc && mapRef.current) {
+          mapRef.current.panTo(loc);
+          mapRef.current.setZoom(16);
+
+          // Drop/move the marker
+          if (markerRef.current) markerRef.current.setMap(null);
+          markerRef.current = new g.maps.Marker({
+            position: loc,
+            map: mapRef.current,
+            animation: g.maps.Animation.DROP,
+          });
+        }
       }
     });
     return () => {
@@ -291,27 +363,7 @@ export default function BookingModal({ intent, onClose }: Props) {
     state.vehicleType === 'suv'   ? 'SUV / Truck (+$30)' :
     state.vehicleType === 'xl'    ? 'XL Vehicle (+$30)' : null;
 
-  // Map: Dallas default until a valid address is entered
-  const mapQuery = state.zip.trim().length >= 10 ? state.zip : 'Dallas, TX';
-  const mapZoom  = state.zip.trim().length >= 10 ? 15 : 11;
-  const mapSrc   = MAPS_API_KEY
-    ? `https://www.google.com/maps/embed/v1/place?key=${MAPS_API_KEY}&q=${encodeURIComponent(mapQuery)}&zoom=${mapZoom}`
-    : null;
-
-  // Address is valid once the customer has entered enough text
   const addressValid = state.zip.trim().length >= 10;
-
-  const MapIframe = mapSrc ? (
-    <iframe
-      title="Service location"
-      src={mapSrc}
-      className={styles.mapIframe}
-      loading="eager"
-      referrerPolicy="no-referrer-when-downgrade"
-    />
-  ) : (
-    <div className={styles.mapAtmosphere} />
-  );
 
   const PinIcon = (
     <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -321,199 +373,192 @@ export default function BookingModal({ intent, onClose }: Props) {
     </svg>
   );
 
-  /* ── PHASE 1: Full-screen address selection ────────────────────────────── */
-  if (phase === 'address') {
-    return createPortal(
+  /* ── Single persistent portal — map container always mounted ───────────── */
+  return createPortal(
+    <div
+      className={styles.bookingRoot}
+      ref={overlayRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label={phase === 'address' ? 'Enter service address' : 'Book a detail'}
+    >
+      {/* Load Maps JS API once — persists across phase transitions */}
+      {MAPS_API_KEY && (
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places&loading=async`}
+          strategy="afterInteractive"
+          onLoad={() => setMapsReady(true)}
+        />
+      )}
+
+      {/* Map container — ALWAYS MOUNTED so the map persists across phases */}
       <div
-        className={styles.addressPhase}
-        ref={overlayRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Enter service address"
-      >
-        {/* Load Maps API */}
-        {MAPS_API_KEY && (
-          <Script
-            src={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places&loading=async`}
-            strategy="afterInteractive"
-            onLoad={() => setMapsReady(true)}
-          />
-        )}
+        ref={mapContainerRef}
+        className={[styles.mapContainer, mapsReady ? styles.mapContainerReady : ''].filter(Boolean).join(' ')}
+      />
 
-        {/* Full-screen map background */}
-        {MapIframe}
+      {/* Fallback atmosphere — shown when no API key */}
+      {!MAPS_API_KEY && <div className={styles.mapAtmosphere} />}
 
-        {/* Floating top area — white glass card with headline + search */}
-        <div className={styles.addressTopCard}>
-          <div className={styles.addressTopRow}>
+      {/* ── PHASE 1: Address selection overlay ───────────────────────────── */}
+      {phase === 'address' && (
+        <>
+          {/* White glass card — logo + headline + search */}
+          <div className={styles.addressTopCard}>
+            <div className={styles.addressTopRow}>
+              <Image
+                src="/velar-logo.png"
+                alt="VELAR Mobile Detailing"
+                width={1238}
+                height={1194}
+                className={styles.addressLogo}
+                priority
+              />
+              <button
+                className={styles.addressCancelBtn}
+                onClick={onClose}
+                type="button"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <h1 className={styles.addressHeadline}>
+              Let&apos;s Schedule Your Appointment
+            </h1>
+
+            <div className={styles.addressSearchRow}>
+              <div className={styles.addressSearchIcon}>{PinIcon}</div>
+              <input
+                ref={addressInputRef}
+                className={styles.addressSearchInput}
+                id="phase1-address"
+                type="text"
+                placeholder="400 Crescent Ct, Dallas, TX 75201"
+                value={state.zip}
+                onChange={e => update({ zip: e.target.value })}
+                autoComplete="street-address"
+                aria-label="Service address"
+              />
+            </div>
+          </div>
+
+          {/* Next button — bottom center */}
+          <div className={styles.addressContinueWrap}>
+            <button
+              className={styles.addressContinueBtn}
+              type="button"
+              disabled={!addressValid}
+              onClick={() => setPhase('booking')}
+            >
+              Next &nbsp;→
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* ── PHASE 2: Booking experience overlaid on the same map ─────────── */}
+      {phase === 'booking' && (
+        <>
+          {/* Logo — top-left */}
+          <div className={styles.mapFloatingLogo}>
             <Image
               src="/velar-logo.png"
               alt="VELAR Mobile Detailing"
               width={1238}
               height={1194}
-              className={styles.addressLogo}
+              className={styles.mapLogo}
               priority
             />
-            <button
-              className={styles.addressCancelBtn}
-              onClick={onClose}
-              type="button"
-              aria-label="Cancel booking"
-            >
-              Cancel
-            </button>
           </div>
 
-          <h1 className={styles.addressHeadline}>
-            Let&apos;s Schedule Your Appointment
-          </h1>
-
-          <div className={styles.addressSearchRow}>
-            <div className={styles.addressSearchIcon}>{PinIcon}</div>
-            <input
-              ref={addressInputRef}
-              className={styles.addressSearchInput}
-              id="phase1-address"
-              type="text"
-              placeholder="400 Crescent Ct, Dallas, TX 75201"
-              value={state.zip}
-              onChange={e => update({ zip: e.target.value })}
-              autoComplete="street-address"
-              aria-label="Service address"
-            />
-          </div>
-        </div>
-
-        {/* Continue — bottom center, disabled until address valid */}
-        <div className={styles.addressContinueWrap}>
-          <button
-            className={styles.addressContinueBtn}
-            type="button"
-            disabled={!addressValid}
-            onClick={() => setPhase('booking')}
-          >
-            Next &nbsp;→
-          </button>
-        </div>
-      </div>,
-      document.body
-    );
-  }
-
-  /* ── PHASE 2: Booking experience — map background + sliding panel ──────── */
-  return createPortal(
-    <div
-      className={styles.bookingPhase}
-      ref={overlayRef}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Book a detail"
-    >
-      {/* Full-screen map background */}
-      {MapIframe}
-
-      {/* Confirmed address pill — top-center of map */}
-      {state.zip.trim().length > 0 && (
-        <div className={styles.mapAddressBar}>
-          <span className={styles.mapAddressPin}>{PinIcon}</span>
-          <span className={styles.mapAddressText}>{state.zip}</span>
-        </div>
-      )}
-
-      {/* VELAR logo — top-left over map */}
-      <div className={styles.mapFloatingLogo}>
-        <Image
-          src="/velar-logo.png"
-          alt="VELAR Mobile Detailing"
-          width={1238}
-          height={1194}
-          className={styles.mapLogo}
-          priority
-        />
-      </div>
-
-      {/* Booking summary — glass bar at bottom of map */}
-      {(pkg || price != null) && (
-        <div className={styles.mapSummaryBar}>
-          <div className={styles.mapSummaryInner}>
-            <div className={styles.mapSummaryLeft}>
-              <div className={styles.mapSummaryPkg}>{pkg ? pkg.name : '—'}</div>
-              {vehicleLabel && <div className={styles.mapSummaryMeta}>{vehicleLabel}</div>}
+          {/* Address confirmed pill — top-center */}
+          {state.zip.trim().length > 0 && (
+            <div className={styles.mapAddressBar}>
+              <span className={styles.mapAddressPin}>{PinIcon}</span>
+              <span className={styles.mapAddressText}>{state.zip}</span>
             </div>
-            {price != null && <div className={styles.mapSummaryPrice}>${price}</div>}
-          </div>
-        </div>
-      )}
+          )}
 
-      {/* Booking panel — slides in from right */}
-      <div className={styles.bookingPanel} ref={panelRef}>
-
-        {submitted ? (
-          <SuccessState onClose={onClose} />
-        ) : (
-          <>
-            <div className={styles.stepIndicator}>
-              <span className={styles.stepCount}>
-                Step {step} of {STEPS.length}
-              </span>
-              <h2 className={styles.stepTitle}>{STEP_TITLES[step - 1]}</h2>
-              <div className={styles.progress}>
-                <div
-                  className={styles.progressFill}
-                  style={{ width: `${(step / STEPS.length) * 100}%` }}
-                />
+          {/* Summary bar — bottom of screen (left of panel) */}
+          {(pkg || price != null) && (
+            <div className={styles.mapSummaryBar}>
+              <div className={styles.mapSummaryInner}>
+                <div className={styles.mapSummaryLeft}>
+                  <div className={styles.mapSummaryPkg}>{pkg ? pkg.name : '—'}</div>
+                  {vehicleLabel && <div className={styles.mapSummaryMeta}>{vehicleLabel}</div>}
+                </div>
+                {price != null && <div className={styles.mapSummaryPrice}>${price}</div>}
               </div>
             </div>
+          )}
 
-            <div className={styles.stepContent}>
-              <StepContent
-                step={step}
-                state={state}
-                update={update}
-                todayISO={todayISO}
-                timeSlots={TIME_SLOTS}
-                submitError={submitError}
-              />
-            </div>
+          {/* Booking panel — slides in from right */}
+          <div className={styles.bookingPanel} ref={panelRef}>
+            {submitted ? (
+              <SuccessState onClose={onClose} />
+            ) : (
+              <>
+                <div className={styles.stepIndicator}>
+                  <span className={styles.stepCount}>Step {step} of {STEPS.length}</span>
+                  <h2 className={styles.stepTitle}>{STEP_TITLES[step - 1]}</h2>
+                  <div className={styles.progress}>
+                    <div className={styles.progressFill} style={{ width: `${(step / STEPS.length) * 100}%` }} />
+                  </div>
+                </div>
 
-            <div className={styles.stepNav}>
-              <button
-                className={styles.backBtn}
-                onClick={step === 1 ? () => setPhase('address') : goBack}
-                type="button"
-              >
-                {step === 1 ? '← Address' : '← Back'}
-              </button>
-              <div className={styles.stepNavRight}>
-                {step === 6 && submitError && (
-                  <p className={styles.errorMsg} style={{ textAlign: 'right', marginBottom: 8 }}>
-                    {submitError}
-                  </p>
-                )}
-                {step < 6 ? (
+                <div className={styles.stepContent}>
+                  <StepContent
+                    step={step}
+                    state={state}
+                    update={update}
+                    todayISO={todayISO}
+                    timeSlots={TIME_SLOTS}
+                    submitError={submitError}
+                  />
+                </div>
+
+                <div className={styles.stepNav}>
                   <button
-                    className={styles.continueBtn}
-                    onClick={goNext}
+                    className={styles.backBtn}
+                    onClick={step === 1 ? () => setPhase('address') : goBack}
                     type="button"
-                    disabled={!isStepValid(step, state)}
                   >
-                    Continue &nbsp;→
+                    {step === 1 ? '← Address' : '← Back'}
                   </button>
-                ) : (
-                  <button
-                    className={styles.continueBtn}
-                    onClick={handleSubmit}
-                    type="button"
-                    disabled={submitting || !isStepValid(5, state)}
-                  >
-                    {submitting ? 'Sending…' : 'Confirm Booking'}
-                  </button>
-                )}
-              </div>
-            </div>
-          </>
-        )}
-      </div>
+                  <div className={styles.stepNavRight}>
+                    {step === 6 && submitError && (
+                      <p className={styles.errorMsg} style={{ textAlign: 'right', marginBottom: 8 }}>
+                        {submitError}
+                      </p>
+                    )}
+                    {step < 6 ? (
+                      <button
+                        className={styles.continueBtn}
+                        onClick={goNext}
+                        type="button"
+                        disabled={!isStepValid(step, state)}
+                      >
+                        Continue &nbsp;→
+                      </button>
+                    ) : (
+                      <button
+                        className={styles.continueBtn}
+                        onClick={handleSubmit}
+                        type="button"
+                        disabled={submitting || !isStepValid(5, state)}
+                      >
+                        {submitting ? 'Sending…' : 'Confirm Booking'}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </>
+      )}
+
     </div>,
     document.body
   );
