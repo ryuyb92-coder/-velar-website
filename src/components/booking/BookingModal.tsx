@@ -37,6 +37,10 @@ interface BookingState {
   zip: string;              // stores full service address (sent to Notion "Service Address" column)
   accessNotes: string;      // gate code, parking info — merged into notes on submit
   vehicleDescription: string;
+  vehicleColor: string;
+  licensePlate: string;
+  conditionNotes: string;   // areas needing extra attention
+  conditionFlags: string[]; // quick-checklist selections
   name: string;
   phone: string;
   email: string;
@@ -94,6 +98,10 @@ function buildInitialState(intent: BookingIntent): BookingState {
     zip: '',
     accessNotes: '',
     vehicleDescription: '',
+    vehicleColor: '',
+    licensePlate: '',
+    conditionNotes: '',
+    conditionFlags: [],
     name: intent.prefillName ?? '',
     phone: intent.prefillPhone ?? '',
     email: '',
@@ -462,7 +470,11 @@ export default function BookingModal({ intent, onClose }: Props) {
       state.vehicleType === 'suv'   ? 'SUV/Truck'   : 'XL Vehicle';
 
     const noteParts = [
-      state.accessNotes.trim() ? `Access Notes: ${state.accessNotes.trim()}` : '',
+      state.accessNotes.trim()    ? `Arrival Instructions: ${state.accessNotes.trim()}` : '',
+      state.conditionNotes.trim() ? `Condition Notes: ${state.conditionNotes.trim()}`    : '',
+      state.conditionFlags.length > 0 ? `Condition Flags: ${state.conditionFlags.join(', ')}` : '',
+      state.vehicleColor.trim()   ? `Vehicle Color: ${state.vehicleColor.trim()}`        : '',
+      state.licensePlate.trim()   ? `License Plate: ${state.licensePlate.trim()}`        : '',
       state.notes.trim(),
       state.enhancements.length > 0 ? `Add-ons requested: ${state.enhancements.join(', ')}` : '',
     ];
@@ -1291,25 +1303,170 @@ function Step1Location({ state, update }: { state: BookingState; update: (partia
     </>
   );
 }
+const CONDITION_FLAGS = [
+  'Pet Hair Present',
+  'Child Car Seats Installed',
+  'Heavy Interior Dirt',
+  'Excessive Trash',
+  'Odor Present',
+  'Garage Access Required',
+] as const;
+
+function CheckIcon() {
+  return (
+    <svg width="11" height="9" viewBox="0 0 11 9" fill="none" aria-hidden="true">
+      <path d="M1 4l3 3.5L10 1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
 function Step5({ state, update }: { state: BookingState; update: (partial: Partial<BookingState> | ((prev: BookingState) => Partial<BookingState>)) => void }) {
+  function toggleFlag(flag: string) {
+    update(prev => ({
+      conditionFlags: prev.conditionFlags.includes(flag)
+        ? prev.conditionFlags.filter(f => f !== flag)
+        : [...prev.conditionFlags, flag],
+    }));
+  }
+
   return (
     <>
-      <p className={styles.stepSub}>Year, make, and model help us arrive prepared with the right products.</p>
+      <p className={styles.stepSub}>
+        Help us arrive fully prepared for your appointment.
+      </p>
 
-      <div className={styles.field}>
-        <label className={styles.fieldLabel} htmlFor="bk-vehicle">
-          Year, Make, Model
-        </label>
-        <input
-          className={styles.fieldInput}
-          id="bk-vehicle"
-          name="vehicle"
-          type="text"
-          required
-          placeholder="e.g. 2022 BMW X5"
-          value={state.vehicleDescription}
-          onChange={e => update({ vehicleDescription: e.target.value })}
-        />
+      {/* ── Vehicle Information ─────────────────────────────────────────── */}
+      <div className={styles.intakeSection}>
+        <span className={styles.intakeSectionLabel}>Vehicle Information</span>
+
+        <div className={styles.field}>
+          <label className={styles.fieldLabel} htmlFor="bk-vehicle">
+            Year, Make &amp; Model <span className={styles.req}>*</span>
+          </label>
+          <input
+            className={styles.fieldInput}
+            id="bk-vehicle"
+            name="vehicle"
+            type="text"
+            required
+            placeholder="Ex: 2023 Jeep Grand Cherokee"
+            value={state.vehicleDescription}
+            onChange={e => update({ vehicleDescription: e.target.value })}
+          />
+        </div>
+
+        <div className={styles.fieldRow}>
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="bk-color">Vehicle Color</label>
+            <input
+              className={styles.fieldInput}
+              id="bk-color"
+              name="vehicleColor"
+              type="text"
+              placeholder="Ex: Black, White, Silver, Red"
+              value={state.vehicleColor}
+              onChange={e => update({ vehicleColor: e.target.value })}
+            />
+          </div>
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="bk-plate">
+              License Plate <span className={styles.fieldLabelOptional}>(optional)</span>
+            </label>
+            <input
+              className={styles.fieldInput}
+              id="bk-plate"
+              name="licensePlate"
+              type="text"
+              placeholder="Ex: ABC1234"
+              value={state.licensePlate}
+              onChange={e => update({ licensePlate: e.target.value })}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Arrival Details ─────────────────────────────────────────────── */}
+      <div className={styles.intakeSection}>
+        <span className={styles.intakeSectionLabel}>Arrival Details</span>
+
+        <div className={styles.field}>
+          <label className={styles.fieldLabel} htmlFor="bk-arrival">Arrival Instructions</label>
+          <p className={styles.intakeHelper}>Help us locate and access your vehicle efficiently.</p>
+          <textarea
+            className={styles.fieldTextarea}
+            id="bk-arrival"
+            name="accessNotes"
+            rows={3}
+            placeholder="Gate code, parking garage level, unit number, concierge instructions, parking location, etc."
+            value={state.accessNotes}
+            onChange={e => update({ accessNotes: e.target.value })}
+          />
+        </div>
+      </div>
+
+      {/* ── Vehicle Condition ────────────────────────────────────────────── */}
+      <div className={styles.intakeSection}>
+        <span className={styles.intakeSectionLabel}>Vehicle Condition</span>
+
+        <div className={styles.field}>
+          <label className={styles.fieldLabel} htmlFor="bk-condition">
+            Areas Requiring Extra Attention
+          </label>
+          <p className={styles.intakeHelper}>Let us know about anything that may require additional time or care.</p>
+          <textarea
+            className={styles.fieldTextarea}
+            id="bk-condition"
+            name="conditionNotes"
+            rows={3}
+            placeholder="Pet hair, stains, sand, excessive dirt, food spills, sticky surfaces, etc."
+            value={state.conditionNotes}
+            onChange={e => update({ conditionNotes: e.target.value })}
+          />
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.fieldLabel} htmlFor="bk-notes-extra">
+            Additional Notes <span className={styles.fieldLabelOptional}>(optional)</span>
+          </label>
+          <textarea
+            className={styles.fieldTextarea}
+            id="bk-notes-extra"
+            name="notes"
+            rows={2}
+            placeholder="Anything else you'd like our team to know before arrival."
+            value={state.notes}
+            onChange={e => update({ notes: e.target.value })}
+          />
+        </div>
+      </div>
+
+      {/* ── Quick Condition Checklist ────────────────────────────────────── */}
+      <div className={styles.intakeSection}>
+        <span className={styles.intakeSectionLabel}>Quick Checklist</span>
+        <div className={styles.conditionCheckGrid}>
+          {CONDITION_FLAGS.map(flag => {
+            const checked = state.conditionFlags.includes(flag);
+            return (
+              <div
+                key={flag}
+                role="checkbox"
+                aria-checked={checked}
+                tabIndex={0}
+                className={[
+                  styles.conditionCheck,
+                  checked ? styles.conditionCheckSelected : '',
+                ].filter(Boolean).join(' ')}
+                onClick={() => toggleFlag(flag)}
+                onKeyDown={e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleFlag(flag); } }}
+              >
+                <div className={styles.conditionCheckbox}>
+                  {checked && <CheckIcon />}
+                </div>
+                <span className={styles.conditionCheckLabel}>{flag}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </>
   );
@@ -1373,23 +1530,6 @@ function Step6({ state, update }: { state: BookingState; update: (partial: Parti
         />
       </div>
 
-      <div className={styles.field}>
-        <label className={styles.fieldLabel} htmlFor="bk-notes">
-          Notes{' '}
-          <span className={styles.fieldLabelOptional}>
-            (optional)
-          </span>
-        </label>
-        <textarea
-          className={styles.fieldTextarea}
-          id="bk-notes"
-          name="notes"
-          placeholder="Vehicle condition, gate codes, location details, anything helpful…"
-          rows={3}
-          value={state.notes}
-          onChange={e => update({ notes: e.target.value })}
-        />
-      </div>
     </>
   );
 }
