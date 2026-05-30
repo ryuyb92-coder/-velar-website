@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELAR — Direction C Refined</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', -apple-system, system-ui, sans-serif;
+  background: #030302;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ════════════════════════════════════════════════════════
+   HERO — Direction C Refined
+   Showroom lighting · Oversized logo · Deep spatial depth
+════════════════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #030302;
+}
+
+/* ── LAYER 1: Base void — not uniform black ── */
+.l-void {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Top corners: coldest black */
+    radial-gradient(ellipse 60% 40% at 0% 0%, #020202 0%, transparent 100%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, #020202 0%, transparent 100%),
+    /* Base: very slightly warmer in center */
+    linear-gradient(180deg, #030302 0%, #060504 40%, #080705 70%, #050403 100%);
+}
+
+/* ── LAYER 2: Showroom ceiling light — high, centered ── */
+/* A real showroom has a light source above the car. This creates depth. */
+.l-ceiling-light {
+  position: absolute;
+  top: -12%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55%;
+  height: 55%;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(32, 28, 22, 0.7) 0%,
+    rgba(20, 17, 13, 0.4) 30%,
+    transparent 70%
+  );
+  filter: blur(2px);
+}
+
+/* ── LAYER 3: Showroom floor — polished concrete glow ── */
+/* Floor is slightly lighter than walls — light bounces off it */
+.l-floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background:
+    /* Center glow under where the car would be */
+    radial-gradient(ellipse 70% 60% at 50% 100%, rgba(22, 19, 14, 0.9) 0%, transparent 65%),
+    /* Subtle warm floor color */
+    radial-gradient(ellipse 90% 40% at 50% 100%, rgba(30, 25, 18, 0.4) 0%, transparent 80%),
+    linear-gradient(180deg, transparent 0%, rgba(10, 8, 6, 0.6) 100%);
+}
+
+/* Floor reflection line — the tell of a polished showroom surface */
+.l-floor-reflection {
+  position: absolute;
+  bottom: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.025) 20%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.025) 80%,
+    transparent 100%
+  );
+}
+
+/* ── LAYER 4: Car presence — right side, asymmetric ── */
+/* The car exists as depth, light, and shadow — not as a shape */
+
+/* Car body mass — dark volume in right quadrant */
+.l-car-mass {
+  position: absolute;
+  right: -8%;
+  bottom: 18%;
+  width: 58%;
+  height: 48%;
+  background:
+    /* Shoulder line highlight — sharp bright strip */
+    linear-gradient(
+      162deg,
+      transparent 0%,
+      transparent 38%,
+      rgba(255, 255, 255, 0.022) 39%,
+      rgba(255, 255, 255, 0.018) 40%,
+      transparent 41%,
+      transparent 100%
+    ),
+    /* Body depth */
+    radial-gradient(ellipse 70% 65% at 55% 50%, rgba(14, 12, 9, 0.95) 0%, transparent 80%);
+}
+
+/* Orange rim light — right edge of the car */
+.l-rim-light {
+  position: absolute;
+  right: 0;
+  top: 18%;
+  bottom: 25%;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(242, 106, 13, 0.08) 15%,
+    rgba(242, 106, 13, 0.18) 35%,
+    rgba(242, 106, 13, 0.22) 52%,
+    rgba(242, 106, 13, 0.14) 70%,
+    rgba(242, 106, 13, 0.04) 88%,
+    transparent 100%
+  );
+  filter: blur(0.5px);
+}
+
+/* Secondary rim light glow (softer, wider) */
+.l-rim-glow {
+  position: absolute;
+  right: 0;
+  top: 15%;
+  bottom: 22%;
+  width: 80px;
+  background: linear-gradient(
+    270deg,
+    rgba(242, 106, 13, 0.06) 0%,
+    rgba(242, 106, 13, 0.03) 30%,
+    transparent 100%
+  );
+  filter: blur(8px);
+}
+
+/* Car floor reflection — mirrored glow below car */
+.l-car-reflection {
+  position: absolute;
+  right: 2%;
+  bottom: 0%;
+  width: 52%;
+  height: 22%;
+  background:
+    radial-gradient(
+      ellipse 70% 80% at 55% 0%,
+      rgba(242, 106, 13, 0.025) 0%,
+      rgba(20, 17, 13, 0.3) 30%,
+      transparent 70%
+    );
+  transform: scaleY(-0.6);
+  transform-origin: top center;
+  opacity: 0.6;
+}
+
+/* Chrome body line — horizontal highlight strip across the car body */
+.l-chrome-line {
+  position: absolute;
+  right: 5%;
+  top: 38%;
+  width: 44%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 15%,
+    rgba(255, 255, 255, 0.1) 35%,
+    rgba(255, 255, 255, 0.14) 52%,
+    rgba(255, 255, 255, 0.06) 72%,
+    rgba(255, 255, 255, 0.02) 88%,
+    transparent 100%
+  );
+  filter: blur(0.3px);
+}
+
+/* Roofline — another panel line, slightly higher */
+.l-roofline {
+  position: absolute;
+  right: 8%;
+  top: 28%;
+  width: 38%;
+  height: 1px;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 20%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 75%,
+    transparent 100%
+  );
+}
+
+/* ── LAYER 5: Left fade — keeps composition clean ── */
+.l-left-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(3, 3, 2, 1) 0%,
+    rgba(3, 3, 2, 0.9) 18%,
+    rgba(3, 3, 2, 0.5) 38%,
+    rgba(3, 3, 2, 0.1) 58%,
+    transparent 75%
+  );
+}
+
+/* ── NAV ── */
+.nav {
+  position: relative;
+  z-index: 20;
+  padding: 36px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-dallas {
+  font-size: 0.56rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.12);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+.nav-link {
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.14);
+  text-decoration: none;
+  cursor: pointer;
+}
+.nav-book {
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(242, 106, 13, 0.55);
+  border: 1px solid rgba(242, 106, 13, 0.2);
+  border-radius: 3px;
+  padding: 8px 18px;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* ── MAIN CONTENT ── */
+.content {
+  position: relative;
+  z-index: 20;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 56px clamp(60px, 8vw, 100px);
+  /* Offset left — creates asymmetric composition */
+  max-width: 720px;
+}
+
+/* THE LOGO — oversized, dominant, iconic */
+.logo-wrap {
+  margin-bottom: clamp(28px, 4vh, 44px);
+  /* Subtle upward tilt of light behind logo */
+  position: relative;
+}
+
+/* Glow behind logo — simulates showroom spotlight on brand mark */
+.logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%;
+  height: 130%;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(28, 24, 18, 0.6) 0%,
+    transparent 65%
+  );
+  filter: blur(16px);
+  pointer-events: none;
+}
+
+.logo-img {
+  display: block;
+  width: clamp(240px, 28vw, 420px);
+  height: auto;
+  position: relative;
+  z-index: 1;
+  /* Very subtle upward brightness — catches ceiling light */
+  filter: brightness(1.08) contrast(1.02);
+}
+
+/* Divider: very thin line, not centered — editorial asymmetry */
+.divider-line {
+  width: 56px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(242, 106, 13, 0.35) 0%, rgba(242, 106, 13, 0.1) 100%);
+  margin-bottom: clamp(24px, 3.5vh, 36px);
+}
+
+/* Tagline — extremely restrained */
+.tagline {
+  font-size: clamp(0.7rem, 1.1vw, 0.82rem);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  line-height: 1.8;
+  margin-bottom: clamp(8px, 1.5vh, 14px);
+}
+
+.tagline-secondary {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.1);
+  margin-bottom: clamp(36px, 5vh, 56px);
+}
+
+/* CTA row */
+.cta-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.cta-primary {
+  border: 1px solid rgba(242, 106, 13, 0.35);
+  color: rgba(242, 106, 13, 0.75);
+  background: transparent;
+  border-radius: 3px;
+  padding: 14px 38px;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.cta-primary:hover {
+  border-color: rgba(242, 106, 13, 0.6);
+  color: rgba(242, 106, 13, 0.95);
+  background: rgba(242, 106, 13, 0.04);
+}
+
+.cta-secondary {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.14);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ── BOTTOM BAR ── */
+.bottom-bar {
+  position: relative;
+  z-index: 20;
+  padding: 0 56px 36px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.bottom-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-num {
+  font-size: 1.4rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  color: rgba(255, 255, 255, 0.07);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.48rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.06);
+}
+
+.bottom-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.bottom-tag {
+  font-size: 0.48rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.07);
+}
+/* Bottom orange mark */
+.bottom-orange {
+  width: 24px;
+  height: 1px;
+  background: rgba(242, 106, 13, 0.25);
+}
+
+/* ── Orange frame lines — very architectural ── */
+/* Left vertical accent */
+.accent-left {
+  position: absolute;
+  left: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 1.5px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(242, 106, 13, 0.12) 30%,
+    rgba(242, 106, 13, 0.18) 55%,
+    rgba(242, 106, 13, 0.08) 80%,
+    transparent 100%
+  );
+  z-index: 15;
+}
+
+/* Bottom frame line */
+.accent-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(242, 106, 13, 0.18) 0%,
+    rgba(242, 106, 13, 0.08) 25%,
+    transparent 60%
+  );
+  z-index: 15;
+}
+
+
+/* ═══════════════════════════════════════════════
+   MOCKUP LABEL BAR
+═══════════════════════════════════════════════ */
+.page-bar {
+  background: #010101;
+  border-bottom: 1px solid #0a0908;
+  padding: 14px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.pb-tag { font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: #2a2620; }
+.pb-note { font-size: 0.54rem; color: #1e1c18; letter-spacing: 0.08em; }
+
+
+/* ═══════════════════════════════════════════════
+   ANNOTATION SECTION
+═══════════════════════════════════════════════ */
+.annotations {
+  background: #020201;
+  border-top: 1px solid #0a0908;
+  padding: 40px 56px 60px;
+}
+.ann-title {
+  font-size: 0.54rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #2a2620;
+  margin-bottom: 28px;
+}
+.ann-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.ann-item {}
+.ann-key {
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #2a2620;
+  margin-bottom: 8px;
+}
+.ann-val {
+  font-size: 0.7rem;
+  color: #3a3428;
+  line-height: 1.6;
+}
+.ann-val strong { color: #4a4030; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<div class="page-bar">
+  <span class="pb-tag">VELAR · Direction C Refined · Showroom Depth + Oversized Branding</span>
+  <span class="pb-note">Visual mockup only — not yet implemented</span>
+</div>
+
+<div class="hero">
+
+  <!-- Lighting layers — order matters for depth -->
+  <div class="l-void"></div>
+  <div class="l-ceiling-light"></div>
+  <div class="l-floor"></div>
+  <div class="l-floor-reflection"></div>
+
+  <!-- Vehicle presence -->
+  <div class="l-car-mass"></div>
+  <div class="l-rim-light"></div>
+  <div class="l-rim-glow"></div>
+  <div class="l-car-reflection"></div>
+  <div class="l-chrome-line"></div>
+  <div class="l-roofline"></div>
+
+  <!-- Left fade — isolates content from car -->
+  <div class="l-left-fade"></div>
+
+  <!-- Architectural accents -->
+  <div class="accent-left"></div>
+  <div class="accent-bottom"></div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <span class="nav-dallas">Dallas, Texas</span>
+    <div class="nav-right">
+      <a class="nav-link">Services</a>
+      <a class="nav-link">Packages</a>
+      <button class="nav-book">Book Now</button>
+    </div>
+  </nav>
+
+  <!-- MAIN: Logo + minimal text -->
+  <div class="content">
+    <div class="logo-wrap">
+      <div class="logo-glow"></div>
+      <img class="logo-img" src="velar-logo-orange.png" alt="VELAR Mobile Detailing">
+    </div>
+
+    <div class="divider-line"></div>
+
+    <p class="tagline">Premium Mobile Detailing</p>
+    <p class="tagline-secondary">Dallas · Fort Worth · DFW</p>
+
+    <div class="cta-row">
+      <button class="cta-primary">Book a Detail</button>
+      <button class="cta-secondary">View packages →</button>
+    </div>
+  </div>
+
+  <!-- Bottom bar — ghost stats, extreme restraint -->
+  <div class="bottom-bar">
+    <div style="display:flex;gap:48px;">
+      <div class="bottom-stat">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Satisfaction</div>
+      </div>
+      <div class="bottom-stat">
+        <div class="stat-num">5★</div>
+        <div class="stat-label">Rated Service</div>
+      </div>
+    </div>
+    <div class="bottom-right">
+      <div class="bottom-tag">Licensed &amp; Insured</div>
+      <div class="bottom-orange"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Annotations -->
+<div class="annotations">
+  <div class="ann-title">Design decisions — Direction C Refined</div>
+  <div class="ann-grid">
+    <div class="ann-item">
+      <div class="ann-key">Lighting</div>
+      <div class="ann-val"><strong>7 depth layers.</strong> Ceiling light from above, floor bounce from below, car mass in right quadrant. Not flat black — graduated warm dark with intentional bright zones.</div>
+    </div>
+    <div class="ann-item">
+      <div class="ann-key">Vehicle</div>
+      <div class="ann-val"><strong>Implied, not drawn.</strong> Three panel lines (roofline, chrome strip, body line) plus rim light + floor reflection. Car is atmosphere, not illustration.</div>
+    </div>
+    <div class="ann-item">
+      <div class="ann-key">Logo</div>
+      <div class="ann-val"><strong>420px wide max.</strong> Showroom spotlight glow behind it. Logo is the hero object — not a nav item. Left-aligned for editorial asymmetry vs. car on right.</div>
+    </div>
+    <div class="ann-item">
+      <div class="ann-key">Orange</div>
+      <div class="ann-val"><strong>Used at 4 points only.</strong> Logo (inherent), left architectural accent line, bottom frame rule, ghost CTA border. Never filled. Never decorative.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

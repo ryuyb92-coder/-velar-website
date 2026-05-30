@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELAR Mobile Detailing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --orange:     #f26a0d;
+  --orange-dim: rgba(242,106,13,0.08);
+  --black:      #07060505;
+  --hero-bg:    #08070605;
+  --off-black:  #111110;
+  --white:      #ffffff;
+  --off-white:  #f6f4f1;
+  --warm-bg:    #f0ece7;
+  --muted:      #7a7060;
+  --border:     #e5ddd5;
+  --font:       'DM Sans', -apple-system, system-ui, sans-serif;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: #08070605;
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─── */
+.nav {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 56px; height: 74px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.nav-logo img {
+  height: 38px; width: auto; display: block;
+  filter: brightness(1.05);
+}
+.nav-links {
+  display: flex; gap: 36px; list-style: none;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.nav-links a {
+  font-size: 0.76rem; color: rgba(255,255,255,0.42);
+  text-decoration: none; letter-spacing: 0.04em; font-weight: 400;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: rgba(255,255,255,0.72); }
+.nav-links a.active { color: rgba(255,255,255,0.9); font-weight: 500; }
+.nav-book {
+  background: var(--orange); color: #fff; border: none; border-radius: 5px;
+  padding: 10px 22px; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.09em; text-transform: uppercase; cursor: pointer;
+  font-family: var(--font);
+}
+
+/* ─── HERO ─── */
+.hero {
+  position: relative; min-height: 100vh; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+/* Deep atmospheric base */
+.hero-atmos {
+  position: absolute; inset: 0;
+  background:
+    /* Subtle warm ground plane under car */
+    radial-gradient(ellipse 60% 35% at 72% 100%, rgba(18,14,10,0.9) 0%, transparent 60%),
+    /* Very faint key light from upper left catching roof */
+    radial-gradient(ellipse 40% 50% at 20% 20%, rgba(22,20,16,0.5) 0%, transparent 65%),
+    /* Atmospheric warm-cool split */
+    linear-gradient(125deg,
+      #0b0a08 0%,
+      #090806 35%,
+      #0a0907 55%,
+      #080605 75%,
+      #060504 100%
+    );
+}
+
+/* Subtle showroom floor glow — gives ground plane */
+.hero-floor {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 28%;
+  background:
+    radial-gradient(ellipse 80% 100% at 65% 100%, rgba(14,12,10,0.6) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 80% at 85% 100%, rgba(242,106,13,0.025) 0%, transparent 50%);
+}
+
+/* Left-to-center fade — protects text readability */
+.hero-fade-left {
+  position: absolute; inset: 0;
+  background: linear-gradient(100deg,
+    rgba(8,7,6,0.97) 0%,
+    rgba(8,7,6,0.92) 28%,
+    rgba(8,7,6,0.68) 44%,
+    rgba(8,7,6,0.28) 58%,
+    rgba(8,7,6,0.06) 70%,
+    transparent 80%
+  );
+}
+
+/* ── CAR STAGE ── */
+.car-stage {
+  position: absolute;
+  right: -4%;
+  top: 5%;
+  bottom: 3%;
+  width: 66%;
+}
+
+/* Warm orange ambient from far right — tail light glow */
+.car-rim-glow {
+  position: absolute;
+  right: 0; top: 8%; bottom: 15%;
+  width: 120px;
+  background: linear-gradient(270deg,
+    rgba(242,106,13,0.055) 0%,
+    rgba(242,106,13,0.02) 40%,
+    transparent 100%
+  );
+  filter: blur(18px);
+}
+
+/* Overhead key-light rim along top — showroom effect */
+.car-key-light {
+  position: absolute;
+  top: 0; left: 8%; right: 5%;
+  height: 90px;
+  background: radial-gradient(ellipse 70% 100% at 52% 0%,
+    rgba(255,255,255,0.025) 0%,
+    transparent 100%
+  );
+}
+
+/* Car SVG wrapper */
+.car-svg-wrap {
+  position: absolute;
+  bottom: 15%;
+  left: 0; right: 0;
+  height: 65%;
+}
+
+/* Ground contact shadow */
+.car-shadow {
+  position: absolute;
+  bottom: 14%; left: 10%; right: 4%;
+  height: 6px;
+  background: radial-gradient(ellipse 70% 100% at 50% 50%, rgba(0,0,0,0.9) 0%, transparent 100%);
+  filter: blur(4px);
+}
+
+/* Floor reflection line — polished showroom surface */
+.car-floor-line {
+  position: absolute;
+  bottom: 15%; left: 8%; right: 2%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.015) 15%,
+    rgba(255,255,255,0.05) 38%,
+    rgba(255,255,255,0.07) 55%,
+    rgba(255,255,255,0.04) 72%,
+    rgba(242,106,13,0.06) 88%,
+    transparent 100%
+  );
+}
+
+/* ── HERO CONTENT ── */
+.hero-content {
+  position: relative; z-index: 20; flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 110px 56px clamp(40px, 5vw, 72px);
+  max-width: 560px;
+}
+.hero-eyebrow {
+  font-size: 0.61rem; font-weight: 600; letter-spacing: 0.26em;
+  text-transform: uppercase; color: var(--orange);
+  margin-bottom: 22px; display: block;
+}
+.hero-h1 {
+  font-size: clamp(2.8rem, 5.4vw, 4.8rem);
+  font-weight: 800; line-height: 0.96; letter-spacing: -0.035em;
+  color: #fff; margin-bottom: 24px;
+}
+.hero-h1 .orange { color: var(--orange); }
+.hero-sub {
+  font-size: 0.9rem; color: rgba(255,255,255,0.44); line-height: 1.72;
+  max-width: 340px; margin-bottom: 44px; font-weight: 400;
+}
+.hero-ctas { display: flex; gap: 12px; align-items: center; }
+.btn-hero-primary {
+  background: var(--orange); color: #fff; border: none; border-radius: 5px;
+  padding: 14px 32px; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 6px 28px rgba(242,106,13,0.28);
+  font-family: var(--font);
+}
+.btn-hero-secondary {
+  background: transparent; color: rgba(255,255,255,0.42);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 5px;
+  padding: 13px 24px; font-size: 0.72rem; letter-spacing: 0.08em;
+  text-transform: uppercase; cursor: pointer; font-family: var(--font);
+}
+
+/* Trust bar — minimal, at bottom of hero */
+.hero-trust {
+  position: relative; z-index: 20;
+  border-top: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+}
+.trust-item {
+  flex: 1; padding: 22px 56px 22px;
+  border-right: 1px solid rgba(255,255,255,0.04);
+  display: flex; align-items: center; gap: 16px;
+}
+.trust-item:last-child { border-right: none; }
+.trust-icon {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.35); font-size: 0.65rem; flex-shrink: 0;
+}
+.trust-label {
+  font-size: 0.63rem; font-weight: 600; letter-spacing: 0.09em;
+  text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 3px;
+}
+.trust-sub { font-size: 0.66rem; color: rgba(255,255,255,0.18); }
+
+/* ─── ABOUT SECTION ─── */
+.about {
+  background: var(--white);
+  padding: clamp(80px, 8vw, 116px) 56px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: center;
+  max-width: 1200px; margin: 0 auto; width: 100%;
+}
+.about-outer { background: var(--white); }
+.about-eye {
+  font-size: 0.59rem; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--orange); font-weight: 600; margin-bottom: 16px; display: block;
+}
+.about-h {
+  font-size: clamp(1.9rem, 3.2vw, 2.9rem); font-weight: 700;
+  letter-spacing: -0.028em; color: #111; line-height: 1.08; margin-bottom: 20px;
+}
+.about-body {
+  font-size: 0.87rem; color: var(--muted); line-height: 1.78;
+  margin-bottom: 34px; max-width: 400px;
+}
+.about-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.71rem; font-weight: 600; letter-spacing: 0.09em;
+  text-transform: uppercase; color: #111; text-decoration: none;
+  border: 1px solid #ddd8d0; border-radius: 5px; padding: 12px 24px;
+  cursor: pointer; font-family: var(--font);
+}
+.about-img {
+  border-radius: 10px; overflow: hidden; aspect-ratio: 4/3;
+  background:
+    radial-gradient(ellipse 55% 50% at 50% 38%, rgba(242,106,13,0.04) 0%, transparent 55%),
+    linear-gradient(148deg, #181614 0%, #111010 35%, #0d0c0a 65%, #080706 100%);
+  position: relative; display: flex; align-items: flex-end;
+  padding: 20px 24px;
+}
+.about-img-label {
+  font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(255,255,255,0.16);
+}
+
+/* ─── PACKAGES SECTION ─── */
+.packages-outer { background: #09080706; }
+.packages {
+  padding: clamp(80px, 8vw, 116px) 56px;
+  max-width: 1040px; margin: 0 auto;
+}
+.packages-header { margin-bottom: 56px; }
+.packages-eye {
+  font-size: 0.59rem; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--orange); font-weight: 600; margin-bottom: 14px; display: block;
+}
+.packages-h {
+  font-size: clamp(1.9rem, 3.2vw, 2.9rem); font-weight: 700;
+  letter-spacing: -0.028em; color: #fff; margin-bottom: 14px;
+}
+.packages-sub {
+  font-size: 0.85rem; color: rgba(255,255,255,0.26); line-height: 1.68; max-width: 500px;
+}
+
+.pkg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+.pkg-card {
+  background: #0d0c0a;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px; padding: 34px 30px;
+  display: flex; flex-direction: column; position: relative; overflow: hidden;
+}
+.pkg-card.featured {
+  background: #0f0e0c;
+  border-color: rgba(242,106,13,0.15);
+}
+.pkg-card.featured::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--orange) 0%, transparent 55%);
+}
+
+/* Dark vehicle thumbnail — atmospheric */
+.pkg-card-thumb {
+  border-radius: 8px; margin-bottom: 26px;
+  height: 120px; position: relative; overflow: hidden;
+  background: linear-gradient(148deg, #131210 0%, #0a0908 55%, #070605 100%);
+}
+.pkg-card-thumb::after {
+  content: '';
+  position: absolute;
+  bottom: 22%; left: 8%; right: 4%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.09) 52%,
+    rgba(242,106,13,0.05) 78%, transparent
+  );
+}
+
+.pkg-badge {
+  position: absolute; top: 14px; right: 14px;
+  background: var(--orange); color: #fff;
+  font-size: 0.49rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  border-radius: 100px; padding: 4px 10px;
+}
+
+.pkg-tier {
+  font-size: 0.49rem; letter-spacing: 0.24em; text-transform: uppercase;
+  color: rgba(255,255,255,0.18); margin-bottom: 7px;
+}
+.pkg-name {
+  font-size: 1.45rem; font-weight: 700; letter-spacing: -0.03em;
+  color: #fff; margin-bottom: 10px;
+}
+.pkg-desc {
+  font-size: 0.76rem; color: rgba(255,255,255,0.26);
+  line-height: 1.62; flex: 1; margin-bottom: 24px;
+}
+
+.pkg-features { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 28px; }
+.pkg-feat {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 0.73rem; color: rgba(255,255,255,0.32); line-height: 1.35;
+}
+.pkg-check {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1px solid rgba(242,106,13,0.22);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.pkg-check::after { content: '✓'; font-size: 0.44rem; color: var(--orange); }
+
+.pkg-rule { height: 1px; background: rgba(255,255,255,0.05); margin-bottom: 20px; }
+.pkg-price-row { display: flex; align-items: baseline; gap: 5px; margin-bottom: 20px; }
+.pkg-from { font-size: 0.61rem; color: rgba(255,255,255,0.22); letter-spacing: 0.04em; }
+.pkg-price { font-size: 2.1rem; font-weight: 700; letter-spacing: -0.03em; color: #fff; }
+.pkg-card.featured .pkg-price { color: var(--orange); }
+.pkg-per { font-size: 0.61rem; color: rgba(255,255,255,0.18); }
+
+.pkg-btn {
+  width: 100%; padding: 13px; border-radius: 7px;
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; text-align: center; font-family: var(--font);
+  border: 1px solid rgba(255,255,255,0.09);
+  background: transparent; color: rgba(255,255,255,0.32);
+}
+.pkg-card.featured .pkg-btn {
+  background: var(--orange); border-color: var(--orange); color: #fff;
+  box-shadow: 0 4px 20px rgba(242,106,13,0.24);
+}
+
+/* ─── BOOKING MODAL DEMO ─── */
+.modal-section-outer { background: var(--warm-bg); }
+.modal-section { padding: clamp(64px, 6vw, 96px) 56px; max-width: 1040px; margin: 0 auto; }
+
+.modal-demo-label {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin-bottom: 10px;
+}
+.modal-demo-pill {
+  font-size: 0.54rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(100,90,80,0.7); background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.08); border-radius: 100px; padding: 4px 12px;
+}
+.modal-section-h {
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem); font-weight: 400;
+  letter-spacing: -0.02em; color: #222; text-align: center; margin-bottom: 10px;
+}
+.modal-section-note {
+  font-size: 0.74rem; color: rgba(0,0,0,0.28); text-align: center; margin-bottom: 52px;
+}
+
+/* Modal chrome */
+.modal-frame {
+  max-width: 940px; margin: 0 auto;
+  border-radius: 18px; overflow: hidden; display: flex;
+  box-shadow:
+    0 2px 2px rgba(0,0,0,0.04),
+    0 8px 24px rgba(0,0,0,0.08),
+    0 32px 80px rgba(0,0,0,0.12);
+  border: 1px solid rgba(0,0,0,0.07);
+  min-height: 580px;
+}
+
+/* Sidebar */
+.modal-sidebar {
+  width: 212px; flex-shrink: 0;
+  background: #080806;
+  border-right: 1px solid #100f0d;
+  display: flex; flex-direction: column; position: relative;
+}
+.modal-sidebar::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--orange) 0%, rgba(242,106,13,0.2) 50%, transparent 100%);
+  opacity: 0.75;
+}
+.sidebar-logo {
+  padding: 26px 20px 22px;
+  border-bottom: 1px solid #0f0e0c;
+}
+.sidebar-logo img { width: 68px; height: auto; opacity: 0.92; }
+
+.sidebar-steps { flex: 1; padding: 18px 0 10px; }
+.sidebar-step {
+  display: flex; align-items: center; gap: 11px;
+  padding: 9px 20px;
+}
+.step-num {
+  width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+  border: 1px solid #1e1c18;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.5rem; color: #2a2620; font-weight: 600;
+}
+.sidebar-step.active .step-num {
+  background: var(--orange); border-color: var(--orange); color: #fff;
+}
+.sidebar-step.done .step-num {
+  background: rgba(242,106,13,0.12);
+  border-color: rgba(242,106,13,0.25);
+  color: var(--orange);
+}
+.step-name { font-size: 0.63rem; color: #252218; letter-spacing: 0.03em; }
+.sidebar-step.active .step-name { color: rgba(255,255,255,0.7); }
+.sidebar-step.done .step-name { color: #332e24; }
+
+.sidebar-connector {
+  width: 1px; height: 10px; background: #141210;
+  margin: 0 0 0 29px;
+}
+
+.sidebar-summary {
+  border-top: 1px solid #0f0e0c;
+  padding: 18px 20px 22px;
+}
+.sum-header {
+  font-size: 0.47rem; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--orange); margin-bottom: 14px;
+}
+.sum-row { margin-bottom: 10px; }
+.sum-key {
+  font-size: 0.44rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #1a1814; margin-bottom: 3px;
+}
+.sum-val { font-size: 0.64rem; color: #3a3428; }
+.sum-row.set .sum-val { color: #4a4438; }
+.sum-total-row { margin-top: 14px; padding-top: 13px; border-top: 1px solid #0f0e0c; }
+.sum-total-key {
+  font-size: 0.44rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #252218; margin-bottom: 5px;
+}
+.sum-total-val {
+  font-size: 1.35rem; font-weight: 300; letter-spacing: -0.04em;
+  color: var(--orange); line-height: 1;
+}
+.sum-total-note {
+  font-size: 0.44rem; letter-spacing: 0.07em; text-transform: uppercase;
+  color: #1a1814; margin-top: 4px;
+}
+
+/* Step panel */
+.modal-main { flex: 1; background: #fff; display: flex; flex-direction: column; }
+.modal-prog { height: 3px; background: #f2ede6; flex-shrink: 0; }
+.modal-prog-fill { height: 100%; background: var(--orange); transition: width 0.4s; }
+
+.modal-inner { flex: 1; padding: 38px 42px 26px; display: flex; flex-direction: column; }
+.modal-step-label {
+  font-size: 0.52rem; font-weight: 600; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--orange); margin-bottom: 10px; display: block;
+}
+.modal-step-h {
+  font-size: 1.65rem; font-weight: 700; letter-spacing: -0.028em;
+  color: #111; margin-bottom: 6px; line-height: 1.1;
+}
+.modal-step-sub {
+  font-size: 0.79rem; color: var(--muted); margin-bottom: 30px; line-height: 1.6;
+}
+
+/* Vehicle type selector */
+.section-sublabel {
+  font-size: 0.52rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+  color: #444; margin-bottom: 12px; display: block;
+}
+.vehicle-types { display: flex; gap: 9px; margin-bottom: 28px; }
+.vt-card {
+  flex: 1; border: 1px solid var(--border); border-radius: 9px;
+  padding: 14px 10px; text-align: center; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  transition: border-color 0.18s, background 0.18s;
+}
+.vt-card.selected {
+  background: #111; border-color: #111;
+}
+.vt-icon { font-size: 1.2rem; line-height: 1; }
+.vt-card:not(.selected) .vt-icon { filter: grayscale(1) opacity(0.4); }
+.vt-name { font-size: 0.61rem; font-weight: 600; color: #888; letter-spacing: 0.03em; }
+.vt-card.selected .vt-name { color: rgba(255,255,255,0.75); }
+.vt-adj { font-size: 0.54rem; color: var(--orange); font-weight: 500; }
+
+/* Package comparison in modal */
+.modal-pkg-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; flex: 1; }
+.modal-pkg {
+  border: 1px solid var(--border); border-radius: 11px; padding: 20px 17px;
+  display: flex; flex-direction: column; cursor: pointer;
+  position: relative; overflow: hidden;
+  transition: border-color 0.18s;
+}
+.modal-pkg.featured {
+  background: #111; border-color: transparent;
+}
+.modal-pkg.featured::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--orange), rgba(242,106,13,0.2) 60%, transparent);
+}
+.modal-pkg-badge {
+  position: absolute; top: 11px; right: 11px;
+  background: var(--orange); color: #fff;
+  font-size: 0.45rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  border-radius: 100px; padding: 3px 8px;
+}
+.modal-pkg-tier {
+  font-size: 0.47rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: #aaa; margin-bottom: 5px;
+}
+.modal-pkg.featured .modal-pkg-tier { color: #2a2218; }
+.modal-pkg-name {
+  font-size: 1.1rem; font-weight: 700; letter-spacing: -0.022em;
+  color: #111; margin-bottom: 10px;
+}
+.modal-pkg.featured .modal-pkg-name { color: #d4ccbf; }
+.modal-pkg-feats { flex: 1; display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; }
+.mpf {
+  font-size: 0.66rem; color: #888; display: flex; align-items: center; gap: 7px;
+  line-height: 1.3;
+}
+.mpf::before { content: '✓'; color: var(--orange); font-size: 0.48rem; flex-shrink: 0; }
+.modal-pkg.featured .mpf { color: #3a3028; }
+.modal-pkg-rule { height: 1px; background: var(--border); margin-bottom: 11px; }
+.modal-pkg.featured .modal-pkg-rule { background: #1c1812; }
+.modal-pkg-price {
+  font-size: 1.45rem; font-weight: 700; letter-spacing: -0.035em;
+  color: #111; line-height: 1;
+}
+.modal-pkg.featured .modal-pkg-price { color: #b8b0a4; }
+.modal-pkg-dur { font-size: 0.59rem; color: #bbb; margin-top: 3px; }
+.modal-pkg.featured .modal-pkg-dur { color: #222018; }
+
+/* Modal nav buttons */
+.modal-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 42px 30px;
+  border-top: 1px solid #f0ebe4; flex-shrink: 0;
+}
+.modal-back {
+  font-size: 0.64rem; letter-spacing: 0.09em; text-transform: uppercase;
+  color: #c8c0b4; background: none; border: none; cursor: pointer; font-family: var(--font);
+}
+.modal-continue {
+  background: var(--orange); color: #fff; border: none; border-radius: 7px;
+  padding: 12px 30px; font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  display: flex; align-items: center; gap: 9px;
+  box-shadow: 0 4px 18px rgba(242,106,13,0.24);
+  font-family: var(--font);
+}
+
+/* ─── FOOTER ─── */
+.footer-outer { background: #060504; border-top: 1px solid #0d0c0a; }
+.footer {
+  padding: 38px 56px; display: flex; align-items: center;
+  justify-content: space-between;
+  max-width: 1200px; margin: 0 auto;
+}
+.footer-logo img { height: 32px; opacity: 0.55; }
+.footer-copy { font-size: 0.64rem; color: rgba(255,255,255,0.14); }
+.footer-links { display: flex; gap: 28px; }
+.footer-links a { font-size: 0.64rem; color: rgba(255,255,255,0.16); text-decoration: none; }
+
+/* Mockup bar */
+.mockup-bar {
+  background: #010100; border-top: 1px solid #080706;
+  padding: 10px 40px; text-align: center;
+}
+.mockup-bar span {
+  font-size: 0.52rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #1e1c18; font-family: var(--font);
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     NAV
+════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-logo">
+    <img src="velar-logo-orange.png" alt="VELAR Mobile Detailing">
+  </div>
+  <ul class="nav-links">
+    <li><a class="active" href="#">Home</a></li>
+    <li><a href="#">Services</a></li>
+    <li><a href="#">Packages</a></li>
+    <li><a href="#">About Us</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <button class="nav-book">Book Now &nbsp;→</button>
+</nav>
+
+
+<!-- ════════════════════════════════════
+     HERO
+════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-atmos"></div>
+  <div class="hero-floor"></div>
+
+  <!-- Car stage — right half -->
+  <div class="car-stage">
+    <div class="car-key-light"></div>
+    <div class="car-rim-glow"></div>
+    <div class="car-shadow"></div>
+
+    <!-- ── SPORTS COUPE SVG ── -->
+    <div class="car-svg-wrap">
+      <svg viewBox="0 0 860 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible;">
+        <defs>
+
+          <!-- ── BODY GRADIENTS ── -->
+          <!-- Body top: clearly darker-warm-charcoal so it reads against near-black bg -->
+          <linearGradient id="bodyMain" x1="0.1" y1="0" x2="0.1" y2="1">
+            <stop offset="0%"   stop-color="#2e2a24"/>
+            <stop offset="20%"  stop-color="#201e1a"/>
+            <stop offset="55%"  stop-color="#161410"/>
+            <stop offset="100%" stop-color="#0c0a08"/>
+          </linearGradient>
+
+          <!-- Body lower side -->
+          <linearGradient id="bodySide" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#1a1816"/>
+            <stop offset="60%"  stop-color="#111010"/>
+            <stop offset="100%" stop-color="#0a0908"/>
+          </linearGradient>
+
+          <!-- Hood: slightly cooler -->
+          <linearGradient id="hoodGrad" x1="0.5" y1="0" x2="0.5" y2="1">
+            <stop offset="0%"   stop-color="#222018"/>
+            <stop offset="50%"  stop-color="#141210"/>
+            <stop offset="100%" stop-color="#0c0a08"/>
+          </linearGradient>
+
+          <!-- Windshield — dark tinted glass, slight green tone -->
+          <linearGradient id="windshield" x1="0.2" y1="0" x2="0.7" y2="1">
+            <stop offset="0%"   stop-color="#182018" stop-opacity="0.65"/>
+            <stop offset="70%"  stop-color="#0d1410" stop-opacity="0.88"/>
+            <stop offset="100%" stop-color="#080f0b" stop-opacity="0.95"/>
+          </linearGradient>
+
+          <!-- Rear glass -->
+          <linearGradient id="rearGlass" x1="0.2" y1="0" x2="0.5" y2="1">
+            <stop offset="0%"   stop-color="#14201a" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#080f0c" stop-opacity="0.9"/>
+          </linearGradient>
+
+          <!-- Wheel rim — dark alloy -->
+          <radialGradient id="rimGrad" cx="50%" cy="40%" r="55%">
+            <stop offset="0%"   stop-color="#2e2a24"/>
+            <stop offset="45%"  stop-color="#181614"/>
+            <stop offset="78%"  stop-color="#0f0d0b"/>
+            <stop offset="100%" stop-color="#080706"/>
+          </radialGradient>
+
+          <!-- Tire -->
+          <radialGradient id="tireGrad" cx="40%" cy="35%" r="60%">
+            <stop offset="0%"   stop-color="#0e0c0a"/>
+            <stop offset="100%" stop-color="#060504"/>
+          </radialGradient>
+
+          <!-- KEY LIGHT: broad overhead highlight running along roof/shoulder — simulates showroom overhead -->
+          <linearGradient id="keyLight" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="white" stop-opacity="0"/>
+            <stop offset="8%"   stop-color="white" stop-opacity="0.04"/>
+            <stop offset="22%"  stop-color="white" stop-opacity="0.14"/>
+            <stop offset="40%"  stop-color="white" stop-opacity="0.26"/>
+            <stop offset="57%"  stop-color="white" stop-opacity="0.22"/>
+            <stop offset="75%"  stop-color="white" stop-opacity="0.1"/>
+            <stop offset="92%"  stop-color="white" stop-opacity="0.03"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </linearGradient>
+
+          <!-- Shoulder character line -->
+          <linearGradient id="shoulderLine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="white" stop-opacity="0"/>
+            <stop offset="12%"  stop-color="white" stop-opacity="0.06"/>
+            <stop offset="34%"  stop-color="white" stop-opacity="0.18"/>
+            <stop offset="55%"  stop-color="white" stop-opacity="0.22"/>
+            <stop offset="74%"  stop-color="white" stop-opacity="0.14"/>
+            <stop offset="90%"  stop-color="white" stop-opacity="0.04"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </linearGradient>
+
+          <!-- Mid character line (lower body) -->
+          <linearGradient id="midLine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="white" stop-opacity="0"/>
+            <stop offset="15%"  stop-color="white" stop-opacity="0.04"/>
+            <stop offset="38%"  stop-color="white" stop-opacity="0.12"/>
+            <stop offset="56%"  stop-color="white" stop-opacity="0.14"/>
+            <stop offset="78%"  stop-color="white" stop-opacity="0.08"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </linearGradient>
+
+          <!-- Orange tail glow -->
+          <radialGradient id="tailGlow" cx="100%" cy="50%" r="75%">
+            <stop offset="0%"   stop-color="#f26a0d" stop-opacity="0.22"/>
+            <stop offset="30%"  stop-color="#f26a0d" stop-opacity="0.09"/>
+            <stop offset="100%" stop-color="#f26a0d" stop-opacity="0"/>
+          </radialGradient>
+
+          <!-- Floor reflection -->
+          <linearGradient id="floorRefl" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#1c1814" stop-opacity="0.28"/>
+            <stop offset="100%" stop-color="#080706" stop-opacity="0"/>
+          </linearGradient>
+
+          <!-- Ground shadow -->
+          <radialGradient id="groundShadow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stop-color="#000000" stop-opacity="0.88"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+          </radialGradient>
+
+          <!-- Wheel well shadow -->
+          <radialGradient id="wellShadow" cx="50%" cy="100%" r="60%">
+            <stop offset="0%"   stop-color="#000" stop-opacity="0.7"/>
+            <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+          </radialGradient>
+
+        </defs>
+
+        <!-- Ground shadow -->
+        <ellipse cx="435" cy="346" rx="410" ry="18" fill="url(#groundShadow)"/>
+
+        <!-- Floor reflection — mirrored body -->
+        <g transform="translate(0,346) scale(1,-0.14)" opacity="0.28">
+          <path d="M 60 190 Q 110 205 165 212 L 190 228 Q 230 240 310 242 L 580 238 Q 640 234 688 222 L 742 208 Q 778 196 808 180 L 820 170 L 820 270 L 60 270 Z"
+            fill="url(#bodyMain)" opacity="0.35"/>
+        </g>
+
+        <!-- ════ MAIN BODY SHELL ════ -->
+
+        <!-- Lower sill / rocker -->
+        <path d="
+          M 60 272 Q 90 276 145 278 L 200 280 Q 225 283 250 285
+          L 595 285 Q 628 283 662 280 L 708 278 Q 748 276 802 270
+          L 814 262 L 820 270 L 60 270 Z
+        " fill="#08070605"/>
+
+        <!-- Main coupe body — profile -->
+        <path d="
+          M 60 270
+          L 65 262 L 80 244 Q 98 228 122 218
+          L 158 208 Q 176 204 195 202 L 212 200
+          Q 228 190 248 176 L 272 158
+          Q 282 142 298 134 L 330 124
+          L 396 114 L 500 112 L 554 116
+          L 588 124 Q 610 132 630 145
+          L 654 162 Q 668 172 683 182
+          L 718 194 Q 742 202 768 210
+          L 790 220 Q 806 228 814 242
+          L 820 258 L 820 270 Z
+        " fill="url(#bodyMain)"/>
+
+        <!-- Hood panel — slightly different tone for depth -->
+        <path d="
+          M 65 265 L 80 246 Q 96 230 118 220
+          L 155 210 L 192 202 L 208 200
+          L 210 205 L 196 208 L 162 216
+          Q 128 226 112 236 L 96 250 L 82 266 Z
+        " fill="url(#hoodGrad)"/>
+
+        <!-- Upper body — lighter warm charcoal shoulder zone -->
+        <path d="
+          M 200 200 Q 240 192 280 178
+          Q 308 168 326 158 Q 350 146 384 132
+          Q 424 120 500 116 Q 556 116 590 124
+          Q 614 132 636 148 Q 655 162 669 174
+          Q 692 190 720 196
+          L 718 194 Q 742 202 768 210 L 790 220 Q 806 228 814 242
+          L 820 258 L 820 270
+          Q 794 262 768 255 L 724 248
+          Q 695 242 668 236 L 636 228
+          Q 614 222 590 216 L 554 212
+          Q 520 210 500 210 L 440 210
+          Q 400 212 360 218 Q 320 226 286 234
+          Q 258 240 228 246 L 200 252 Z
+        " fill="url(#bodySide)"/>
+
+        <!-- ══ HIGHLIGHT LINES ══ -->
+
+        <!-- Roof/top highlight — KEY LIGHT, wide + bright -->
+        <path d="M 300 120 Q 400 110 500 112 Q 554 114 586 122 L 598 128"
+          fill="none" stroke="url(#keyLight)" stroke-width="2.5" stroke-linecap="round"/>
+
+        <!-- A-pillar top edge -->
+        <path d="M 300 134 Q 350 142 400 124 Q 440 116 490 113"
+          fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+        <!-- Shoulder highlight — strong character line along body peak -->
+        <path d="
+          M 205 198 Q 248 190 286 178
+          Q 316 168 338 158 Q 362 148 396 136
+          Q 436 126 500 122 Q 558 122 594 130
+          Q 620 138 644 154 Q 664 168 678 180
+          Q 700 192 726 198
+        " fill="none" stroke="url(#shoulderLine)" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- Mid-body character crease -->
+        <path d="
+          M 90 238 Q 148 230 208 224
+          Q 268 220 320 214 Q 380 208 440 205
+          Q 498 204 558 206 Q 610 210 654 216
+          Q 704 224 756 234 L 800 244
+        " fill="none" stroke="url(#midLine)" stroke-width="1.5" stroke-linecap="round"/>
+
+        <!-- ══ WINDSHIELD ══ -->
+        <path d="
+          M 298 136 L 330 124 L 404 114 L 500 112
+          L 516 114 L 512 118 L 448 120 L 374 122
+          L 340 130 L 320 142 L 308 152 Z
+        " fill="url(#windshield)"/>
+
+        <!-- Windshield top frame -->
+        <path d="M 298 136 L 320 142 L 342 130 L 376 122 L 448 120 L 512 118"
+          fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1.2"/>
+
+        <!-- A-pillar -->
+        <path d="M 298 136 L 310 116 L 330 113 L 330 124"
+          fill="#0d0c0a" stroke="none"/>
+
+        <!-- ══ REAR GLASS / C-PILLAR ══ -->
+        <path d="
+          M 516 114 L 556 118 L 588 126 L 608 140 L 610 152
+          L 600 160 L 575 148 L 546 134 L 520 124 Z
+        " fill="url(#rearGlass)"/>
+
+        <!-- C-pillar edge line -->
+        <path d="M 516 114 L 546 132 L 574 146 L 598 158"
+          fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+        <!-- ══ REAR TAIL ══ -->
+        <path d="
+          M 775 214 L 790 220 Q 806 228 814 242
+          L 820 258 L 820 270 L 810 270 L 808 258
+          Q 806 246 800 236 L 790 226 L 780 220 Z
+        " fill="#0c0b09"/>
+
+        <!-- Tail light strip — orange glow -->
+        <path d="M 806 232 L 820 240 L 820 256 L 808 262"
+          fill="none" stroke="rgba(242,106,13,0.28)" stroke-width="1.8"/>
+        <path d="M 808 234 L 820 242 L 820 254 L 810 260"
+          fill="rgba(242,106,13,0.08)"/>
+
+        <!-- Diffuser/exhaust hint -->
+        <path d="M 805 268 L 818 268 L 820 270 L 802 270 Z"
+          fill="#111" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+
+        <!-- Orange ambient from rear (tail glow) -->
+        <ellipse cx="826" cy="248" rx="70" ry="60" fill="url(#tailGlow)"/>
+
+        <!-- Front bumper / grille detail -->
+        <path d="M 60 268 L 66 266 L 76 268 L 80 272 L 58 272 Z"
+          fill="#0a0908"/>
+        <path d="M 63 265 L 78 267"
+          fill="none" stroke="rgba(242,106,13,0.12)" stroke-width="1.5"/>
+
+        <!-- Door seam (subtle) -->
+        <line x1="436" y1="202" x2="436" y2="274"
+          stroke="rgba(0,0,0,0.45)" stroke-width="1.5"/>
+        <line x1="436" y1="202" x2="436" y2="274"
+          stroke="rgba(255,255,255,0.022)" stroke-width="0.5"/>
+
+        <!-- Side mirror -->
+        <path d="M 252 175 L 270 170 L 272 183 L 256 188 Z"
+          fill="#0e0d0b" stroke="rgba(255,255,255,0.045)" stroke-width="0.5"/>
+
+        <!-- ════ FRONT WHEEL ════ -->
+        <!-- Wheel well arch -->
+        <path d="
+          M 155 268 Q 155 234 186 224 Q 213 216 240 224
+          Q 267 234 267 268 Z
+        " fill="url(#wellShadow)" opacity="0.65"/>
+
+        <!-- Tire outer -->
+        <ellipse cx="211" cy="272" rx="57" ry="57" fill="#060504"/>
+        <!-- Tire rubber -->
+        <ellipse cx="211" cy="272" rx="53" ry="53" fill="url(#tireGrad)"/>
+
+        <!-- Rim face -->
+        <ellipse cx="211" cy="272" rx="40" ry="40" fill="url(#rimGrad)"/>
+
+        <!-- Rim spokes — 5-spoke design -->
+        <g stroke="rgba(255,255,255,0.14)" stroke-width="1.6" stroke-linecap="round">
+          <line x1="211" y1="237" x2="211" y2="307"/>
+          <line x1="177" y1="272" x2="245" y2="272"/>
+          <line x1="187" y1="248" x2="235" y2="296"/>
+          <line x1="235" y1="248" x2="187" y2="296"/>
+        </g>
+        <!-- Spoke highlight (key light) -->
+        <g stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-linecap="round">
+          <line x1="188" y1="249" x2="178" y2="273"/>
+          <line x1="211" y1="238" x2="200" y2="248"/>
+        </g>
+
+        <!-- Brake rotor -->
+        <ellipse cx="211" cy="272" rx="26" ry="26"
+          fill="none" stroke="rgba(255,255,255,0.055)" stroke-width="1.5"/>
+        <!-- Rotor center disc -->
+        <ellipse cx="211" cy="272" rx="10" ry="10" fill="#141210"/>
+
+        <!-- Center cap -->
+        <ellipse cx="211" cy="272" rx="6" ry="6" fill="#1e1c18"/>
+
+        <!-- Tire highlight (from key light) -->
+        <path d="M 168 238 Q 160 272 172 306"
+          fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+
+        <!-- ════ REAR WHEEL ════ -->
+        <!-- Wheel well arch -->
+        <path d="
+          M 610 268 Q 610 232 644 222 Q 672 214 700 222
+          Q 728 232 728 268 Z
+        " fill="url(#wellShadow)" opacity="0.65"/>
+
+        <!-- Tire outer -->
+        <ellipse cx="669" cy="272" rx="57" ry="57" fill="#060504"/>
+        <!-- Tire rubber -->
+        <ellipse cx="669" cy="272" rx="53" ry="53" fill="url(#tireGrad)"/>
+
+        <!-- Rim face -->
+        <ellipse cx="669" cy="272" rx="40" ry="40" fill="url(#rimGrad)"/>
+
+        <!-- Rim spokes — 5-spoke -->
+        <g stroke="rgba(255,255,255,0.14)" stroke-width="1.6" stroke-linecap="round">
+          <line x1="669" y1="237" x2="669" y2="307"/>
+          <line x1="635" y1="272" x2="703" y2="272"/>
+          <line x1="645" y1="248" x2="693" y2="296"/>
+          <line x1="693" y1="248" x2="645" y2="296"/>
+        </g>
+        <!-- Spoke highlight -->
+        <g stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-linecap="round">
+          <line x1="646" y1="249" x2="636" y2="273"/>
+          <line x1="669" y1="238" x2="658" y2="248"/>
+        </g>
+
+        <!-- Brake rotor -->
+        <ellipse cx="669" cy="272" rx="26" ry="26"
+          fill="none" stroke="rgba(255,255,255,0.055)" stroke-width="1.5"/>
+        <!-- Rotor center disc -->
+        <ellipse cx="669" cy="272" rx="10" ry="10" fill="#141210"/>
+
+        <!-- Center cap -->
+        <ellipse cx="669" cy="272" rx="6" ry="6" fill="#1e1c18"/>
+
+        <!-- Tire highlight -->
+        <path d="M 626 238 Q 618 272 630 306"
+          fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+
+      </svg>
+    </div>
+
+    <div class="car-floor-line"></div>
+  </div>
+
+  <div class="hero-fade-left"></div>
+
+  <!-- Hero text content -->
+  <div class="hero-content">
+    <span class="hero-eyebrow">Premium Mobile Detailing</span>
+    <h1 class="hero-h1">
+      Premium care.<br>
+      Delivered to <span class="orange">you.</span>
+    </h1>
+    <p class="hero-sub">
+      Concierge-level detailing at your door.<br>
+      Professional grade. No appointments needed.
+    </p>
+    <div class="hero-ctas">
+      <button class="btn-hero-primary">Book Now &nbsp;→</button>
+      <button class="btn-hero-secondary">View Packages</button>
+    </div>
+  </div>
+
+  <!-- Trust strip — bottom of hero -->
+  <div class="hero-trust">
+    <div class="trust-item">
+      <div class="trust-icon">◈</div>
+      <div>
+        <div class="trust-label">We Come to You</div>
+        <div class="trust-sub">Home, office, or anywhere</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">◆</div>
+      <div>
+        <div class="trust-label">Premium Products</div>
+        <div class="trust-sub">Professional-grade only</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">✦</div>
+      <div>
+        <div class="trust-label">100% Satisfaction</div>
+        <div class="trust-sub">Guaranteed every time</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     ABOUT
+════════════════════════════════════ -->
+<div class="about-outer">
+  <div class="about">
+    <div>
+      <span class="about-eye">About VELAR</span>
+      <h2 class="about-h">Dallas's premium<br>mobile detailing.</h2>
+      <p class="about-body">
+        One professional, proven techniques, and professional-grade products — every appointment. We bring concierge-level care directly to your door so your time stays yours.
+      </p>
+      <button class="about-cta">Our Services &nbsp;→</button>
+    </div>
+    <div class="about-img">
+      <span class="about-img-label">VELAR · Dallas, TX</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     PACKAGES
+════════════════════════════════════ -->
+<div class="packages-outer">
+  <div class="packages">
+    <div class="packages-header">
+      <span class="packages-eye">Service Packages</span>
+      <h2 class="packages-h">Choose your level of care.</h2>
+      <p class="packages-sub">Every package is delivered by a single dedicated professional using premium products. No corners cut.</p>
+    </div>
+
+    <div class="pkg-grid">
+
+      <!-- Essential -->
+      <div class="pkg-card">
+        <div class="pkg-card-thumb"></div>
+        <div class="pkg-tier">Interior + Exterior</div>
+        <div class="pkg-name">Essential</div>
+        <div class="pkg-desc">A complete maintenance detail — refreshed inside and out. Ideal for regularly maintained vehicles.</div>
+        <ul class="pkg-features">
+          <li class="pkg-feat"><div class="pkg-check"></div>Safe exterior hand wash</li>
+          <li class="pkg-feat"><div class="pkg-check"></div>Interior vacuum &amp; wipe-down</li>
+          <li class="pkg-feat"><div class="pkg-check"></div>Tire &amp; rim cleaning</li>
+          <li class="pkg-feat"><div class="pkg-check"></div>Basic trim protection</li>
+        </ul>
+        <div class="pkg-rule"></div>
+        <div class="pkg-price-row">
+          <span class="pkg-from">From</span>
+          <span class="pkg-price">$159</span>
+          <span class="pkg-per">/ Sedan</span>
+        </div>
+        <button class="pkg-btn">Book Essential</button>
+      </div>
+
+      <!-- Signature (featured) -->
+      <div class="pkg-card featured">
+        <div class="pkg-badge">Most Popular</div>
+        <div class="pkg-card-thumb"></div>
+        <div class="pkg-tier">Interior + Exterior</div>
+        <div class="pkg-name">Signature</div>
+        <div class="pkg-desc">Deeper clean with steam sanitization, stain treatment, and enhanced exterior finish. Our most thorough everyday detail.</div>
+        <ul class="pkg-features">
+          <li class="pkg-feat"><div class="pkg-check"></div>Everything in Essential</li>
+          <li class="pkg-feat"><div class="pkg-check"></div>Steam cleaning &amp; sanitization</li>
+          <li class="pkg-feat"><div class="pkg-check"></div>Stain treatment</li>
+          <li class="pkg-feat"><div class="pkg-check"></div>Hydrophobic paint sealant</li>
+        </ul>
+        <div class="pkg-rule"></div>
+        <div class="pkg-price-row">
+          <span class="pkg-from">From</span>
+          <span class="pkg-price">$239</span>
+          <span class="pkg-per">/ Sedan</span>
+        </div>
+        <button class="pkg-btn">Book Signature</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     BOOKING MODAL DEMO
+     (Preview only — in production this
+      opens as an overlay on "Book Now")
+════════════════════════════════════ -->
+<div class="modal-section-outer">
+  <div class="modal-section">
+    <div class="modal-demo-label">
+      <span class="modal-demo-pill">Booking Experience Preview</span>
+    </div>
+    <h2 class="modal-section-h">Guided booking — one step at a time.</h2>
+    <p class="modal-section-note">Opens as an overlay when you click "Book Now" — this is a design preview only.</p>
+
+    <div class="modal-frame">
+
+      <!-- ── DARK SIDEBAR ── -->
+      <div class="modal-sidebar">
+        <div class="sidebar-logo">
+          <img src="velar-logo-orange.png" alt="VELAR">
+        </div>
+
+        <div class="sidebar-steps">
+          <!-- Step 1 — active -->
+          <div class="sidebar-step active">
+            <div class="step-num">1</div>
+            <span class="step-name">Vehicle &amp; Package</span>
+          </div>
+          <div class="sidebar-connector"></div>
+          <!-- Steps 2–7 — inactive -->
+          <div class="sidebar-step">
+            <div class="step-num">2</div>
+            <span class="step-name">Add-ons</span>
+          </div>
+          <div class="sidebar-connector"></div>
+          <div class="sidebar-step">
+            <div class="step-num">3</div>
+            <span class="step-name">Date &amp; Time</span>
+          </div>
+          <div class="sidebar-connector"></div>
+          <div class="sidebar-step">
+            <div class="step-num">4</div>
+            <span class="step-name">Location</span>
+          </div>
+          <div class="sidebar-connector"></div>
+          <div class="sidebar-step">
+            <div class="step-num">5</div>
+            <span class="step-name">Vehicle Details</span>
+          </div>
+          <div class="sidebar-connector"></div>
+          <div class="sidebar-step">
+            <div class="step-num">6</div>
+            <span class="step-name">Your Information</span>
+          </div>
+          <div class="sidebar-connector"></div>
+          <div class="sidebar-step">
+            <div class="step-num">7</div>
+            <span class="step-name">Review &amp; Confirm</span>
+          </div>
+        </div>
+
+        <div class="sidebar-summary">
+          <div class="sum-header">Booking Summary</div>
+          <div class="sum-row set">
+            <div class="sum-key">Service</div>
+            <div class="sum-val">Signature Package</div>
+          </div>
+          <div class="sum-row set">
+            <div class="sum-key">Vehicle</div>
+            <div class="sum-val">SUV / Truck (+$30)</div>
+          </div>
+          <div class="sum-total-row">
+            <div class="sum-total-key">Est. Total</div>
+            <div class="sum-total-val">$279</div>
+            <div class="sum-total-note">~3 hrs · subject to review</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── WHITE STEP PANEL ── -->
+      <div class="modal-main">
+        <div class="modal-prog">
+          <div class="modal-prog-fill" style="width:14%;"></div>
+        </div>
+
+        <div class="modal-inner">
+          <span class="modal-step-label">Step 1 of 7</span>
+          <h3 class="modal-step-h">Your vehicle and service level.</h3>
+          <p class="modal-step-sub">This helps us give you accurate pricing before you confirm.</p>
+
+          <!-- Vehicle type selector -->
+          <span class="section-sublabel">Vehicle Type</span>
+          <div class="vehicle-types">
+            <div class="vt-card">
+              <div class="vt-icon">🚗</div>
+              <div class="vt-name">Sedan / Coupe</div>
+            </div>
+            <div class="vt-card selected">
+              <div class="vt-icon">🚙</div>
+              <div class="vt-name">SUV / Truck</div>
+              <div class="vt-adj">+$30</div>
+            </div>
+            <div class="vt-card">
+              <div class="vt-icon">🚐</div>
+              <div class="vt-name">XL Vehicle</div>
+              <div class="vt-adj">+$30</div>
+            </div>
+          </div>
+
+          <!-- Package selector -->
+          <span class="section-sublabel">Choose Your Package</span>
+          <div class="modal-pkg-cols">
+            <!-- Essential -->
+            <div class="modal-pkg">
+              <div class="modal-pkg-tier">Essential</div>
+              <div class="modal-pkg-name">Essential</div>
+              <div class="modal-pkg-feats">
+                <div class="mpf">Exterior hand wash</div>
+                <div class="mpf">Interior vacuum &amp; wipe-down</div>
+                <div class="mpf">Tire &amp; rim cleaning</div>
+                <div class="mpf">Basic trim protection</div>
+              </div>
+              <div class="modal-pkg-rule"></div>
+              <div class="modal-pkg-price">$189</div>
+              <div class="modal-pkg-dur">~2 hrs</div>
+            </div>
+            <!-- Signature -->
+            <div class="modal-pkg featured">
+              <div class="modal-pkg-badge">Most Popular</div>
+              <div class="modal-pkg-tier">Signature</div>
+              <div class="modal-pkg-name">Signature</div>
+              <div class="modal-pkg-feats">
+                <div class="mpf">Everything in Essential</div>
+                <div class="mpf">Steam cleaning</div>
+                <div class="mpf">Stain treatment</div>
+                <div class="mpf">Paint sealant</div>
+              </div>
+              <div class="modal-pkg-rule"></div>
+              <div class="modal-pkg-price">$279</div>
+              <div class="modal-pkg-dur">~3 hrs</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-nav">
+          <button class="modal-back" style="visibility:hidden;">← Back</button>
+          <button class="modal-continue">Continue &nbsp;→</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     FOOTER
+════════════════════════════════════ -->
+<div class="footer-outer">
+  <footer class="footer">
+    <div class="footer-logo">
+      <img src="velar-logo-orange.png" alt="VELAR Mobile Detailing">
+    </div>
+    <div class="footer-copy">© 2025 VELAR Mobile Detailing · Dallas, TX</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+  </footer>
+</div>
+
+<div class="mockup-bar">
+  <span>Visual mockup only · Production preview · velar-production-mockup.html</span>
+</div>
+
+</body>
+</html>

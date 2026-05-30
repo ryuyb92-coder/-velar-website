@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELAR Pricing Variants</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: #111;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-size: 0.62rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+.variants {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.variant-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  text-decoration: none;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 22px 24px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.variant-link:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(242,106,13,0.3);
+}
+
+.variant-letter {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #f26a0d;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 28px;
+}
+
+.variant-info { flex: 1; }
+
+.variant-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 5px;
+  letter-spacing: -0.01em;
+}
+
+.variant-desc {
+  font-size: 0.79rem;
+  color: rgba(255,255,255,0.38);
+  line-height: 1.5;
+}
+
+.arrow {
+  color: rgba(255,255,255,0.2);
+  font-size: 1.1rem;
+  align-self: center;
+  flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<h1>VELAR · Pricing Section Variants</h1>
+
+<div class="variants">
+
+  <a href="pricing-variant-a.html" class="variant-link">
+    <div class="variant-letter">A</div>
+    <div class="variant-info">
+      <div class="variant-name">Editorial Light</div>
+      <div class="variant-desc">Warm white background · Black typography · Dark featured card · Orange accents · Warm editorial feel</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+
+  <a href="pricing-variant-b.html" class="variant-link">
+    <div class="variant-letter">B</div>
+    <div class="variant-info">
+      <div class="variant-name">Split Contrast</div>
+      <div class="variant-desc">Light stone section · Dark featured card · Controls inline with heading · Strong hierarchy</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+
+  <a href="pricing-variant-c.html" class="variant-link">
+    <div class="variant-letter">C</div>
+    <div class="variant-info">
+      <div class="variant-name">Ultra Minimal Luxury</div>
+      <div class="variant-desc">Pure white · Oversized 800-weight type · Side-by-side comparison table · Grid add-ons</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+
+</div>
+
+</body>
+</html>

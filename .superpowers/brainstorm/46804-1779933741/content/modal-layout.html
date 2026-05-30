@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELAR Booking Modal — Layout Approach</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, system-ui, sans-serif;
+    background: #0f0f0f;
+    color: #f5f4f2;
+    padding: 32px 24px 60px;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .page-eyebrow {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a7068;
+    margin-bottom: 10px;
+  }
+  .page-title {
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #f5f4f2;
+    margin-bottom: 8px;
+  }
+  .page-sub {
+    font-size: 0.82rem;
+    color: #7a7068;
+  }
+
+  .layouts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 900px) {
+    .layouts {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  .layout-card {
+    border: 1px solid #2c2a27;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    background: #141414;
+  }
+  .layout-card:hover { border-color: #4a4540; }
+  .layout-card.selected { border-color: #1C3E74; box-shadow: 0 0 0 1px #1C3E74; }
+
+  .layout-label {
+    padding: 12px 16px;
+    border-bottom: 1px solid #2c2a27;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .layout-letter {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a7068;
+  }
+  .layout-name {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #f5f4f2;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Option A: Centered Dark Card ── */
+  .preview-a {
+    padding: 20px;
+    background: #0a0a0a;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mock-overlay-a {
+    background: rgba(8,8,8,0.85);
+    border-radius: 10px;
+    padding: 24px;
+    width: 100%;
+    max-width: 280px;
+    border: 1px solid #2c2a27;
+  }
+  .mock-progress-a {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+  .mock-dot {
+    height: 2px;
+    flex: 1;
+    background: #2c2a27;
+    border-radius: 1px;
+  }
+  .mock-dot.active { background: #1C3E74; }
+  .mock-dot.done { background: #4a4540; }
+  .mock-step-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a7068;
+    margin-bottom: 8px;
+  }
+  .mock-question {
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: #f5f4f2;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .mock-choice-dark {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .mock-card-dark {
+    border: 1px solid #2c2a27;
+    border-radius: 8px;
+    padding: 12px;
+    background: #1a1a1a;
+  }
+  .mock-card-dark.hi { border-color: #1C3E74; background: #0d1e3a; }
+  .mock-card-title {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #f5f4f2;
+    margin-bottom: 2px;
+  }
+  .mock-card-sub {
+    font-size: 0.62rem;
+    color: #7a7068;
+  }
+  .mock-btn-a {
+    margin-top: 16px;
+    width: 100%;
+    background: #f5f4f2;
+    color: #111;
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* ── Option B: Bottom Sheet Multi-Step ── */
+  .preview-b {
+    padding: 20px;
+    background: #0a0a0a;
+    min-height: 300px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .mock-sheet-b {
+    background: #ffffff;
+    border-radius: 14px 14px 0 0;
+    padding: 20px 18px;
+    width: 100%;
+    max-width: 280px;
+  }
+  .mock-drag-b {
+    width: 32px;
+    height: 3px;
+    background: #e4ddd4;
+    border-radius: 2px;
+    margin: 0 auto 14px;
+  }
+  .mock-progress-b {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+  .mock-seg {
+    height: 2px;
+    flex: 1;
+    background: #e4ddd4;
+    border-radius: 1px;
+  }
+  .mock-seg.active { background: #111; }
+  .mock-seg.done { background: #c0b9b0; }
+  .mock-step-label-b {
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a7068;
+    margin-bottom: 6px;
+  }
+  .mock-question-b {
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: #111;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+  }
+  .mock-choice-light {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .mock-card-light {
+    border: 1px solid #e4ddd4;
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: #fff;
+  }
+  .mock-card-light.hi { border-color: #111; background: #f8f6f3; }
+  .mock-card-title-b {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #111;
+    margin-bottom: 2px;
+  }
+  .mock-card-sub-b {
+    font-size: 0.6rem;
+    color: #7a7068;
+  }
+  .mock-nav-b {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+  }
+  .mock-back-b {
+    font-size: 0.62rem;
+    color: #7a7068;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .mock-next-b {
+    background: #111;
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ── Option C: Split Panel ── */
+  .preview-c {
+    padding: 20px;
+    background: #0a0a0a;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mock-split {
+    display: flex;
+    width: 100%;
+    max-width: 320px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #2c2a27;
+    height: 240px;
+  }
+  .mock-split-left {
+    width: 90px;
+    background: #090B10;
+    border-right: 1px solid #1a1e28;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .mock-velar-mark {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #7a7068;
+    margin-bottom: 14px;
+  }
+  .mock-summary-item {
+    margin-bottom: 10px;
+  }
+  .mock-summary-key {
+    font-size: 0.48rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #3a3830;
+    margin-bottom: 2px;
+  }
+  .mock-summary-val {
+    font-size: 0.6rem;
+    color: #7a7068;
+    font-weight: 500;
+  }
+  .mock-summary-val.set { color: #a8a09a; }
+  .mock-step-dots {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .mock-step-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #2c2a27;
+  }
+  .mock-step-dot.active { background: #1C3E74; }
+  .mock-step-dot.done { background: #3a3830; }
+
+  .mock-split-right {
+    flex: 1;
+    background: #ffffff;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .mock-split-eyebrow {
+    font-size: 0.5rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a7068;
+    margin-bottom: 6px;
+  }
+  .mock-split-q {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: #111;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .mock-split-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+  .mock-split-card {
+    border: 1px solid #e4ddd4;
+    border-radius: 7px;
+    padding: 8px 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .mock-split-card.hi { border-color: #111; background: #f8f6f3; }
+  .mock-split-card-t {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: #111;
+    margin-bottom: 2px;
+  }
+  .mock-split-card-s {
+    font-size: 0.55rem;
+    color: #7a7068;
+  }
+  .mock-split-next {
+    background: #111;
+    color: #fff;
+    border-radius: 5px;
+    padding: 7px 0;
+    text-align: center;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-top: 10px;
+  }
+
+  /* Description pills */
+  .layout-desc {
+    padding: 12px 16px;
+    border-top: 1px solid #2c2a27;
+  }
+  .layout-desc p {
+    font-size: 0.75rem;
+    color: #7a7068;
+    line-height: 1.5;
+  }
+  .layout-desc strong {
+    color: #a8a09a;
+    font-weight: 500;
+  }
+
+  .select-hint {
+    text-align: center;
+    font-size: 0.72rem;
+    color: #4a4540;
+    margin-top: 32px;
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <span class="page-eyebrow">VELAR · Booking Modal · Question 1 of 2</span>
+  <h1 class="page-title">Which modal layout approach feels right?</h1>
+  <p class="page-sub">Click a layout to select it. These are structural mockups — not final styling.</p>
+</div>
+
+<div class="layouts">
+
+  <!-- Option A -->
+  <div class="layout-card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="layout-label">
+      <span class="layout-letter">Option A</span>
+      <span class="layout-name">Dark Centered Card</span>
+    </div>
+    <div class="preview-a">
+      <div class="mock-overlay-a">
+        <div class="mock-progress-a">
+          <div class="mock-dot active"></div>
+          <div class="mock-dot"></div>
+          <div class="mock-dot"></div>
+          <div class="mock-dot"></div>
+          <div class="mock-dot"></div>
+          <div class="mock-dot"></div>
+          <div class="mock-dot"></div>
+          <div class="mock-dot"></div>
+        </div>
+        <div class="mock-step-label">Step 1 of 8 · Service</div>
+        <div class="mock-question">What type of service?</div>
+        <div class="mock-choice-dark">
+          <div class="mock-card-dark hi">
+            <div class="mock-card-title">Full Detail</div>
+            <div class="mock-card-sub">Interior + Exterior</div>
+          </div>
+          <div class="mock-card-dark">
+            <div class="mock-card-title">Interior Only</div>
+            <div class="mock-card-sub">Cabin-focused service</div>
+          </div>
+        </div>
+        <div class="mock-btn-a">Continue →</div>
+      </div>
+    </div>
+    <div class="layout-desc">
+      <p><strong>Fully dark VELAR aesthetic.</strong> Modal floats centered over dimmed page. Every step replaces the card content. Cinematic and immersive. Most premium-feeling option.</p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="layout-card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="layout-label">
+      <span class="layout-letter">Option B</span>
+      <span class="layout-name">Light Bottom Sheet</span>
+    </div>
+    <div class="preview-b">
+      <div class="mock-sheet-b">
+        <div class="mock-drag-b"></div>
+        <div class="mock-progress-b">
+          <div class="mock-seg active"></div>
+          <div class="mock-seg"></div>
+          <div class="mock-seg"></div>
+          <div class="mock-seg"></div>
+          <div class="mock-seg"></div>
+          <div class="mock-seg"></div>
+          <div class="mock-seg"></div>
+          <div class="mock-seg"></div>
+        </div>
+        <div class="mock-step-label-b">Step 1 of 8 · Service</div>
+        <div class="mock-question-b">What type of service?</div>
+        <div class="mock-choice-light">
+          <div class="mock-card-light hi">
+            <div class="mock-card-title-b">Full Detail</div>
+            <div class="mock-card-sub-b">Interior + Exterior</div>
+          </div>
+          <div class="mock-card-light">
+            <div class="mock-card-title-b">Interior Only</div>
+            <div class="mock-card-sub-b">Cabin-focused service</div>
+          </div>
+        </div>
+        <div class="mock-nav-b">
+          <span class="mock-back-b">← Back</span>
+          <div class="mock-next-b">Continue</div>
+        </div>
+      </div>
+    </div>
+    <div class="layout-desc">
+      <p><strong>Extends the current modal style.</strong> Slides up from bottom on mobile, centered on desktop. White panel. Familiar, fast-feeling, lower visual risk. Steps slide horizontally inside the sheet.</p>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="layout-card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="layout-label">
+      <span class="layout-letter">Option C</span>
+      <span class="layout-name">Split Panel</span>
+    </div>
+    <div class="preview-c">
+      <div class="mock-split">
+        <div class="mock-split-left">
+          <div>
+            <div class="mock-velar-mark">VELAR</div>
+            <div class="mock-summary-item">
+              <div class="mock-summary-key">Service</div>
+              <div class="mock-summary-val set">Full Detail</div>
+            </div>
+            <div class="mock-summary-item">
+              <div class="mock-summary-key">Vehicle</div>
+              <div class="mock-summary-val">—</div>
+            </div>
+            <div class="mock-summary-item">
+              <div class="mock-summary-key">Package</div>
+              <div class="mock-summary-val">—</div>
+            </div>
+          </div>
+          <div class="mock-step-dots">
+            <div class="mock-step-dot done"></div>
+            <div class="mock-step-dot active"></div>
+            <div class="mock-step-dot"></div>
+            <div class="mock-step-dot"></div>
+            <div class="mock-step-dot"></div>
+            <div class="mock-step-dot"></div>
+            <div class="mock-step-dot"></div>
+            <div class="mock-step-dot"></div>
+          </div>
+        </div>
+        <div class="mock-split-right">
+          <div>
+            <div class="mock-split-eyebrow">Step 2 · Vehicle</div>
+            <div class="mock-split-q">What size is your vehicle?</div>
+          </div>
+          <div class="mock-split-cards">
+            <div class="mock-split-card hi">
+              <div class="mock-split-card-t">Sedan / Coupe</div>
+              <div class="mock-split-card-s">Standard pricing</div>
+            </div>
+            <div class="mock-split-card">
+              <div class="mock-split-card-t">SUV / Truck</div>
+              <div class="mock-split-card-s">+$30</div>
+            </div>
+            <div class="mock-split-card">
+              <div class="mock-split-card-t">Large SUV / 3-Row</div>
+              <div class="mock-split-card-s">+$30</div>
+            </div>
+          </div>
+          <div class="mock-split-next">Continue →</div>
+        </div>
+      </div>
+    </div>
+    <div class="layout-desc">
+      <p><strong>SHWASH-inspired split layout.</strong> Dark left panel shows live booking summary. White right panel shows current step. Desktop: side-by-side. Mobile: right panel full-screen with summary collapsed. Most concierge-feeling.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="select-hint">Click a layout to select · Respond in terminal when ready</p>
+
+<script>
+function toggleSelect(el) {
+  const all = document.querySelectorAll('.layout-card');
+  all.forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const choice = el.getAttribute('data-choice');
+  const text = el.querySelector('.layout-name').textContent;
+  if (window.__recordChoice) window.__recordChoice(choice, text);
+}
+</script>
+</body>
+</html>

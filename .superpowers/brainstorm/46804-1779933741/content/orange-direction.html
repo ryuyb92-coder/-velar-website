@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELAR — Orange Brand Direction</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', -apple-system, system-ui, sans-serif;
+    background: #060606;
+    color: #f5f4f2;
+    padding: 40px 20px 100px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Page intro ── */
+  .intro {
+    text-align: center;
+    max-width: 540px;
+    margin: 0 auto 52px;
+  }
+  .intro-eye {
+    display: block;
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #2e2a26;
+    margin-bottom: 10px;
+  }
+  .intro-title {
+    font-size: 1.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #f5f4f2;
+    margin-bottom: 8px;
+  }
+  .intro-sub {
+    font-size: 0.73rem;
+    color: #3a3528;
+    line-height: 1.6;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #2e2a26;
+    border: 1px solid #1a1712;
+    border-radius: 20px;
+    padding: 4px 12px;
+    margin-bottom: 12px;
+  }
+  .note {
+    font-size: 0.68rem;
+    color: #2e2a26;
+    margin-bottom: 26px;
+    line-height: 1.5;
+  }
+  hr { border: none; border-top: 1px solid #111; margin: 56px 0; }
+
+  /* ════════════════════════════════════
+     MODAL
+  ════════════════════════════════════ */
+  .modal {
+    max-width: 880px;
+    margin: 0 auto;
+    border-radius: 22px;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid #141210;
+    box-shadow:
+      0 2px 0 rgba(255,255,255,0.025) inset,
+      0 60px 140px rgba(0,0,0,0.85);
+    min-height: 560px;
+  }
+
+  /* ── Left panel: cinematic black ── */
+  .left {
+    width: 210px;
+    flex-shrink: 0;
+    background: #080808;
+    border-right: 1px solid #0f0e0c;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Top orange hairline — very subtle brand anchor */
+  .left::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1.5px;
+    background: linear-gradient(90deg, #f26a0d 0%, transparent 70%);
+    opacity: 0.6;
+  }
+
+  .left-logo-zone {
+    padding: 36px 24px 32px;
+    border-bottom: 1px solid #0f0e0c;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logo-img {
+    width: 80px;
+    height: auto;
+    display: block;
+    margin-bottom: 0;
+    opacity: 0.92;
+    filter: brightness(0.9);
+  }
+
+  .left-summary {
+    flex: 1;
+    padding: 28px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .s-row {
+    padding: 11px 0;
+    border-bottom: 1px solid #0d0c0a;
+  }
+  .s-row:last-of-type { border-bottom: none; }
+
+  .s-key {
+    font-size: 0.46rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #1e1c18;
+    margin-bottom: 4px;
+  }
+  .s-val {
+    font-size: 0.68rem;
+    color: #2a2620;
+    line-height: 1.3;
+    transition: color 0.35s;
+  }
+  .s-row.set .s-key { color: #2e2a22; }
+  .s-row.set .s-val { color: #6a6050; }
+
+  /* Est. total — glows orange when set */
+  .est-zone {
+    padding: 20px 24px 24px;
+    border-top: 1px solid #0d0c0a;
+    margin-top: auto;
+  }
+  .est-key {
+    font-size: 0.46rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #2e2a22;
+    margin-bottom: 6px;
+  }
+  .est-val {
+    font-size: 1.35rem;
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    color: #f26a0d;
+    line-height: 1;
+  }
+  .est-sub {
+    font-size: 0.5rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2a2620;
+    margin-top: 5px;
+  }
+
+  /* Step dots at very bottom */
+  .left-foot {
+    padding: 0 24px 28px;
+  }
+  .step-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .sd {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: #1a1714;
+    transition: all 0.25s;
+  }
+  .sd.done { background: #2a2620; }
+  .sd.active {
+    background: #f26a0d;
+    width: 16px;
+    border-radius: 2px;
+  }
+
+  /* ── Right panel: white, editorial ── */
+  .right {
+    flex: 1;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Close button */
+  .close-btn {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid #e8e2da;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #c0b9b0;
+    font-size: 0.65rem;
+    z-index: 10;
+  }
+
+  /* Progress */
+  .prog {
+    height: 2px;
+    background: #f5f2ee;
+    flex-shrink: 0;
+  }
+  .prog-fill {
+    height: 100%;
+    background: #f26a0d;
+    border-radius: 0 1px 1px 0;
+    transition: width 0.4s cubic-bezier(0.25,0.1,0.25,1);
+  }
+
+  .r-inner {
+    flex: 1;
+    padding: 44px 48px 32px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step-eye {
+    font-size: 0.56rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #d0c8be;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .step-q {
+    font-size: 1.35rem;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    color: #0f0e0c;
+    line-height: 1.2;
+    margin-bottom: 32px;
+  }
+
+  /* Vehicle chips */
+  .chips {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    border: 1px solid #e4ddd4;
+    border-radius: 100px;
+    padding: 9px 18px;
+    font-size: 0.72rem;
+    color: #9a9080;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    background: #fff;
+  }
+  .chip:hover { border-color: #c8bfb4; color: #444; }
+  .chip.on {
+    border-color: #f26a0d;
+    background: #fff8f3;
+    color: #111;
+  }
+  .chip.on .chip-plus { color: #f26a0d; }
+  .chip-plus { font-size: 0.62rem; color: #c0b9b0; }
+
+  /* Package cards — editorial, hospitality */
+  .pkg-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .pkg {
+    border: 1px solid #ede7df;
+    border-radius: 14px;
+    padding: 28px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    background: #fff;
+    position: relative;
+  }
+  .pkg:hover:not(.pkg-sig) {
+    border-color: #d4ccc2;
+    background: #faf8f5;
+  }
+  /* Selected state: thin orange border */
+  .pkg.selected {
+    border-color: #f26a0d;
+    background: #fff9f5;
+  }
+
+  /* Signature — dark automotive */
+  .pkg-sig {
+    background: #0a0a09;
+    border-color: transparent;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.025) inset,
+      0 20px 50px rgba(0,0,0,0.45);
+  }
+  .pkg-sig:hover { background: #0d0d0b; }
+
+  /* Orange dot: subtle brand mark on both cards */
+  .pkg-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #e4ddd4;
+    margin-bottom: 18px;
+    flex-shrink: 0;
+  }
+  .pkg-sig .pkg-dot { background: #f26a0d; opacity: 0.7; }
+  .pkg.selected .pkg-dot { background: #f26a0d; }
+
+  .pkg-tier {
+    font-size: 0.5rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #b8b0a4;
+    margin-bottom: 7px;
+  }
+  .pkg-sig .pkg-tier { color: #2a2620; }
+
+  .pkg-name {
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: #111;
+    margin-bottom: 10px;
+    line-height: 1.1;
+  }
+  .pkg-sig .pkg-name { color: #d8d0c8; }
+
+  .pkg-desc {
+    font-size: 0.7rem;
+    color: #9a9080;
+    line-height: 1.55;
+    flex: 1;
+    margin-bottom: 20px;
+  }
+  .pkg-sig .pkg-desc { color: #38342e; }
+
+  .pkg-rule {
+    height: 1px;
+    background: #f0ebe4;
+    margin-bottom: 16px;
+  }
+  .pkg-sig .pkg-rule { background: #141210; }
+
+  .pkg-foot {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .pkg-price {
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    color: #111;
+  }
+  .pkg-sig .pkg-price { color: #c8c0b5; }
+  .pkg.selected .pkg-price { color: #f26a0d; }
+  .pkg-sig.selected .pkg-price { color: #f26a0d; }
+
+  .pkg-dur {
+    font-size: 0.58rem;
+    color: #c0b8ae;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .pkg-sig .pkg-dur { color: #28241e; }
+
+  /* Nav */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px 36px;
+    border-top: 1px solid #f0ebe4;
+    flex-shrink: 0;
+  }
+  .btn-back {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #c8c0b4;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px 0;
+  }
+  .btn-back:hover { color: #7a7060; }
+
+  /* Continue: orange, premium */
+  .btn-next {
+    background: #f26a0d;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 32px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(242, 106, 13, 0.3);
+    transition: background 0.18s, box-shadow 0.18s;
+  }
+  .btn-next:hover {
+    background: #d95d08;
+    box-shadow: 0 4px 24px rgba(242, 106, 13, 0.4);
+  }
+
+  /* ════ Additional step variations below ════ */
+
+  .mini-modal {
+    max-width: 880px;
+    margin: 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid #141210;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+  }
+
+  /* Mini left shared */
+  .ml {
+    width: 210px;
+    flex-shrink: 0;
+    background: #080808;
+    border-right: 1px solid #0f0e0c;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .ml::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1.5px;
+    background: linear-gradient(90deg, #f26a0d, transparent 70%);
+    opacity: 0.6;
+  }
+  .ml-logo { padding: 28px 22px 24px; border-bottom: 1px solid #0f0e0c; }
+  .ml-logo img { width: 70px; opacity: 0.9; filter: brightness(0.9); }
+  .ml-sum { flex: 1; padding: 22px 22px 16px; display: flex; flex-direction: column; gap: 0; }
+  .ml-row { padding: 9px 0; border-bottom: 1px solid #0d0c0a; }
+  .ml-row:last-of-type { border-bottom: none; }
+  .ml-key { font-size: 0.44rem; letter-spacing: 0.2em; text-transform: uppercase; color: #1e1c18; margin-bottom: 3px; }
+  .ml-val { font-size: 0.65rem; color: #2a2620; }
+  .ml-row.set .ml-key { color: #2e2a22; }
+  .ml-row.set .ml-val { color: #6a6050; }
+  .ml-est { padding: 16px 22px 20px; border-top: 1px solid #0d0c0a; margin-top: auto; }
+  .ml-est-k { font-size: 0.44rem; letter-spacing: 0.2em; text-transform: uppercase; color: #2e2a22; margin-bottom: 4px; }
+  .ml-est-v { font-size: 1.2rem; font-weight: 300; letter-spacing: -0.03em; color: #f26a0d; }
+  .ml-est-s { font-size: 0.48rem; letter-spacing: 0.08em; text-transform: uppercase; color: #2a2620; margin-top: 3px; }
+  .ml-foot { padding: 0 22px 24px; }
+  .ml-dots { display: flex; gap: 6px; align-items: center; }
+  .msd { width: 4px; height: 4px; border-radius: 50%; background: #1a1714; }
+  .msd.done { background: #2a2620; }
+  .msd.active { background: #f26a0d; width: 16px; border-radius: 2px; }
+
+  /* Mini right panels */
+  .mr {
+    flex: 1;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 440px;
+  }
+  .mr-prog { height: 2px; background: #f5f2ee; flex-shrink: 0; }
+  .mr-prog-fill { height: 100%; background: #f26a0d; }
+  .mr-inner { flex: 1; padding: 36px 44px 24px; display: flex; flex-direction: column; }
+  .mr-eye { font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: #d0c8be; margin-bottom: 5px; display: block; }
+  .mr-q { font-size: 1.25rem; font-weight: 400; letter-spacing: -0.025em; color: #0f0e0c; line-height: 1.2; margin-bottom: 26px; }
+  .mr-nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 44px 28px; border-top: 1px solid #f0ebe4; flex-shrink: 0; }
+  .mr-back { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: #c8c0b4; background: none; border: none; cursor: pointer; }
+  .mr-next { background: #f26a0d; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: 0.67rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 16px rgba(242,106,13,0.28); }
+
+  /* Service cards (step 1) */
+  .svc-cards { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .svc-card {
+    border: 1px solid #ede7df;
+    border-radius: 12px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    flex: 1;
+  }
+  .svc-card.on { border-color: #f26a0d; background: #fff9f5; }
+  .svc-name { font-size: 0.9rem; font-weight: 500; color: #111; margin-bottom: 3px; }
+  .svc-sub { font-size: 0.7rem; color: #9a9080; }
+  .svc-badge {
+    font-size: 0.54rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #f26a0d;
+    border: 1px solid rgba(242,106,13,0.25);
+    border-radius: 20px;
+    padding: 3px 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+
+  /* Add-on rows */
+  .addon-rows { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .addon {
+    border: 1px solid #ede7df;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: border-color 0.18s, background 0.18s;
+  }
+  .addon.on { border-color: #f26a0d; background: #fff9f5; }
+  .addon-check {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 1px solid #e4ddd4;
+    margin-right: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.18s;
+  }
+  .addon.on .addon-check { background: #f26a0d; border-color: #f26a0d; }
+  .addon-check-inner { width: 5px; height: 5px; border-radius: 50%; background: #fff; display: none; }
+  .addon.on .addon-check-inner { display: block; }
+  .addon-name { font-size: 0.82rem; color: #111; flex: 1; }
+  .addon-price { font-size: 0.75rem; color: #9a9080; }
+  .skip-link { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: #d0c8be; text-align: center; margin-top: 16px; display: block; cursor: pointer; }
+  .skip-link:hover { color: #9a9080; }
+
+  /* Review step */
+  .review-wrap { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .review-card {
+    border: 1px solid #ede7df;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .rv-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1px solid #f5f0ea;
+  }
+  .rv-row:last-child { border-bottom: none; }
+  .rv-key { font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c8c0b4; }
+  .rv-val { font-size: 0.78rem; color: #111; font-weight: 400; text-align: right; max-width: 60%; }
+  .rv-total {
+    background: #0a0a09;
+    padding: 18px 18px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .rv-total-k { font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: #3a3528; }
+  .rv-total-v { font-size: 1.7rem; font-weight: 300; letter-spacing: -0.03em; color: #f26a0d; }
+  .rv-total-note { font-size: 0.52rem; color: #2a2620; letter-spacing: 0.06em; }
+
+  /* annotations */
+  .ann-wrap { max-width: 880px; margin: 18px auto 0; display: flex; gap: 14px; flex-wrap: wrap; }
+  .ann { flex: 1; min-width: 170px; display: flex; gap: 8px; align-items: flex-start; }
+  .ann-dot { width: 5px; height: 5px; border-radius: 50%; background: #f26a0d; margin-top: 5px; flex-shrink: 0; opacity: 0.7; }
+  .ann-t { font-size: 0.65rem; color: #3a3528; line-height: 1.55; }
+  .ann-t strong { color: #5a5040; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <span class="intro-eye">VELAR · Orange Brand Direction · Pre-Implementation Mockup</span>
+  <h1 class="intro-title">VELAR logo · Orange accents · Black/white dominant</h1>
+  <p class="intro-sub">Four modal states. Logo on left panel. Orange for selected states, CTAs, and est. total. White breathing room preserved throughout.</p>
+</div>
+
+<!-- ════════════════════════
+     STATE 1 — Vehicle & Package
+════════════════════════ -->
+<div style="text-align:center;margin-bottom:20px;">
+  <span class="tag">Step 2 of 7 — Vehicle &amp; Package</span>
+  <div class="note">SUV / Truck selected (orange chip). Signature recommended (dark card). Left: logo + summary + orange est. total.</div>
+</div>
+
+<div class="modal" style="position:relative;">
+
+  <!-- Close -->
+  <div class="close-btn" style="position:absolute;top:18px;right:18px;width:28px;height:28px;border-radius:50%;background:transparent;border:1px solid #1e1c18;display:flex;align-items:center;justify-content:center;color:#3a3528;font-size:0.7rem;cursor:pointer;z-index:10;">✕</div>
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="left-logo-zone">
+      <img class="logo-img" src="velar-logo.png" alt="VELAR" />
+    </div>
+
+    <div class="left-summary">
+      <div class="s-row set">
+        <div class="s-key">Service</div>
+        <div class="s-val">Full Detail</div>
+      </div>
+      <div class="s-row">
+        <div class="s-key">Vehicle</div>
+        <div class="s-val">—</div>
+      </div>
+      <div class="s-row">
+        <div class="s-key">Package</div>
+        <div class="s-val">—</div>
+      </div>
+      <div class="s-row">
+        <div class="s-key">Add-ons</div>
+        <div class="s-val">—</div>
+      </div>
+      <div class="s-row">
+        <div class="s-key">Date</div>
+        <div class="s-val">—</div>
+      </div>
+    </div>
+
+    <!-- Est. total shows after package is selected -->
+    <div class="est-zone">
+      <div class="est-key">Est. Total</div>
+      <div class="est-val">$279</div>
+      <div class="est-sub">~3 hrs · subject to review</div>
+    </div>
+
+    <div class="left-foot">
+      <div class="step-dots">
+        <div class="sd done"></div>
+        <div class="sd active"></div>
+        <div class="sd"></div>
+        <div class="sd"></div>
+        <div class="sd"></div>
+        <div class="sd"></div>
+        <div class="sd"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="prog"><div class="prog-fill" style="width:28%;"></div></div>
+    <div class="r-inner">
+      <span class="step-eye">Vehicle &amp; Package</span>
+      <div class="step-q">Your vehicle and service level.</div>
+
+      <!-- Vehicle chips: selected = orange -->
+      <div class="chips">
+        <div class="chip">Sedan / Coupe</div>
+        <div class="chip on">SUV / Truck <span class="chip-plus">+$30</span></div>
+        <div class="chip">XL Vehicle <span class="chip-plus">+$30</span></div>
+      </div>
+
+      <!-- Package cards -->
+      <div class="pkg-grid">
+        <div class="pkg">
+          <div class="pkg-dot"></div>
+          <div class="pkg-tier">Essential</div>
+          <div class="pkg-name">Essential</div>
+          <div class="pkg-desc">Complete maintenance detail — refreshed inside and out, ready for the road.</div>
+          <div class="pkg-rule"></div>
+          <div class="pkg-foot">
+            <div class="pkg-price">$189</div>
+            <div class="pkg-dur">2 hrs</div>
+          </div>
+        </div>
+        <div class="pkg pkg-sig">
+          <div class="pkg-dot"></div>
+          <div class="pkg-tier">Signature</div>
+          <div class="pkg-name">Signature</div>
+          <div class="pkg-desc">Deeper clean, steam sanitization, stain treatment and enhanced exterior finish.</div>
+          <div class="pkg-rule"></div>
+          <div class="pkg-foot">
+            <div class="pkg-price">$279</div>
+            <div class="pkg-dur">3 hrs</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn-back">← Back</button>
+      <button class="btn-next">Continue</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="ann-wrap">
+  <div class="ann"><div class="ann-dot"></div><div class="ann-t"><strong>Left panel:</strong> Logo sits in its own zone separated by a hairline. Est. total glows orange only after a package is selected. Summary dims until each step is set.</div></div>
+  <div class="ann"><div class="ann-dot"></div><div class="ann-t"><strong>Orange hairline:</strong> Single 1.5px top-left gradient on the left panel — brand anchor, not a gimmick. Fades to transparent.</div></div>
+  <div class="ann"><div class="ann-dot"></div><div class="ann-t"><strong>Chips:</strong> Selected = orange border + warm tint. Not filled orange — keeps the white breathing room.</div></div>
+  <div class="ann"><div class="ann-dot"></div><div class="ann-t"><strong>Continue:</strong> Orange with a restrained glow shadow. Used once per step — never competing with selections.</div></div>
+</div>
+
+<hr>
+
+<!-- ════════════════════════
+     STATE 2 — Service Type (Step 1)
+════════════════════════ -->
+<div style="text-align:center;margin-bottom:20px;">
+  <span class="tag">Step 1 of 7 — Service Type</span>
+  <div class="note">Opening state. Left panel: logo + empty summary. Right: big service cards. Most open, least pressure.</div>
+</div>
+
+<div class="mini-modal" style="min-height:460px;">
+  <div class="ml">
+    <div class="ml-logo"><img src="velar-logo.png" style="width:70px;opacity:0.9;filter:brightness(0.9);" alt="VELAR"></div>
+    <div class="ml-sum">
+      <div class="ml-row"><div class="ml-key">Service</div><div class="ml-val">—</div></div>
+      <div class="ml-row"><div class="ml-key">Vehicle</div><div class="ml-val">—</div></div>
+      <div class="ml-row"><div class="ml-key">Package</div><div class="ml-val">—</div></div>
+      <div class="ml-row"><div class="ml-key">Add-ons</div><div class="ml-val">—</div></div>
+      <div class="ml-row"><div class="ml-key">Date</div><div class="ml-val">—</div></div>
+    </div>
+    <div style="flex:1;"></div>
+    <div class="ml-foot">
+      <div class="ml-dots">
+        <div class="msd active"></div><div class="msd"></div><div class="msd"></div><div class="msd"></div><div class="msd"></div><div class="msd"></div><div class="msd"></div>
+      </div>
+    </div>
+  </div>
+  <div class="mr">
+    <div class="mr-prog"><div class="mr-prog-fill" style="width:8%;"></div></div>
+    <div class="mr-inner">
+      <span class="mr-eye">Service</span>
+      <div class="mr-q">What type of detail?</div>
+      <div class="svc-cards">
+        <div class="svc-card on">
+          <div><div class="svc-name">Full Detail</div><div class="svc-sub">Interior + Exterior premium service</div></div>
+          <div class="svc-badge">Most popular</div>
+        </div>
+        <div class="svc-card">
+          <div><div class="svc-name">Interior Only</div><div class="svc-sub">Cabin-focused deep clean</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="mr-nav">
+      <button class="mr-back" style="visibility:hidden;">← Back</button>
+      <button class="mr-next">Continue</button>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ════════════════════════
+     STATE 3 — Add-ons
+════════════════════════ -->
+<div style="text-align:center;margin-bottom:20px;">
+  <span class="tag">Step 3 of 7 — Add-ons</span>
+  <div class="note">Orange checkmarks. Skip link beneath nav. Summary building on the left.</div>
+</div>
+
+<div class="mini-modal" style="min-height:480px;">
+  <div class="ml">
+    <div class="ml-logo"><img src="velar-logo.png" style="width:70px;opacity:0.9;filter:brightness(0.9);" alt="VELAR"></div>
+    <div class="ml-sum">
+      <div class="ml-row set"><div class="ml-key">Service</div><div class="ml-val">Full Detail</div></div>
+      <div class="ml-row set"><div class="ml-key">Vehicle</div><div class="ml-val">SUV / Truck</div></div>
+      <div class="ml-row set"><div class="ml-key">Package</div><div class="ml-val">Signature</div></div>
+      <div class="ml-row"><div class="ml-key">Add-ons</div><div class="ml-val">—</div></div>
+      <div class="ml-row"><div class="ml-key">Date</div><div class="ml-val">—</div></div>
+    </div>
+    <div class="ml-est">
+      <div class="ml-est-k">Est. Total</div>
+      <div class="ml-est-v">$279</div>
+      <div class="ml-est-s">~3 hrs</div>
+    </div>
+    <div class="ml-foot">
+      <div class="ml-dots">
+        <div class="msd done"></div><div class="msd done"></div><div class="msd active"></div><div class="msd"></div><div class="msd"></div><div class="msd"></div><div class="msd"></div>
+      </div>
+    </div>
+  </div>
+  <div class="mr">
+    <div class="mr-prog"><div class="mr-prog-fill" style="width:42%;"></div></div>
+    <div class="mr-inner">
+      <span class="mr-eye">Add-ons</span>
+      <div class="mr-q">Any extras?</div>
+      <div class="addon-rows">
+        <div class="addon on">
+          <div class="addon-check"><div class="addon-check-inner"></div></div>
+          <span class="addon-name">Pet Hair Removal</span>
+          <span class="addon-price">+$35</span>
+        </div>
+        <div class="addon">
+          <div class="addon-check"><div class="addon-check-inner"></div></div>
+          <span class="addon-name">Odor Treatment</span>
+          <span class="addon-price">+$55</span>
+        </div>
+        <div class="addon">
+          <div class="addon-check"><div class="addon-check-inner"></div></div>
+          <span class="addon-name">Engine Bay Cleaning</span>
+          <span class="addon-price">+$65</span>
+        </div>
+        <div class="addon">
+          <div class="addon-check"><div class="addon-check-inner"></div></div>
+          <span class="addon-name">Seat Extraction</span>
+          <span class="addon-price">+$50</span>
+        </div>
+      </div>
+      <span class="skip-link">No add-ons needed →</span>
+    </div>
+    <div class="mr-nav">
+      <button class="mr-back">← Back</button>
+      <button class="mr-next">Continue</button>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ════════════════════════
+     STATE 4 — Review & Submit
+════════════════════════ -->
+<div style="text-align:center;margin-bottom:20px;">
+  <span class="tag">Step 7 of 7 — Review &amp; Submit</span>
+  <div class="note">Dark total bar at bottom of review card. Est. total in orange. Submit button orange. Left panel fully populated.</div>
+</div>
+
+<div class="mini-modal" style="min-height:480px;">
+  <div class="ml">
+    <div class="ml-logo"><img src="velar-logo.png" style="width:70px;opacity:0.9;filter:brightness(0.9);" alt="VELAR"></div>
+    <div class="ml-sum">
+      <div class="ml-row set"><div class="ml-key">Service</div><div class="ml-val">Full Detail</div></div>
+      <div class="ml-row set"><div class="ml-key">Vehicle</div><div class="ml-val">SUV / Truck</div></div>
+      <div class="ml-row set"><div class="ml-key">Package</div><div class="ml-val">Signature</div></div>
+      <div class="ml-row set"><div class="ml-key">Add-ons</div><div class="ml-val">Pet Hair</div></div>
+      <div class="ml-row set"><div class="ml-key">Date</div><div class="ml-val">Jun 7, Morning</div></div>
+    </div>
+    <div class="ml-est">
+      <div class="ml-est-k">Est. Total</div>
+      <div class="ml-est-v">$314</div>
+      <div class="ml-est-s">~3 hrs · subject to review</div>
+    </div>
+    <div class="ml-foot">
+      <div class="ml-dots">
+        <div class="msd done"></div><div class="msd done"></div><div class="msd done"></div><div class="msd done"></div><div class="msd done"></div><div class="msd done"></div><div class="msd active"></div>
+      </div>
+    </div>
+  </div>
+  <div class="mr">
+    <div class="mr-prog"><div class="mr-prog-fill" style="width:96%;"></div></div>
+    <div class="mr-inner">
+      <span class="mr-eye">Review</span>
+      <div class="mr-q" style="font-size:1.1rem;margin-bottom:18px;">Review your booking.</div>
+      <div class="review-wrap">
+        <div class="review-card">
+          <div class="rv-row"><span class="rv-key">Service</span><span class="rv-val">Full Detail — Signature</span></div>
+          <div class="rv-row"><span class="rv-key">Vehicle</span><span class="rv-val">2021 BMW X5 · SUV / Truck</span></div>
+          <div class="rv-row"><span class="rv-key">Date & Time</span><span class="rv-val">Jun 7 · Morning (8–10 AM)</span></div>
+          <div class="rv-row"><span class="rv-key">Location</span><span class="rv-val">123 Main St, Dallas, TX</span></div>
+          <div class="rv-row"><span class="rv-key">Add-ons</span><span class="rv-val">Pet Hair Removal</span></div>
+          <div class="rv-total">
+            <div>
+              <div class="rv-total-k">Estimated Total</div>
+              <div class="rv-total-note">Final price confirmed at booking</div>
+            </div>
+            <div class="rv-total-v">$314</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mr-nav">
+      <button class="mr-back">← Back</button>
+      <button class="mr-next">Request Booking</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

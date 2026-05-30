@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELAR Pricing — Variant B: Split Contrast</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --orange: #f26a0d;
+  --black: #111110;
+  --warm-white: #f8f6f3;
+  --stone: #ede9e4;
+  --muted: #7a7068;
+  --border: #e0d9d1;
+  --dark-card: #111110;
+  --font: 'DM Sans', system-ui, sans-serif;
+}
+body { font-family: var(--font); background: #e4e0db; -webkit-font-smoothing: antialiased; }
+
+.variant-label {
+  background: #111; color: #fff;
+  padding: 10px 24px; font-size: 0.65rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  font-family: var(--font);
+}
+
+/* ─── SECTION ─── */
+.section {
+  background: var(--warm-white);
+  padding: clamp(72px, 9vw, 120px) 0;
+}
+
+/* ─── HEADER — full-width warm strip ─── */
+.header-strip {
+  padding: 0 clamp(20px, 5vw, 60px) 56px;
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.eyebrow {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--orange);
+  display: block;
+  margin-bottom: 14px;
+}
+
+.heading-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.heading {
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--black);
+  line-height: 1.05;
+  max-width: 480px;
+}
+
+/* Controls inline with heading */
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  background: var(--stone);
+  border-radius: 9px;
+  padding: 3px;
+  border: 1px solid var(--border);
+}
+
+.tab {
+  padding: 8px 22px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tab.active {
+  background: #fff;
+  color: var(--black);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.xl-toggle {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.xl-pill {
+  width: 38px; height: 20px;
+  background: var(--border);
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+}
+
+.xl-thumb {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ─── CARDS STRIP — two columns, asymmetric ─── */
+.cards-section {
+  padding: 0 clamp(20px, 5vw, 60px);
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* BASE CARD */
+.card {
+  border-radius: 16px;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Light card — warm stone */
+.card-light {
+  background: var(--stone);
+  border: 1px solid var(--border);
+}
+
+/* Dark featured card */
+.card-dark {
+  background: var(--dark-card);
+  border: 1px solid #222;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Orange accent on dark card */
+.card-dark::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--orange);
+}
+
+/* Price */
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  margin-bottom: 6px;
+}
+
+.currency {
+  font-size: 1.4rem;
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(17,17,16,0.45);
+}
+.card-dark .currency { color: rgba(242,106,13,0.55); }
+
+.amount {
+  font-size: 3.8rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--black);
+}
+.card-dark .amount { color: var(--orange); }
+
+.per-sedan {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-left: 2px;
+  padding-bottom: 6px;
+}
+.card-dark .per-sedan { color: rgba(255,255,255,0.25); }
+
+/* Metadata */
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.pkg-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--black);
+  letter-spacing: -0.015em;
+}
+.card-dark .pkg-name { color: #fff; }
+
+.badge {
+  background: var(--orange);
+  color: #fff;
+  font-size: 0.46rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 100px;
+}
+
+.duration {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+.card-dark .duration { color: rgba(255,255,255,0.28); }
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 20px;
+}
+.card-dark .divider { background: rgba(255,255,255,0.08); }
+
+/* Features */
+.group { margin-bottom: 14px; }
+
+.group-label {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--orange);
+  display: block;
+  margin-bottom: 9px;
+}
+
+.feat-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.feat-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: #3a3530;
+}
+.card-dark .feat-item { color: rgba(255,255,255,0.65); }
+
+.check { color: var(--orange); flex-shrink: 0; margin-top: 1px; font-size: 0.85rem; }
+
+.features-block { flex: 1; margin-bottom: 16px; }
+
+/* Add-ons */
+.addons {
+  font-size: 0.7rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+.card-dark .addons { color: rgba(255,255,255,0.25); }
+
+.al { font-weight: 600; color: #5a5048; }
+.card-dark .al { color: rgba(255,255,255,0.35); }
+
+/* CTA */
+.cta {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  margin-top: auto;
+}
+
+.cta-ghost {
+  background: transparent;
+  color: var(--black);
+  border: 1.5px solid var(--border);
+}
+.cta-ghost:hover { background: rgba(0,0,0,0.04); }
+
+.cta-orange {
+  background: var(--orange);
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(242,106,13,0.28);
+}
+.cta-orange:hover { opacity: 0.9; }
+
+/* Trust + Enhancements */
+.bottom-section {
+  padding: 0 clamp(20px, 5vw, 60px);
+  max-width: 1040px;
+  margin: 40px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.trust {
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.trust::before, .trust::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+.enh-box {
+  background: var(--stone);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 32px;
+}
+
+.enh-head {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.enh-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 40px;
+}
+
+.enh-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.81rem;
+}
+
+.enh-name { color: #3a3530; }
+.enh-price { font-weight: 600; color: var(--black); white-space: nowrap; }
+
+@media (max-width: 639px) {
+  .cards { grid-template-columns: 1fr; }
+  .heading-row { flex-direction: column; align-items: flex-start; }
+  .controls { align-items: flex-start; }
+  .enh-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="variant-label">VELAR Pricing — Variant B: Split Contrast</div>
+
+<section class="section">
+
+  <!-- Header -->
+  <div class="header-strip">
+    <span class="eyebrow">Service Packages · Dallas, TX</span>
+    <div class="heading-row">
+      <h2 class="heading">Choose your level of care.</h2>
+      <div class="controls">
+        <div class="tabs">
+          <button class="tab active">Interior + Exterior</button>
+          <button class="tab">Interior Only</button>
+        </div>
+        <div class="xl-toggle">
+          <button class="xl-pill"><div class="xl-thumb"></div></button>
+          <span>SUV / XL Vehicle <strong style="color:var(--black)">+$30</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="cards-section">
+    <div class="cards">
+
+      <!-- Essential — light -->
+      <div class="card card-light">
+        <div class="price-row">
+          <span class="currency">$</span>
+          <span class="amount">159</span>
+          <span class="per-sedan">/ sedan</span>
+        </div>
+        <div class="card-meta">
+          <span class="pkg-name">Essential</span>
+        </div>
+        <div class="duration">~2 Hours &nbsp;·&nbsp; Interior + Exterior</div>
+        <div class="divider"></div>
+        <div class="features-block">
+          <div class="group">
+            <span class="group-label">Interior</span>
+            <ul class="feat-list">
+              <li class="feat-item"><span class="check">✓</span> Vacuum &amp; air crevice blowout</li>
+              <li class="feat-item"><span class="check">✓</span> All surfaces &amp; mats wiped</li>
+              <li class="feat-item"><span class="check">✓</span> Seats wiped &amp; refreshed</li>
+              <li class="feat-item"><span class="check">✓</span> Interior glass cleaned</li>
+            </ul>
+          </div>
+          <div class="group" style="margin-top:12px">
+            <span class="group-label">Exterior</span>
+            <ul class="feat-list">
+              <li class="feat-item"><span class="check">✓</span> Safe hand wash</li>
+              <li class="feat-item"><span class="check">✓</span> Wheel &amp; tire cleaning</li>
+              <li class="feat-item"><span class="check">✓</span> Tire dressing applied</li>
+              <li class="feat-item"><span class="check">✓</span> Spot-free dry finish</li>
+            </ul>
+          </div>
+        </div>
+        <p class="addons"><span class="al">Add-ons: </span>Pet hair · Engine bay · Hydrophobic spray</p>
+        <button class="cta cta-ghost">Book Essential</button>
+      </div>
+
+      <!-- Signature — dark featured -->
+      <div class="card card-dark">
+        <div class="price-row">
+          <span class="currency">$</span>
+          <span class="amount">239</span>
+          <span class="per-sedan">/ sedan</span>
+        </div>
+        <div class="card-meta">
+          <span class="pkg-name">Signature</span>
+          <span class="badge">Most Popular</span>
+        </div>
+        <div class="duration">~3 Hours &nbsp;·&nbsp; Interior + Exterior</div>
+        <div class="divider"></div>
+        <div class="features-block">
+          <div style="font-size:0.72rem;color:rgba(255,255,255,0.35);margin-bottom:14px;letter-spacing:0.02em;">
+            Everything in Essential, plus:
+          </div>
+          <div class="group">
+            <span class="group-label">Interior</span>
+            <ul class="feat-list">
+              <li class="feat-item"><span class="check">✓</span> 2-step deep vacuum</li>
+              <li class="feat-item"><span class="check">✓</span> Full steam cleaning &amp; sanitization</li>
+              <li class="feat-item"><span class="check">✓</span> Light stain treatment</li>
+              <li class="feat-item"><span class="check">✓</span> Leather cleaning &amp; conditioning</li>
+            </ul>
+          </div>
+          <div class="group" style="margin-top:12px">
+            <span class="group-label">Exterior</span>
+            <ul class="feat-list">
+              <li class="feat-item"><span class="check">✓</span> Pre-wash contaminant treatment</li>
+              <li class="feat-item"><span class="check">✓</span> Deep wheel &amp; tire cleaning</li>
+              <li class="feat-item"><span class="check">✓</span> Hydrophobic spray protection</li>
+            </ul>
+          </div>
+        </div>
+        <p class="addons"><span class="al">Add-ons: </span>Pet hair · Seat shampoo extraction · Odor treatment</p>
+        <button class="cta cta-orange">Book Signature</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Trust + Enhancements -->
+  <div class="bottom-section">
+    <p class="trust">Trusted by 100+ Dallas vehicle owners &nbsp;·&nbsp; 5-star rated</p>
+
+    <div class="enh-box">
+      <div class="enh-head">Optional Add-ons</div>
+      <div class="enh-grid">
+        <div class="enh-row"><span class="enh-name">Light Pet Hair Removal</span><span class="enh-price">$35</span></div>
+        <div class="enh-row"><span class="enh-name">Heavy Pet Hair Removal</span><span class="enh-price">$69</span></div>
+        <div class="enh-row"><span class="enh-name">Ozone Odor Treatment</span><span class="enh-price">$55</span></div>
+        <div class="enh-row"><span class="enh-name">Engine Bay Detail</span><span class="enh-price">$65</span></div>
+        <div class="enh-row"><span class="enh-name">Headliner Deep Cleaning</span><span class="enh-price">$55</span></div>
+        <div class="enh-row"><span class="enh-name">Clay Bar Treatment</span><span class="enh-price">$55</span></div>
+        <div class="enh-row"><span class="enh-name">Headlight Restoration (pair)</span><span class="enh-price">$110</span></div>
+        <div class="enh-row"><span class="enh-name">Individual Seat Cleaning</span><span class="enh-price">$40</span></div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</body>
+</html>

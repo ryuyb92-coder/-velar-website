@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELAR Mobile Detailing — Full Visual Mockup</title>
+<style>
+/* ─── Reset & Tokens ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:       #080808;
+  --off-black:   #111111;
+  --dark:        #0d0d0d;
+  --white:       #ffffff;
+  --off-white:   #f5f4f2;
+  --warm-stone:  #f0ebe3;
+  --orange:      #f26a0d;
+  --orange-dim:  rgba(242,106,13,0.12);
+  --orange-glow: rgba(242,106,13,0.28);
+  --muted:       #7a7060;
+  --border:      #e4ddd4;
+  --border-dark: #1a1714;
+  --font:        'DM Sans', -apple-system, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--black);
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ─── Shared utilities ───────────────────────────── */
+.container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 60px);
+}
+.eyebrow {
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.section-pad { padding: clamp(72px, 9vw, 120px) 0; }
+
+/* ══════════════════════════════════════════════════
+   1. NAVIGATION
+══════════════════════════════════════════════════ */
+.nav {
+  position: relative;
+  z-index: 10;
+  padding: 0 clamp(20px, 5vw, 60px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  background: transparent;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nav-logo img {
+  height: 40px;
+  width: auto;
+  filter: brightness(1.05);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.18s;
+}
+.nav-links a:hover { color: #fff; }
+
+.nav-book {
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 22px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 20px var(--orange-glow);
+}
+
+/* ══════════════════════════════════════════════════
+   2. HERO
+══════════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--black);
+  overflow: hidden;
+  margin-top: -68px;
+  padding-top: 68px;
+}
+
+/* Cinematic gradient overlay */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(105deg, rgba(8,8,8,0.98) 0%, rgba(8,8,8,0.82) 42%, rgba(8,8,8,0.3) 70%, transparent 100%),
+    linear-gradient(180deg, rgba(8,8,8,0) 55%, rgba(8,8,8,0.98) 100%);
+  z-index: 2;
+}
+
+/* Simulated car silhouette background */
+.hero-visual {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 80% at 80% 55%, rgba(30,25,18,0.9) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 65% 45%, rgba(242,106,13,0.04) 0%, transparent 50%),
+    linear-gradient(135deg, #060606 0%, #0f0e0c 30%, #141210 60%, #0a0908 100%);
+  z-index: 1;
+}
+
+/* Subtle car shape suggestion using gradients */
+.hero-car-hint {
+  position: absolute;
+  right: -2%;
+  bottom: 12%;
+  width: 62%;
+  height: 55%;
+  background:
+    radial-gradient(ellipse 80% 50% at 55% 60%, rgba(20,18,14,0.8) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 65%, rgba(242,106,13,0.035) 0%, transparent 55%);
+  z-index: 1;
+}
+
+/* Orange rim-light suggestion */
+.hero-rim {
+  position: absolute;
+  right: 5%;
+  bottom: 8%;
+  width: 55%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(242,106,13,0.18) 40%, rgba(242,106,13,0.06) 80%, transparent 100%);
+  z-index: 3;
+  filter: blur(1px);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  padding: clamp(80px, 12vw, 160px) clamp(20px, 5vw, 60px) clamp(60px, 8vw, 100px);
+  max-width: 1160px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.hero-eyebrow {
+  color: var(--orange);
+  margin-bottom: 20px;
+  letter-spacing: 0.2em;
+  font-size: 0.64rem;
+}
+
+.hero-headline {
+  font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  color: #fff;
+  max-width: 640px;
+  margin-bottom: 24px;
+}
+.hero-headline em {
+  font-style: normal;
+  color: var(--orange);
+}
+
+.hero-sub {
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+  max-width: 380px;
+  margin-bottom: 44px;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.btn-primary {
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 16px 36px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 6px 28px var(--orange-glow);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover {
+  background: #d95d08;
+  box-shadow: 0 8px 36px rgba(242,106,13,0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 7px;
+  padding: 15px 28px;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-secondary:hover { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
+
+/* Trust bar */
+.hero-trust {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  gap: clamp(28px, 4vw, 56px);
+  padding: 32px clamp(20px, 5vw, 60px);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  max-width: 1160px;
+  margin: 0 auto;
+  width: 100%;
+}
+.trust-item {}
+.trust-label {
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.22);
+  margin-bottom: 4px;
+}
+.trust-value {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.5);
+  font-weight: 400;
+}
+
+/* ══════════════════════════════════════════════════
+   3. WHITE BRIDGE — "Why VELAR"
+══════════════════════════════════════════════════ */
+.why {
+  background: var(--white);
+  padding: clamp(72px, 8vw, 110px) 0;
+}
+.why-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 60px);
+}
+.why-eyebrow {
+  color: var(--orange);
+  margin-bottom: 16px;
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.why-heading {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  color: var(--off-black);
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.why-body {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.75;
+  margin-bottom: 36px;
+}
+.why-pillars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.pillar {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.pillar-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--orange);
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+.pillar-text {
+  font-size: 0.84rem;
+  color: var(--off-black);
+  line-height: 1.5;
+}
+.pillar-text span {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Simulated building/studio image */
+.why-image {
+  border-radius: 14px;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  background:
+    linear-gradient(145deg, #0f0e0c 0%, #1a1612 40%, #0d0c0a 70%, #080808 100%);
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 24px;
+}
+.why-image::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(242,106,13,0.04) 0%, transparent 60%);
+}
+.why-image-caption {
+  position: relative;
+  z-index: 2;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+}
+
+/* ══════════════════════════════════════════════════
+   4. PACKAGES SECTION
+══════════════════════════════════════════════════ */
+.packages {
+  background: var(--warm-stone);
+  padding: clamp(80px, 9vw, 120px) 0;
+}
+.packages-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.packages-eyebrow {
+  color: var(--orange);
+  margin-bottom: 14px;
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.packages-heading {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  color: var(--off-black);
+  line-height: 1.15;
+  margin-bottom: 14px;
+}
+.packages-sub {
+  font-size: 0.85rem;
+  color: var(--muted);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* Category tabs */
+.pkg-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 48px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 100px;
+  padding: 4px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+.pkg-tab {
+  padding: 9px 24px;
+  border-radius: 100px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  cursor: pointer;
+}
+.pkg-tab.active {
+  background: var(--white);
+  color: var(--off-black);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* Package grid */
+.pkg-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.pkg-card {
+  background: var(--white);
+  border-radius: 18px;
+  padding: clamp(28px, 4vw, 44px);
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 1px 3px rgba(60,45,20,0.05), 0 8px 24px rgba(60,45,20,0.04);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dark Signature card */
+.pkg-card.dark {
+  background: #0c0b09;
+  border-color: transparent;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.025) inset;
+}
+
+/* Orange "Most Popular" badge */
+.pkg-popular {
+  position: absolute;
+  top: 22px; right: 22px;
+  background: var(--orange);
+  color: #fff;
+  font-size: 0.52rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  padding: 4px 12px;
+  box-shadow: 0 3px 12px var(--orange-glow);
+}
+
+/* Orange accent top line on dark card */
+.pkg-card.dark::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--orange) 0%, transparent 70%);
+  opacity: 0.7;
+}
+
+.pkg-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  margin-bottom: 20px;
+}
+.pkg-card.dark .pkg-dot { background: var(--orange); opacity: 0.8; }
+
+.pkg-tier {
+  font-size: 0.52rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.pkg-card.dark .pkg-tier { color: #2e2820; }
+
+.pkg-name {
+  font-size: 1.7rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  color: var(--off-black);
+  margin-bottom: 12px;
+  line-height: 1.05;
+}
+.pkg-card.dark .pkg-name { color: #d8d0c5; }
+
+.pkg-desc {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.65;
+  flex: 1;
+  margin-bottom: 28px;
+}
+.pkg-card.dark .pkg-desc { color: #38322a; }
+
+/* Features list */
+.pkg-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 32px;
+}
+.pkg-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.74rem;
+  color: var(--off-black);
+  line-height: 1.4;
+}
+.pkg-card.dark .pkg-feature { color: #5a5040; }
+.feature-check {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--orange-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.pkg-card.dark .feature-check { background: rgba(242,106,13,0.08); }
+.feature-check::after {
+  content: '✓';
+  font-size: 0.48rem;
+  color: var(--orange);
+  line-height: 1;
+}
+
+.pkg-rule {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 20px;
+}
+.pkg-card.dark .pkg-rule { background: #1a1612; }
+
+.pkg-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.pkg-price {
+  font-size: 2.4rem;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  color: var(--off-black);
+}
+.pkg-card.dark .pkg-price { color: #c8c0b4; }
+.pkg-price-note {
+  font-size: 0.62rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.pkg-card.dark .pkg-price-note { color: #28221c; }
+
+.pkg-cta {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--off-black);
+  transition: all 0.2s;
+  text-align: center;
+}
+.pkg-card.dark .pkg-cta {
+  border-color: #2a2218;
+  color: #6a6050;
+  background: transparent;
+}
+.pkg-cta.primary-cta {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #fff;
+  box-shadow: 0 4px 20px var(--orange-glow);
+}
+
+/* ══════════════════════════════════════════════════
+   5. BOOKING MODAL — Full visual preview
+══════════════════════════════════════════════════ */
+.modal-section {
+  background: var(--off-white);
+  padding: clamp(80px, 9vw, 120px) 0;
+}
+.modal-section-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.modal-section-eye {
+  color: var(--orange);
+  margin-bottom: 14px;
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.modal-section-h {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  color: var(--off-black);
+}
+
+.modal-preview {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 60px);
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+/* Each modal instance */
+.modal-frame {
+  border-radius: 22px;
+  overflow: hidden;
+  display: flex;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow:
+    0 2px 0 rgba(255,255,255,0.7) inset,
+    0 40px 100px rgba(0,0,0,0.16),
+    0 8px 24px rgba(0,0,0,0.08);
+  min-height: 520px;
+}
+
+/* ── Left: cinematic panel ── */
+.ml {
+  width: 210px;
+  flex-shrink: 0;
+  background: #080808;
+  border-right: 1px solid #0e0d0b;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+/* Orange hairline brand anchor */
+.ml::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--orange) 0%, transparent 65%);
+  opacity: 0.75;
+  z-index: 2;
+}
+
+.ml-logo-zone {
+  padding: 30px 22px 26px;
+  border-bottom: 1px solid #0f0e0b;
+  flex-shrink: 0;
+}
+.ml-logo-zone img {
+  width: 78px;
+  height: auto;
+  display: block;
+  opacity: 0.95;
+}
+
+.ml-summary {
+  flex: 1;
+  padding: 24px 22px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+}
+
+.mls-row {
+  padding: 10px 0;
+  border-bottom: 1px solid #0d0c09;
+}
+.mls-row:last-of-type { border-bottom: none; }
+.mls-key {
+  font-size: 0.44rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #1e1c17;
+  margin-bottom: 4px;
+}
+.mls-val {
+  font-size: 0.67rem;
+  color: #2a2620;
+  line-height: 1.3;
+}
+.mls-row.set .mls-key { color: #2e2a20; }
+.mls-row.set .mls-val { color: #6a6050; }
+
+.ml-est {
+  padding: 18px 22px 20px;
+  border-top: 1px solid #0e0d0b;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+.ml-est-key {
+  font-size: 0.44rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #2a2620;
+  margin-bottom: 5px;
+}
+.ml-est-val {
+  font-size: 1.4rem;
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  color: var(--orange);
+  line-height: 1;
+}
+.ml-est-note {
+  font-size: 0.48rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2a2620;
+  margin-top: 5px;
+}
+
+.ml-foot {
+  padding: 0 22px 26px;
+  flex-shrink: 0;
+}
+.step-pips {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.sp {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #161410;
+  transition: all 0.25s;
+}
+.sp.done { background: #2a2620; }
+.sp.active { background: var(--orange); width: 18px; border-radius: 2px; }
+
+/* ── Right: white step panel ── */
+.mr {
+  flex: 1;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Close btn */
+.mr-close {
+  position: absolute;
+  top: 18px; right: 18px;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c0b9b0;
+  font-size: 0.65rem;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.mr-prog {
+  height: 2px;
+  background: #f5f0ea;
+  flex-shrink: 0;
+}
+.mr-prog-fill {
+  height: 100%;
+  background: var(--orange);
+  border-radius: 0 1px 1px 0;
+}
+
+.mr-inner {
+  flex: 1;
+  padding: 40px 48px 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mr-eye {
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #d0c8be;
+  margin-bottom: 6px;
+  display: block;
+}
+.mr-q {
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  color: var(--off-black);
+  line-height: 1.2;
+  margin-bottom: 30px;
+}
+
+/* Vehicle chips */
+.v-chips {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.v-chip {
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 9px 20px;
+  font-size: 0.72rem;
+  color: #9a9080;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #fff;
+}
+.v-chip.on {
+  border-color: var(--orange);
+  background: rgba(242,106,13,0.05);
+  color: var(--off-black);
+}
+.v-chip-note {
+  font-size: 0.62rem;
+  color: var(--orange);
+  opacity: 0.8;
+}
+
+/* Package cards in modal */
+.mr-pkg-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+}
+
+.mr-pkg {
+  border: 1px solid #ede7df;
+  border-radius: 14px;
+  padding: 26px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.mr-pkg:hover:not(.mr-pkg-dark) { border-color: #d4ccc2; background: #faf8f5; }
+
+.mr-pkg-dark {
+  background: #0c0b09;
+  border-color: transparent;
+  box-shadow: 0 16px 44px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.02) inset;
+}
+.mr-pkg-dark::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--orange) 0%, transparent 70%);
+  opacity: 0.65;
+}
+
+.mr-pkg-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--border);
+  margin-bottom: 16px;
+}
+.mr-pkg-dark .mr-pkg-dot { background: var(--orange); opacity: 0.75; }
+
+.mr-pkg-tier {
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #b8b0a4;
+  margin-bottom: 6px;
+}
+.mr-pkg-dark .mr-pkg-tier { color: #2a2218; }
+
+.mr-pkg-name {
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--off-black);
+  margin-bottom: 9px;
+}
+.mr-pkg-dark .mr-pkg-name { color: #d8d0c5; }
+
+.mr-pkg-desc {
+  font-size: 0.68rem;
+  color: #9a9080;
+  line-height: 1.55;
+  flex: 1;
+  margin-bottom: 18px;
+}
+.mr-pkg-dark .mr-pkg-desc { color: #32281e; }
+
+.mr-pkg-rule { height: 1px; background: #f0ebe4; margin-bottom: 14px; }
+.mr-pkg-dark .mr-pkg-rule { background: #141210; }
+
+.mr-pkg-foot { display: flex; align-items: baseline; justify-content: space-between; }
+.mr-pkg-price {
+  font-size: 1.45rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  color: var(--off-black);
+}
+.mr-pkg-dark .mr-pkg-price { color: #c0b8ac; }
+.mr-pkg-dur {
+  font-size: 0.58rem;
+  color: #c0b9b0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.mr-pkg-dark .mr-pkg-dur { color: #24201a; }
+
+/* Modal nav */
+.mr-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 48px 32px;
+  border-top: 1px solid #f0ebe4;
+  flex-shrink: 0;
+}
+.mr-back {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c8c0b4;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px 0;
+}
+.mr-next {
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 13px 32px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 18px var(--orange-glow);
+}
+
+/* ── Add-ons step ── */
+.addon-list { display: flex; flex-direction: column; gap: 9px; flex: 1; }
+.addon-row {
+  border: 1px solid #ede7df;
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+}
+.addon-row.on { border-color: var(--orange); background: rgba(242,106,13,0.04); }
+.addon-check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.addon-row.on .addon-check {
+  background: var(--orange);
+  border-color: var(--orange);
+}
+.addon-check::after { content: ''; }
+.addon-row.on .addon-check::after {
+  content: '✓';
+  font-size: 0.52rem;
+  color: #fff;
+  line-height: 1;
+}
+.addon-name { flex: 1; font-size: 0.82rem; color: var(--off-black); }
+.addon-price { font-size: 0.75rem; color: #9a9080; }
+.skip-line { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: #d0c8be; text-align: center; margin-top: 18px; display: block; cursor: pointer; }
+
+/* ── Review step ── */
+.review-wrap { flex: 1; display: flex; flex-direction: column; gap: 0; }
+.review-card {
+  border: 1px solid #ede7df;
+  border-radius: 14px;
+  overflow: hidden;
+  flex: 1;
+}
+.rv-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 13px 20px;
+  border-bottom: 1px solid #f5f0ea;
+}
+.rv-row:last-of-type { border-bottom: none; }
+.rv-k { font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c8c0b4; }
+.rv-v { font-size: 0.78rem; color: var(--off-black); text-align: right; max-width: 55%; }
+.rv-total {
+  background: var(--off-black);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.rv-total-left {}
+.rv-total-k { font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 2px; }
+.rv-total-note { font-size: 0.5rem; color: rgba(255,255,255,0.12); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 3px; }
+.rv-total-v { font-size: 1.9rem; font-weight: 300; letter-spacing: -0.04em; color: var(--orange); }
+
+/* ── Service step ── */
+.svc-cards { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.svc-card {
+  border: 1px solid #ede7df;
+  border-radius: 12px;
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  flex: 1;
+  transition: border-color 0.18s, background 0.18s;
+}
+.svc-card.on {
+  border-color: var(--orange);
+  background: rgba(242,106,13,0.04);
+}
+.svc-name { font-size: 0.92rem; font-weight: 500; color: var(--off-black); margin-bottom: 4px; }
+.svc-sub { font-size: 0.72rem; color: #9a9080; }
+.svc-badge {
+  font-size: 0.54rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--orange);
+  border: 1px solid rgba(242,106,13,0.3);
+  border-radius: 100px;
+  padding: 4px 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 14px;
+}
+
+/* ── Section dividers & labels ── */
+.step-context {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 clamp(20px, 5vw, 60px);
+}
+.step-context-tag {
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.step-context-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Footer ── */
+.footer {
+  background: var(--black);
+  padding: 52px clamp(20px, 5vw, 60px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #0f0e0b;
+}
+.footer-logo img { height: 36px; opacity: 0.7; }
+.footer-copy { font-size: 0.7rem; color: rgba(255,255,255,0.2); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-size: 0.7rem; color: rgba(255,255,255,0.2); text-decoration: none; }
+
+/* Scroll hint */
+.scroll-hint {
+  text-align: center;
+  padding: 14px;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.15);
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-logo">
+    <img src="velar-logo-orange.png" alt="VELAR Mobile Detailing">
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">Services</a></li>
+    <li><a href="#">Packages</a></li>
+    <li><a href="#">Process</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <button class="nav-book">Book Now</button>
+</nav>
+
+<!-- ══════════════════════════════════════════════════
+     HERO SECTION
+══════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-visual"></div>
+  <div class="hero-car-hint"></div>
+  <div class="hero-bg"></div>
+  <div class="hero-rim"></div>
+
+  <div class="hero-content">
+    <p class="eyebrow hero-eyebrow">Premium Mobile Detailing · Dallas, TX</p>
+    <h1 class="hero-headline">
+      Premium care.<br>Delivered to <em>you.</em>
+    </h1>
+    <p class="hero-sub">
+      Concierge-level detailing wherever you are.<br>Because your time matters.
+    </p>
+    <div class="hero-ctas">
+      <button class="btn-primary">
+        Book Now
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path d="M8.5 1L13 5m0 0L8.5 9M13 5H1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="btn-secondary">View Packages</button>
+    </div>
+  </div>
+
+  <div class="hero-trust">
+    <div class="trust-item">
+      <div class="trust-label">Convenient</div>
+      <div class="trust-value">We come to you</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-label">Premium Quality</div>
+      <div class="trust-value">Professional-grade products</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-label">Satisfaction</div>
+      <div class="trust-value">100% guaranteed</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-label">Fully Insured</div>
+      <div class="trust-value">Licensed &amp; bonded</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     WHY VELAR (white bridge)
+══════════════════════════════════════════════════ -->
+<section class="why">
+  <div class="why-inner">
+    <div>
+      <p class="why-eyebrow eyebrow">About VELAR</p>
+      <h2 class="why-heading">We treat your vehicle like our own.</h2>
+      <p class="why-body">
+        VELAR is a one-man premium mobile detailing operation built around precision, trust, and care. No crews. No shortcuts. Just a professional who shows up, does the work right, and leaves your vehicle looking its best.
+      </p>
+      <div class="why-pillars">
+        <div class="pillar">
+          <div class="pillar-dot"></div>
+          <div class="pillar-text">Meticulous attention to detail<span>Every surface treated with professional-grade products</span></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-dot"></div>
+          <div class="pillar-text">Scheduled at your location<span>Driveway, garage, parking lot — wherever works for you</span></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-dot"></div>
+          <div class="pillar-text">Transparent pricing, no surprises<span>Know exactly what you're getting before we arrive</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="why-image">
+      <span class="why-image-caption">VELAR Mobile Detailing · Dallas, TX</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     PACKAGES SECTION
+══════════════════════════════════════════════════ -->
+<section class="packages">
+  <div class="container">
+    <div class="packages-header">
+      <p class="eyebrow packages-eyebrow">Our Packages</p>
+      <h2 class="packages-heading">Choose your level of care.</h2>
+      <p class="packages-sub">
+        Two carefully designed service tiers. Every detail is intentional — from what's included to what we use.
+      </p>
+    </div>
+
+    <div class="pkg-tabs">
+      <div class="pkg-tab active">Interior + Exterior</div>
+      <div class="pkg-tab">Interior Only</div>
+    </div>
+
+    <div class="pkg-grid">
+
+      <!-- Essential -->
+      <div class="pkg-card">
+        <div class="pkg-dot"></div>
+        <div class="pkg-tier">Essential</div>
+        <div class="pkg-name">Essential</div>
+        <div class="pkg-desc">
+          A complete maintenance detail designed for regularly maintained vehicles needing a clean, refreshed reset inside and out.
+        </div>
+        <ul class="pkg-features">
+          <li class="pkg-feature"><div class="feature-check"></div>Professional interior vacuum &amp; wipe-down</li>
+          <li class="pkg-feature"><div class="feature-check"></div>Safe exterior hand wash</li>
+          <li class="pkg-feature"><div class="feature-check"></div>Wheel faces &amp; tire cleaning</li>
+          <li class="pkg-feature"><div class="feature-check"></div>Tire dressing + spot-free dry finish</li>
+          <li class="pkg-feature"><div class="feature-check"></div>Door jambs &amp; exterior glass cleaned</li>
+        </ul>
+        <div class="pkg-rule"></div>
+        <div class="pkg-price-row">
+          <div class="pkg-price">$159</div>
+          <div class="pkg-price-note">~2 hrs · Sedan</div>
+        </div>
+        <button class="pkg-cta">Book Essential</button>
+      </div>
+
+      <!-- Signature (featured dark) -->
+      <div class="pkg-card dark">
+        <div class="pkg-popular">Most Popular</div>
+        <div class="pkg-dot"></div>
+        <div class="pkg-tier">Signature</div>
+        <div class="pkg-name">Signature</div>
+        <div class="pkg-desc">
+          Our most comprehensive everyday detail featuring deeper interior cleaning, steam sanitization, stain treatment, and enhanced exterior protection.
+        </div>
+        <ul class="pkg-features">
+          <li class="pkg-feature"><div class="feature-check"></div>Everything in Essential, plus:</li>
+          <li class="pkg-feature"><div class="feature-check"></div>Full interior steam cleaning</li>
+          <li class="pkg-feature"><div class="feature-check"></div>Light stain treatment</li>
+          <li class="pkg-feature"><div class="feature-check"></div>Leather cleaning &amp; conditioning</li>
+          <li class="pkg-feature"><div class="feature-check"></div>Hydrophobic spray protection</li>
+        </ul>
+        <div class="pkg-rule"></div>
+        <div class="pkg-price-row">
+          <div class="pkg-price">$239</div>
+          <div class="pkg-price-note">~3 hrs · Sedan</div>
+        </div>
+        <button class="pkg-cta primary-cta">Book Signature</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     BOOKING MODAL — STEP PREVIEWS
+══════════════════════════════════════════════════ -->
+<section class="modal-section">
+  <div class="modal-section-header">
+    <p class="eyebrow modal-section-eye">Booking Experience</p>
+    <h2 class="modal-section-h">Guided. Calm. One step at a time.</h2>
+  </div>
+
+  <div class="modal-preview">
+
+    <!-- Step 1: Service -->
+    <div class="step-context">
+      <span class="step-context-tag">Step 1 of 7 — Service Type</span>
+      <div class="step-context-rule"></div>
+    </div>
+
+    <div class="modal-frame">
+      <div class="ml">
+        <div class="ml-logo-zone">
+          <img src="velar-logo-orange.png" alt="VELAR">
+        </div>
+        <div class="ml-summary">
+          <div class="mls-row"><div class="mls-key">Service</div><div class="mls-val">—</div></div>
+          <div class="mls-row"><div class="mls-key">Vehicle</div><div class="mls-val">—</div></div>
+          <div class="mls-row"><div class="mls-key">Package</div><div class="mls-val">—</div></div>
+          <div class="mls-row"><div class="mls-key">Add-ons</div><div class="mls-val">—</div></div>
+          <div class="mls-row"><div class="mls-key">Date</div><div class="mls-val">—</div></div>
+        </div>
+        <div style="flex:1;"></div>
+        <div class="ml-foot">
+          <div class="step-pips">
+            <div class="sp active"></div>
+            <div class="sp"></div><div class="sp"></div><div class="sp"></div>
+            <div class="sp"></div><div class="sp"></div><div class="sp"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mr">
+        <div class="mr-close">✕</div>
+        <div class="mr-prog"><div class="mr-prog-fill" style="width:8%;"></div></div>
+        <div class="mr-inner">
+          <span class="mr-eye">Service</span>
+          <div class="mr-q">What type of detail?</div>
+          <div class="svc-cards">
+            <div class="svc-card on">
+              <div>
+                <div class="svc-name">Full Detail</div>
+                <div class="svc-sub">Interior + Exterior premium service</div>
+              </div>
+              <div class="svc-badge">Most popular</div>
+            </div>
+            <div class="svc-card">
+              <div>
+                <div class="svc-name">Interior Only</div>
+                <div class="svc-sub">Cabin-focused deep clean</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mr-nav">
+          <button class="mr-back" style="visibility:hidden;">← Back</button>
+          <button class="mr-next">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Vehicle & Package -->
+    <div class="step-context">
+      <span class="step-context-tag">Step 2 of 7 — Vehicle &amp; Package</span>
+      <div class="step-context-rule"></div>
+    </div>
+
+    <div class="modal-frame">
+      <div class="ml">
+        <div class="ml-logo-zone">
+          <img src="velar-logo-orange.png" alt="VELAR">
+        </div>
+        <div class="ml-summary">
+          <div class="mls-row set"><div class="mls-key">Service</div><div class="mls-val">Full Detail</div></div>
+          <div class="mls-row"><div class="mls-key">Vehicle</div><div class="mls-val">—</div></div>
+          <div class="mls-row"><div class="mls-key">Package</div><div class="mls-val">—</div></div>
+          <div class="mls-row"><div class="mls-key">Add-ons</div><div class="mls-val">—</div></div>
+          <div class="mls-row"><div class="mls-key">Date</div><div class="mls-val">—</div></div>
+        </div>
+        <div class="ml-est">
+          <div class="ml-est-key">Est. Total</div>
+          <div class="ml-est-val">$279</div>
+          <div class="ml-est-note">~3 hrs · subject to review</div>
+        </div>
+        <div class="ml-foot">
+          <div class="step-pips">
+            <div class="sp done"></div>
+            <div class="sp active"></div>
+            <div class="sp"></div><div class="sp"></div>
+            <div class="sp"></div><div class="sp"></div><div class="sp"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mr">
+        <div class="mr-close">✕</div>
+        <div class="mr-prog"><div class="mr-prog-fill" style="width:28%;"></div></div>
+        <div class="mr-inner">
+          <span class="mr-eye">Vehicle &amp; Package</span>
+          <div class="mr-q">Your vehicle and service level.</div>
+          <div class="v-chips">
+            <div class="v-chip">Sedan / Coupe</div>
+            <div class="v-chip on">SUV / Truck <span class="v-chip-note">+$30</span></div>
+            <div class="v-chip">XL Vehicle <span class="v-chip-note">+$30</span></div>
+          </div>
+          <div class="mr-pkg-grid">
+            <div class="mr-pkg">
+              <div class="mr-pkg-dot"></div>
+              <div class="mr-pkg-tier">Essential</div>
+              <div class="mr-pkg-name">Essential</div>
+              <div class="mr-pkg-desc">Complete maintenance detail — refreshed inside and out.</div>
+              <div class="mr-pkg-rule"></div>
+              <div class="mr-pkg-foot">
+                <div class="mr-pkg-price">$189</div>
+                <div class="mr-pkg-dur">2 hrs</div>
+              </div>
+            </div>
+            <div class="mr-pkg mr-pkg-dark">
+              <div class="mr-pkg-dot"></div>
+              <div class="mr-pkg-tier">Signature</div>
+              <div class="mr-pkg-name">Signature</div>
+              <div class="mr-pkg-desc">Deeper clean, steam, stain treatment + enhanced exterior.</div>
+              <div class="mr-pkg-rule"></div>
+              <div class="mr-pkg-foot">
+                <div class="mr-pkg-price">$279</div>
+                <div class="mr-pkg-dur">3 hrs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mr-nav">
+          <button class="mr-back">← Back</button>
+          <button class="mr-next">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Add-ons -->
+    <div class="step-context">
+      <span class="step-context-tag">Step 3 of 7 — Add-ons (optional)</span>
+      <div class="step-context-rule"></div>
+    </div>
+
+    <div class="modal-frame" style="min-height:480px;">
+      <div class="ml">
+        <div class="ml-logo-zone">
+          <img src="velar-logo-orange.png" alt="VELAR">
+        </div>
+        <div class="ml-summary">
+          <div class="mls-row set"><div class="mls-key">Service</div><div class="mls-val">Full Detail</div></div>
+          <div class="mls-row set"><div class="mls-key">Vehicle</div><div class="mls-val">SUV / Truck</div></div>
+          <div class="mls-row set"><div class="mls-key">Package</div><div class="mls-val">Signature</div></div>
+          <div class="mls-row"><div class="mls-key">Add-ons</div><div class="mls-val">—</div></div>
+          <div class="mls-row"><div class="mls-key">Date</div><div class="mls-val">—</div></div>
+        </div>
+        <div class="ml-est">
+          <div class="ml-est-key">Est. Total</div>
+          <div class="ml-est-val">$279</div>
+          <div class="ml-est-note">~3 hrs</div>
+        </div>
+        <div class="ml-foot">
+          <div class="step-pips">
+            <div class="sp done"></div><div class="sp done"></div>
+            <div class="sp active"></div>
+            <div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mr">
+        <div class="mr-close">✕</div>
+        <div class="mr-prog"><div class="mr-prog-fill" style="width:42%;"></div></div>
+        <div class="mr-inner">
+          <span class="mr-eye">Add-ons</span>
+          <div class="mr-q">Any extras?</div>
+          <div class="addon-list">
+            <div class="addon-row on">
+              <div class="addon-check"></div>
+              <span class="addon-name">Pet Hair Removal</span>
+              <span class="addon-price">+$35</span>
+            </div>
+            <div class="addon-row">
+              <div class="addon-check"></div>
+              <span class="addon-name">Odor Treatment</span>
+              <span class="addon-price">+$55</span>
+            </div>
+            <div class="addon-row">
+              <div class="addon-check"></div>
+              <span class="addon-name">Engine Bay Cleaning</span>
+              <span class="addon-price">+$65</span>
+            </div>
+            <div class="addon-row">
+              <div class="addon-check"></div>
+              <span class="addon-name">Seat Extraction</span>
+              <span class="addon-price">+$50</span>
+            </div>
+          </div>
+          <span class="skip-line">No add-ons needed →</span>
+        </div>
+        <div class="mr-nav">
+          <button class="mr-back">← Back</button>
+          <button class="mr-next">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 7: Review & Submit -->
+    <div class="step-context">
+      <span class="step-context-tag">Step 7 of 7 — Review &amp; Submit</span>
+      <div class="step-context-rule"></div>
+    </div>
+
+    <div class="modal-frame" style="min-height:460px;">
+      <div class="ml">
+        <div class="ml-logo-zone">
+          <img src="velar-logo-orange.png" alt="VELAR">
+        </div>
+        <div class="ml-summary">
+          <div class="mls-row set"><div class="mls-key">Service</div><div class="mls-val">Full Detail</div></div>
+          <div class="mls-row set"><div class="mls-key">Vehicle</div><div class="mls-val">SUV / Truck</div></div>
+          <div class="mls-row set"><div class="mls-key">Package</div><div class="mls-val">Signature</div></div>
+          <div class="mls-row set"><div class="mls-key">Add-ons</div><div class="mls-val">Pet Hair</div></div>
+          <div class="mls-row set"><div class="mls-key">Date</div><div class="mls-val">Jun 7, Morning</div></div>
+        </div>
+        <div class="ml-est">
+          <div class="ml-est-key">Est. Total</div>
+          <div class="ml-est-val">$314</div>
+          <div class="ml-est-note">~3 hrs · subject to review</div>
+        </div>
+        <div class="ml-foot">
+          <div class="step-pips">
+            <div class="sp done"></div><div class="sp done"></div><div class="sp done"></div>
+            <div class="sp done"></div><div class="sp done"></div><div class="sp done"></div>
+            <div class="sp active"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mr">
+        <div class="mr-close">✕</div>
+        <div class="mr-prog"><div class="mr-prog-fill" style="width:96%;"></div></div>
+        <div class="mr-inner">
+          <span class="mr-eye">Review</span>
+          <div class="mr-q" style="font-size:1.1rem;margin-bottom:20px;">Review your booking.</div>
+          <div class="review-wrap">
+            <div class="review-card">
+              <div class="rv-row"><span class="rv-k">Service</span><span class="rv-v">Full Detail — Signature</span></div>
+              <div class="rv-row"><span class="rv-k">Vehicle</span><span class="rv-v">2021 BMW X5 · SUV / Truck</span></div>
+              <div class="rv-row"><span class="rv-k">Date &amp; Time</span><span class="rv-v">Jun 7 · Morning (8–10 AM)</span></div>
+              <div class="rv-row"><span class="rv-k">Location</span><span class="rv-v">123 Main St, Dallas TX</span></div>
+              <div class="rv-row"><span class="rv-k">Add-ons</span><span class="rv-v">Pet Hair Removal</span></div>
+              <div class="rv-total">
+                <div class="rv-total-left">
+                  <div class="rv-total-k">Estimated Total</div>
+                  <div class="rv-total-note">Final price confirmed at booking</div>
+                </div>
+                <div class="rv-total-v">$314</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mr-nav">
+          <button class="mr-back">← Back</button>
+          <button class="mr-next">Request Booking</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /modal-preview -->
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-logo">
+    <img src="velar-logo-orange.png" alt="VELAR">
+  </div>
+  <div class="footer-copy">© 2025 VELAR Mobile Detailing · Dallas, TX</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+<div class="scroll-hint">↓ Scroll to see all sections · This is a visual preview only · Not yet implemented</div>
+
+</body>
+</html>

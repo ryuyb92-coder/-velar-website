@@ -1,0 +1,6 @@
+{"type":"server-started","port":58156,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:58156","screen_dir":"/Users/yungryu/Documents/Claude/Projects/VELAR-Website/.superpowers/brainstorm/46804-1779933741/content","state_dir":"/Users/yungryu/Documents/Claude/Projects/VELAR-Website/.superpowers/brainstorm/46804-1779933741/state"}
+{"type":"screen-added","file":"/Users/yungryu/Documents/Claude/Projects/VELAR-Website/.superpowers/brainstorm/46804-1779933741/content/modal-layout.html"}
+{"type":"screen-added","file":"/Users/yungryu/Documents/Claude/Projects/VELAR-Website/.superpowers/brainstorm/46804-1779933741/content/split-refined.html"}
+{"type":"screen-added","file":"/Users/yungryu/Documents/Claude/Projects/VELAR-Website/.superpowers/brainstorm/46804-1779933741/content/combined-step.html"}
+{"type":"screen-added","file":"/Users/yungryu/Documents/Claude/Projects/VELAR-Website/.superpowers/brainstorm/46804-1779933741/content/refined-v2.html"}
+{"type":"server-stopped","reason":"idle timeout"}

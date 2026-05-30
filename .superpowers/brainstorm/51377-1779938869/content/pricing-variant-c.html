@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELAR Pricing — Variant C: Ultra Minimal Luxury</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --orange: #f26a0d;
+  --black: #111110;
+  --off-white: #f9f8f6;
+  --muted: #888078;
+  --border: #e5ddd5;
+  --font: 'DM Sans', system-ui, sans-serif;
+}
+body { font-family: var(--font); background: #e8e6e3; -webkit-font-smoothing: antialiased; }
+
+.variant-label {
+  background: #111; color: #fff;
+  padding: 10px 24px; font-size: 0.65rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  font-family: var(--font);
+}
+
+/* ─── SECTION ─── */
+.section {
+  background: #fff;
+  padding: clamp(80px, 10vw, 140px) clamp(20px, 5vw, 60px);
+}
+
+.container {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* ─── HEADER — large, editorial ─── */
+.header {
+  margin-bottom: 64px;
+}
+
+.eyebrow {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--orange);
+  display: block;
+  margin-bottom: 20px;
+}
+
+.heading {
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--black);
+  line-height: 0.95;
+  margin-bottom: 24px;
+}
+
+.heading .accent { color: var(--orange); }
+
+/* Tabs + toggle in a single row below heading */
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tab {
+  padding: 8px 24px;
+  border: none;
+  background: transparent;
+  font-family: var(--font);
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--muted);
+  cursor: pointer;
+  border-right: 1px solid var(--border);
+}
+
+.tab:last-child { border-right: none; }
+
+.tab.active {
+  background: var(--black);
+  color: #fff;
+  font-weight: 500;
+}
+
+.xl-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.xl-pill {
+  width: 36px; height: 20px;
+  background: var(--border);
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+}
+
+.xl-thumb {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ─── COMPARISON TABLE — two columns ─── */
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+/* Column headers */
+.col-header {
+  padding: 32px 36px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.col-header:first-child {
+  border-right: 1px solid var(--border);
+}
+
+.col-header.featured-col {
+  background: var(--black);
+}
+
+.col-badge {
+  font-size: 0.46rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--orange);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.col-badge.hidden { visibility: hidden; }
+
+.col-price {
+  font-size: 3.8rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--black);
+  margin-bottom: 4px;
+}
+
+.featured-col .col-price { color: var(--orange); }
+
+.col-price-note {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.featured-col .col-price-note { color: rgba(255,255,255,0.3); }
+
+.col-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--black);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+  margin-top: 16px;
+}
+.featured-col .col-name { color: #fff; }
+
+.col-duration {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.featured-col .col-duration { color: rgba(255,255,255,0.3); }
+
+/* Feature rows */
+.feature-row {
+  display: contents;
+}
+
+.feature-cell {
+  padding: 14px 36px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.feature-cell:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+
+.feature-cell.section-head {
+  background: #f8f6f3;
+  padding: 10px 36px;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--orange);
+  gap: 0;
+}
+
+.feature-cell.section-head.dark-head {
+  background: rgba(255,255,255,0.04);
+  color: rgba(242,106,13,0.7);
+}
+
+.feature-cell.dark-cell {
+  background: var(--black);
+  border-bottom-color: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.65);
+}
+
+.feature-cell.dark-cell .check { color: var(--orange); }
+
+.feature-cell.dark-cell.inherited-note {
+  font-size: 0.71rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.02);
+}
+
+.check { color: var(--orange); flex-shrink: 0; font-size: 0.9rem; }
+
+.dash { color: var(--border); flex-shrink: 0; }
+
+/* CTA row */
+.cta-row {
+  display: contents;
+}
+
+.cta-cell {
+  padding: 24px 36px 32px;
+}
+
+.cta-cell:first-child {
+  border-right: 1px solid var(--border);
+}
+
+.cta-cell.dark-cta {
+  background: var(--black);
+}
+
+.cta-btn {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+}
+
+.cta-outline {
+  background: transparent;
+  color: var(--black);
+  border: 1.5px solid var(--border);
+}
+.cta-outline:hover { background: #f5f2ee; }
+
+.cta-fill {
+  background: var(--orange);
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(242,106,13,0.28);
+}
+.cta-fill:hover { opacity: 0.9; }
+
+/* Trust + Add-ons below table */
+.trust {
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0.55;
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+/* ─── ADD-ONS — minimal row list ─── */
+.addons-section {}
+
+.addons-heading {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.addons-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.addon-cell {
+  padding: 16px 20px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.addon-cell:nth-child(4n) { border-right: none; }
+.addon-cell:nth-last-child(-n+4) { border-bottom: none; }
+
+.addon-name {
+  font-size: 0.79rem;
+  color: var(--black);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.addon-price {
+  font-size: 0.78rem;
+  color: var(--orange);
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .comparison { grid-template-columns: 1fr; }
+  .feature-cell:nth-child(odd) { border-right: none; }
+  .cta-cell:first-child { border-right: none; }
+  .col-header:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+  .feature-cell.section-head:nth-child(2n) { display: none; }
+  .feature-cell:nth-child(2n) { display: none; }
+  .cta-cell.dark-cta { display: none; }
+  .col-header.featured-col { border-top: 1px solid var(--border); }
+  .addons-grid { grid-template-columns: 1fr 1fr; }
+  .addon-cell:nth-child(2n) { border-right: none; }
+  .addon-cell:nth-child(4n) { border-right: 1px solid var(--border); }
+}
+
+@media (max-width: 479px) {
+  .addons-grid { grid-template-columns: 1fr; }
+  .addon-cell { border-right: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="variant-label">VELAR Pricing — Variant C: Ultra Minimal Luxury</div>
+
+<section class="section">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <span class="eyebrow">Service Packages · Dallas, TX</span>
+      <h2 class="heading">Premium care.<br><span class="accent">Your terms.</span></h2>
+      <div style="height:28px"></div>
+      <div class="controls-row">
+        <div class="tabs">
+          <button class="tab active">Interior + Exterior</button>
+          <button class="tab">Interior Only</button>
+        </div>
+        <div class="xl-row">
+          <button class="xl-pill"><div class="xl-thumb"></div></button>
+          <span>SUV / XL &nbsp;<strong style="color:var(--black)">+$30</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="comparison">
+
+      <!-- Column headers -->
+      <div class="col-header">
+        <span class="col-badge hidden">·</span>
+        <div class="col-price">$159</div>
+        <div class="col-price-note">per sedan &nbsp;·&nbsp; XL +$30</div>
+        <div class="col-name">Essential</div>
+        <div class="col-duration">~2 Hours</div>
+      </div>
+
+      <div class="col-header featured-col">
+        <span class="col-badge">Most Popular</span>
+        <div class="col-price">$239</div>
+        <div class="col-price-note">per sedan &nbsp;·&nbsp; XL +$30</div>
+        <div class="col-name">Signature</div>
+        <div class="col-duration">~3 Hours</div>
+      </div>
+
+      <!-- INTERIOR rows -->
+      <div class="feature-cell section-head">Interior</div>
+      <div class="feature-cell section-head dark-head">Interior</div>
+
+      <div class="feature-cell"><span class="check">✓</span> Vacuum &amp; air blowout</div>
+      <div class="feature-cell dark-cell"><span class="check">✓</span> 2-step deep vacuum</div>
+
+      <div class="feature-cell"><span class="check">✓</span> All surfaces &amp; mats wiped</div>
+      <div class="feature-cell dark-cell"><span class="check">✓</span> Full steam cleaning &amp; sanitization</div>
+
+      <div class="feature-cell"><span class="check">✓</span> Seats wiped &amp; refreshed</div>
+      <div class="feature-cell dark-cell"><span class="check">✓</span> Light stain treatment</div>
+
+      <div class="feature-cell"><span class="check">✓</span> Interior glass cleaned</div>
+      <div class="feature-cell dark-cell"><span class="check">✓</span> Leather cleaning &amp; conditioning</div>
+
+      <!-- EXTERIOR rows -->
+      <div class="feature-cell section-head">Exterior</div>
+      <div class="feature-cell section-head dark-head">Exterior</div>
+
+      <div class="feature-cell"><span class="check">✓</span> Safe hand wash</div>
+      <div class="feature-cell dark-cell"><span class="check">✓</span> Pre-wash contaminant treatment</div>
+
+      <div class="feature-cell"><span class="check">✓</span> Wheel &amp; tire cleaning</div>
+      <div class="feature-cell dark-cell"><span class="check">✓</span> Deep wheel &amp; tire cleaning</div>
+
+      <div class="feature-cell"><span class="check">✓</span> Tire dressing applied</div>
+      <div class="feature-cell dark-cell"><span class="check">✓</span> Hydrophobic spray protection</div>
+
+      <div class="feature-cell"><span class="check">✓</span> Spot-free dry finish</div>
+      <div class="feature-cell dark-cell inherited-note">Everything in Essential, plus the above</div>
+
+      <!-- CTAs -->
+      <div class="cta-cell">
+        <button class="cta-btn cta-outline">Book Essential</button>
+      </div>
+      <div class="cta-cell dark-cta">
+        <button class="cta-btn cta-fill">Book Signature</button>
+      </div>
+
+    </div>
+
+    <!-- Trust -->
+    <p class="trust">Trusted by 100+ Dallas vehicle owners &nbsp;·&nbsp; 5-star rated</p>
+
+    <!-- Add-ons -->
+    <div class="addons-section">
+      <div class="addons-heading">Optional Add-ons</div>
+      <div class="addons-grid">
+        <div class="addon-cell">
+          <span class="addon-name">Light Pet Hair</span>
+          <span class="addon-price">$35</span>
+        </div>
+        <div class="addon-cell">
+          <span class="addon-name">Heavy Pet Hair</span>
+          <span class="addon-price">$69</span>
+        </div>
+        <div class="addon-cell">
+          <span class="addon-name">Odor Treatment</span>
+          <span class="addon-price">$55</span>
+        </div>
+        <div class="addon-cell">
+          <span class="addon-name">Engine Bay Detail</span>
+          <span class="addon-price">$65</span>
+        </div>
+        <div class="addon-cell">
+          <span class="addon-name">Headliner Cleaning</span>
+          <span class="addon-price">$55</span>
+        </div>
+        <div class="addon-cell">
+          <span class="addon-name">Clay Bar Treatment</span>
+          <span class="addon-price">$55</span>
+        </div>
+        <div class="addon-cell">
+          <span class="addon-name">Headlight Restoration</span>
+          <span class="addon-price">$110</span>
+        </div>
+        <div class="addon-cell">
+          <span class="addon-name">Individual Seat Clean</span>
+          <span class="addon-price">$40</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>

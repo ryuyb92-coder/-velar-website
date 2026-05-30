@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELAR — Hero Directions A / B / C</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', -apple-system, system-ui, sans-serif;
+  background: #050505;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Section labels ── */
+.section-divider {
+  background: #050505;
+  padding: 32px 40px 20px;
+  border-top: 1px solid #111;
+}
+.section-divider:first-of-type { border-top: none; padding-top: 40px; }
+.option-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #2e2a24;
+  margin-bottom: 6px;
+}
+.option-title {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #3a3428;
+}
+
+/* ════════════════════════════════════════════════
+   OPTION A — Cinematic Dark
+   Full-black, car at right, minimal text left
+════════════════════════════════════════════════ */
+.hero-a {
+  position: relative;
+  min-height: 100vh;
+  background: #060504;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Deep automotive atmosphere */
+.hero-a-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 55% 70% at 80% 55%, #0f0d0a 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 75% 50%, rgba(242,106,13,0.025) 0%, transparent 45%),
+    linear-gradient(160deg, #040404 0%, #080705 35%, #0c0b08 65%, #060504 100%);
+}
+
+/* Simulated car shape — glossy dark body with rim light */
+.hero-a-car {
+  position: absolute;
+  right: -5%;
+  bottom: 0;
+  width: 68%;
+  height: 75%;
+
+  /* Body of the car — dark form */
+  background:
+    /* Orange rim light on far edge */
+    radial-gradient(ellipse 8% 60% at 98% 55%, rgba(242,106,13,0.12) 0%, transparent 100%),
+    /* Subtle highlight on roof/hood */
+    radial-gradient(ellipse 50% 25% at 48% 28%, rgba(255,255,255,0.035) 0%, transparent 60%),
+    /* Deep body shadow */
+    radial-gradient(ellipse 80% 60% at 50% 55%, #0d0c0a 0%, transparent 70%),
+    /* Ground reflection */
+    radial-gradient(ellipse 70% 20% at 50% 92%, rgba(242,106,13,0.04) 0%, transparent 70%);
+}
+
+/* Ground line / reflection */
+.hero-a-ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(242,106,13,0.08) 40%, rgba(242,106,13,0.12) 60%, transparent 100%);
+}
+
+/* Gradient fade to cover left side */
+.hero-a-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    rgba(6,5,4,1) 0%,
+    rgba(6,5,4,0.92) 28%,
+    rgba(6,5,4,0.6) 48%,
+    rgba(6,5,4,0.1) 68%,
+    transparent 85%
+  );
+}
+
+/* Nav */
+.a-nav {
+  position: relative;
+  z-index: 10;
+  padding: 32px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.a-nav img { height: 44px; width: auto; }
+.a-nav-links {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+}
+.a-nav-links a {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.32);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+}
+
+/* Hero content */
+.a-content {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 60px clamp(80px, 10vw, 120px);
+  max-width: 620px;
+}
+
+.a-eyebrow {
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(242,106,13,0.7);
+  margin-bottom: 28px;
+  display: block;
+}
+
+.a-headline {
+  font-size: clamp(3.2rem, 6.5vw, 5.8rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: #fff;
+  margin-bottom: 32px;
+}
+.a-headline em {
+  display: block;
+  font-style: normal;
+  color: rgba(255,255,255,0.28);
+  font-weight: 300;
+  font-size: 0.62em;
+  letter-spacing: -0.02em;
+  margin-top: 6px;
+}
+
+.a-sub {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.3);
+  line-height: 1.7;
+  margin-bottom: 48px;
+  max-width: 340px;
+}
+
+.a-cta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.btn-orange {
+  background: #f26a0d;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 16px 36px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 6px 28px rgba(242,106,13,0.3);
+}
+
+.btn-ghost {
+  color: rgba(255,255,255,0.35);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 15px 28px;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: transparent;
+}
+
+/* Bottom orange hairline */
+.a-bottom-line {
+  position: absolute;
+  bottom: 0;
+  left: 60px;
+  right: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(242,106,13,0.25) 0%, transparent 50%);
+}
+
+
+/* ════════════════════════════════════════════════
+   OPTION B — Split Editorial
+   White left / Dark right
+════════════════════════════════════════════════ */
+.hero-b {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* Left: editorial white */
+.b-left {
+  background: #f8f6f2;
+  padding: 48px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.b-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.b-top img { height: 40px; }
+.b-nav-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c0b9b0;
+}
+
+.b-mid {
+  padding: 40px 0;
+}
+
+.b-issue {
+  font-size: 0.56rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #c0b9b0;
+  margin-bottom: 36px;
+  display: block;
+}
+
+.b-headline {
+  font-size: clamp(2.4rem, 4.5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  color: #111;
+  margin-bottom: 24px;
+}
+.b-headline span {
+  display: block;
+  font-weight: 300;
+  color: #9a9080;
+  font-size: 0.55em;
+  letter-spacing: -0.01em;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.b-rule {
+  width: 40px;
+  height: 1px;
+  background: #f26a0d;
+  margin-bottom: 28px;
+}
+
+.b-body {
+  font-size: 0.82rem;
+  color: #7a7060;
+  line-height: 1.75;
+  max-width: 340px;
+  margin-bottom: 44px;
+}
+
+.b-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.b-cta-btn {
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 15px 32px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.b-cta-link {
+  font-size: 0.68rem;
+  color: #c0b9b0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.b-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.b-location {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c0b9b0;
+}
+.b-orange-bar {
+  width: 28px;
+  height: 2px;
+  background: #f26a0d;
+}
+
+/* Right: dark cinematic */
+.b-right {
+  background: #080705;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 48px;
+}
+
+/* Car atmosphere */
+.b-right-atmos {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 60% 50%, rgba(242,106,13,0.03) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 80% at 50% 40%, #0f0e0b 0%, transparent 70%),
+    linear-gradient(160deg, #0a0908 0%, #060504 100%);
+}
+
+/* Rim light edge */
+.b-right-rim {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  right: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent 0%, rgba(242,106,13,0.15) 30%, rgba(242,106,13,0.22) 55%, rgba(242,106,13,0.08) 80%, transparent 100%);
+}
+
+/* Glossy car body suggestion */
+.b-car-body {
+  position: absolute;
+  inset: 10% 5% 15%;
+  background:
+    radial-gradient(ellipse 35% 20% at 45% 30%, rgba(255,255,255,0.03) 0%, transparent 100%),
+    radial-gradient(ellipse 60% 50% at 50% 55%, rgba(12,11,9,0.9) 0%, transparent 80%);
+}
+
+.b-right-caption {
+  position: relative;
+  z-index: 2;
+}
+.b-right-eye {
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.15);
+  margin-bottom: 8px;
+  display: block;
+}
+.b-right-stat {
+  font-size: 2.4rem;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  color: rgba(255,255,255,0.12);
+  line-height: 1;
+}
+.b-right-stat span {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.1);
+  margin-top: 6px;
+}
+
+
+/* ════════════════════════════════════════════════
+   OPTION C — Minimal Luxury, Oversized Logo
+   Near-black, logo dominates, extreme restraint
+════════════════════════════════════════════════ */
+.hero-c {
+  min-height: 100vh;
+  background: #050504;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 60px 40px;
+}
+
+/* Very subtle background texture */
+.c-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 45%, rgba(20,18,14,0.8) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 60% at 50% 60%, rgba(242,106,13,0.018) 0%, transparent 55%),
+    linear-gradient(180deg, #040403 0%, #060504 50%, #040403 100%);
+}
+
+/* Orange hairlines top and bottom — frame */
+.c-frame-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 5%, rgba(242,106,13,0.2) 35%, rgba(242,106,13,0.2) 65%, transparent 95%);
+}
+.c-frame-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 5%, rgba(242,106,13,0.12) 35%, rgba(242,106,13,0.12) 65%, transparent 95%);
+}
+
+/* Minimal top nav: just a city tag */
+.c-nav {
+  position: absolute;
+  top: 36px;
+  left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 56px;
+  z-index: 10;
+}
+.c-nav-tag {
+  font-size: 0.56rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.14);
+}
+.c-nav-book {
+  font-size: 0.56rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.22);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 8px 0;
+}
+
+/* THE LOGO — dominant */
+.c-logo-wrap {
+  position: relative;
+  z-index: 5;
+  margin-bottom: 52px;
+}
+.c-logo-wrap img {
+  width: clamp(220px, 30vw, 380px);
+  height: auto;
+  opacity: 0.96;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Thin divider beneath logo */
+.c-rule {
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+  margin: 0 auto 40px;
+  position: relative;
+  z-index: 5;
+}
+
+/* Minimal headline */
+.c-headline {
+  position: relative;
+  z-index: 5;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.22);
+  margin-bottom: 8px;
+}
+
+.c-sub {
+  position: relative;
+  z-index: 5;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.1);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 56px;
+}
+
+/* Book CTA */
+.c-cta {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+}
+.c-book-btn {
+  border: 1px solid rgba(242,106,13,0.4);
+  color: rgba(242,106,13,0.8);
+  background: transparent;
+  border-radius: 4px;
+  padding: 13px 36px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.c-services-link {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.16);
+  cursor: pointer;
+}
+
+/* Bottom location tag */
+.c-bottom {
+  position: absolute;
+  bottom: 36px;
+  left: 0; right: 0;
+  text-align: center;
+  z-index: 5;
+}
+.c-bottom-text {
+  font-size: 0.5rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.1);
+}
+
+/* ── Hover indicators for selection ── */
+.hero-a, .hero-b, .hero-c {
+  cursor: default;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  transition: outline-color 0.2s;
+}
+.hero-a.selected { outline-color: #f26a0d; }
+.hero-b.selected { outline-color: #f26a0d; }
+.hero-c.selected { outline-color: #f26a0d; }
+
+.select-overlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  background: rgba(242,106,13,0.1);
+  border: 1px solid rgba(242,106,13,0.4);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f26a0d;
+  display: none;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.selected .select-overlay { display: block; }
+
+/* Page intro / instruction bar */
+.page-bar {
+  background: #0a0908;
+  border-bottom: 1px solid #111;
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.page-bar-title {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #3a3428;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.page-bar-hint {
+  font-size: 0.58rem;
+  color: #2a2620;
+  letter-spacing: 0.08em;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+</style>
+</head>
+<body>
+
+<div class="page-bar">
+  <span class="page-bar-title">VELAR · Hero Direction Exploration · A / B / C</span>
+  <span class="page-bar-hint">Visual mockup only — click to select a direction · respond in terminal</span>
+</div>
+
+<!-- ════════════════════
+     LABEL A
+════════════════════ -->
+<div class="section-divider">
+  <div class="option-label">Direction A</div>
+  <div class="option-title">Cinematic Dark — car at right, headline left, atmosphere-first</div>
+</div>
+
+<!-- ════════════════════
+     OPTION A
+════════════════════ -->
+<div class="hero-a" onclick="select('a',this)" data-choice="a">
+  <div class="select-overlay">Selected ✓</div>
+  <div class="hero-a-bg"></div>
+  <div class="hero-a-car"></div>
+  <div class="hero-a-fade"></div>
+  <div class="hero-a-ground"></div>
+
+  <nav class="a-nav">
+    <img src="velar-logo-orange.png" alt="VELAR">
+    <ul class="a-nav-links">
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Packages</a></li>
+      <li><a href="#">Dallas, TX</a></li>
+    </ul>
+  </nav>
+
+  <div class="a-content">
+    <span class="a-eyebrow">Premium Mobile Detailing</span>
+    <h1 class="a-headline">
+      Your car.<br>Perfected.
+      <em>We come to you.</em>
+    </h1>
+    <p class="a-sub">
+      Concierge-level detailing wherever you are. One professional. No shortcuts.
+    </p>
+    <div class="a-cta">
+      <button class="btn-orange">Book Now</button>
+      <button class="btn-ghost">View Packages</button>
+    </div>
+  </div>
+
+  <div class="a-bottom-line"></div>
+</div>
+
+
+<!-- ════════════════════
+     LABEL B
+════════════════════ -->
+<div class="section-divider">
+  <div class="option-label">Direction B</div>
+  <div class="option-title">Split Editorial — white left / dark right, typographic restraint</div>
+</div>
+
+<!-- ════════════════════
+     OPTION B
+════════════════════ -->
+<div class="hero-b" onclick="select('b',this)" data-choice="b" style="position:relative;">
+  <div class="select-overlay">Selected ✓</div>
+
+  <!-- LEFT: white editorial -->
+  <div class="b-left">
+    <div class="b-top">
+      <img src="velar-logo-orange.png" alt="VELAR">
+      <span class="b-nav-tag">Dallas, TX</span>
+    </div>
+
+    <div class="b-mid">
+      <span class="b-issue">Premium Mobile Detailing</span>
+      <h1 class="b-headline">
+        Delivered<br>to you.
+        <span>Concierge-level care for your vehicle,<br>at your location, on your schedule.</span>
+      </h1>
+      <div class="b-rule"></div>
+      <p class="b-body">
+        One professional. Professional-grade products. Meticulous attention. We show up, do the work right, and leave your vehicle looking its best.
+      </p>
+      <div class="b-cta-row">
+        <button class="b-cta-btn">Book Now</button>
+        <span class="b-cta-link">View Packages →</span>
+      </div>
+    </div>
+
+    <div class="b-bottom">
+      <span class="b-location">Dallas · Fort Worth · DFW Area</span>
+      <div class="b-orange-bar"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: dark cinematic -->
+  <div class="b-right">
+    <div class="b-right-atmos"></div>
+    <div class="b-car-body"></div>
+    <div class="b-right-rim"></div>
+    <div class="b-right-caption">
+      <span class="b-right-eye">Precision detailing</span>
+      <div class="b-right-stat">
+        100%
+        <span>satisfaction · every appointment</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════
+     LABEL C
+════════════════════ -->
+<div class="section-divider">
+  <div class="option-label">Direction C</div>
+  <div class="option-title">Minimal Luxury — logo dominates, extreme restraint, fashion-automotive feel</div>
+</div>
+
+<!-- ════════════════════
+     OPTION C
+════════════════════ -->
+<div class="hero-c" onclick="select('c',this)" data-choice="c">
+  <div class="select-overlay">Selected ✓</div>
+  <div class="c-bg"></div>
+  <div class="c-frame-top"></div>
+  <div class="c-frame-bottom"></div>
+
+  <div class="c-nav">
+    <span class="c-nav-tag">Dallas, Texas</span>
+    <button class="c-nav-book">Book Now</button>
+  </div>
+
+  <div class="c-logo-wrap">
+    <img src="velar-logo-orange.png" alt="VELAR Mobile Detailing">
+  </div>
+
+  <div class="c-rule"></div>
+
+  <p class="c-headline">Premium Mobile Detailing</p>
+  <p class="c-sub">Dallas · Fort Worth · DFW Area</p>
+
+  <div class="c-cta">
+    <button class="c-book-btn">Request a Detail</button>
+    <span class="c-services-link">View services →</span>
+  </div>
+
+  <div class="c-bottom">
+    <span class="c-bottom-text">We come to you · Licensed &amp; Insured · 100% Satisfaction</span>
+  </div>
+</div>
+
+<script>
+function select(choice, el) {
+  document.querySelectorAll('.hero-a, .hero-b, .hero-c').forEach(h => h.classList.remove('selected'));
+  el.classList.add('selected');
+  if (window.__recordChoice) window.__recordChoice(choice, 'Direction ' + choice.toUpperCase());
+}
+</script>
+</body>
+</html>
