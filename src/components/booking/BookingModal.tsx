@@ -243,6 +243,22 @@ export default function BookingModal({ intent, onClose }: Props) {
     };
     console.log('[VELAR Diag] appending Maps script to head:', script.src);
     document.head.appendChild(script);
+
+    // Verify the script tag landed in the DOM and expose for DevTools inspection
+    setTimeout(() => {
+      const tag = document.getElementById('velar-gmaps') as HTMLScriptElement | null;
+      console.log('[VELAR Diag] script tag in DOM after append:', !!tag, '| src:', tag?.src ?? 'missing');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).__VELAR_DIAG__ = {
+        ...(window as any).__VELAR_DIAG__,
+        scriptTagExists: !!tag,
+        scriptSrc: tag?.src ?? 'missing',
+        googleExists: !!(window as any).google,
+        googleMapsExists: !!(window as any).google?.maps,
+      };
+      console.log('[VELAR Diag] Full diagnostic state — run window.__VELAR_DIAG__ in console');
+    }, 100);
+
     // Do not remove on unmount — it's a global resource
   }, []);
 
